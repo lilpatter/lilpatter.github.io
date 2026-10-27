@@ -1,9 +1,16 @@
 // Builds the site from projects.json: the home page, one page per app at /<id>/, and 404.html.
 // Usage: node build.mjs
+import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 
 const SITE = "https://lilpatter.github.io";
 const { projects } = JSON.parse(await readFile("projects.json", "utf8"));
+
+// GitHub Pages lets browsers cache files for 10 minutes. A content hash in the URL makes
+// every page load the stylesheet and script it was built with, never a stale copy.
+const version = async (file) => createHash("sha256").update(await readFile(file)).digest("hex").slice(0, 10);
+const CSS = `/styles.css?v=${await version("styles.css")}`;
+const JS = `/app.js?v=${await version("app.js")}`;
 
 const PLATFORM_FAMILY = {
   iOS: "Apple", iPadOS: "Apple", macOS: "Apple", tvOS: "Apple", watchOS: "Apple", visionOS: "Apple",
@@ -51,8 +58,8 @@ function layout({ title, description, path, image = "/assets/avatar.jpg", wash =
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="${esc(image)}">
   <link rel="apple-touch-icon" href="${esc(image)}">
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/app.js" defer></script>
+  <link rel="stylesheet" href="${CSS}">
+  <script src="${JS}" defer></script>
 </head>
 <body>
   <header class="bar" id="bar">

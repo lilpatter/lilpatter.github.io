@@ -8,6 +8,8 @@ on:
     paths:
       - projects.json
       - build.mjs
+      - styles.css
+      - app.js
   workflow_dispatch:
 
 permissions:
