@@ -281,7 +281,7 @@ function skeleton(path) {
       </section>
       <section class="section wrap skeleton">
         <div class="section-head"><span class="sk sk-title sm"></span></div>
-        <ul class="app-grid">${`<li><div class="app-card"><span class="sk sk-app"></span><span class="card-text"><span class="sk sk-line w40 lg"></span><span class="sk sk-line w70"></span></span><span class="sk sk-line w30"></span></div></li>`.repeat(Math.max(APPS.length, 3))}</ul>
+        <ul class="app-grid">${`<li><div class="app-tile"><span class="sk sk-app"></span><span class="sk sk-line w50 c"></span></div></li>`.repeat(Math.max(APPS.length, 3))}</ul>
       </section>`,
   };
 }

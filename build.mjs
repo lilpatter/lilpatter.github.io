@@ -155,18 +155,14 @@ const appBar = (p) => `<a class="circle glass" href="/" aria-label="Back to Apps
         <button class="bar-search" type="button" data-palette aria-label="Search">${SEARCH}</button>
       </nav>`;
 
-// An app card: the whole card is the link, tinted by a blur of the app's own icon.
+// An app tile, like a Home Screen icon: the icon and its name. The tagline stays for screen readers and hover.
 function appCard(p, heading = "h3") {
-  const soon = p.status === "in-development" ? `<span class="card-badge">Coming Soon</span>` : "";
+  const soon = p.status === "in-development" ? `<span class="tile-badge">Coming Soon</span>` : "";
   return `<li data-families="${esc(families(p).join(" "))}">
-          <a class="app-card" href="/${esc(p.id)}/" style="--art:url('${esc(asset(p.icon))}')">
-            <span class="card-tint" aria-hidden="true"></span>
-            <span class="card-top">${icon(p, 88)}${soon}</span>
-            <span class="card-text">
-              <${heading} class="card-name">${esc(p.name)}</${heading}>
-              <span class="card-tagline">${esc(p.tagline)}</span>
-            </span>
-            <span class="card-meta">${esc(p.platforms.join(" · "))}</span>
+          <a class="app-tile" href="/${esc(p.id)}/" title="${esc(p.tagline)}">
+            ${icon(p, 112)}
+            <${heading} class="tile-name">${esc(p.name)}</${heading}>
+            <span class="sr-only">${esc(p.tagline)}</span>${soon}
           </a>
         </li>`;
 }
