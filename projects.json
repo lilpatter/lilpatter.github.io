@@ -27,7 +27,7 @@
       "icon": "assets/icons/hangar.png",
       "accent": "#ff9f43",
       "status": "available",
-      "tagline": "Switch Steam accounts silently.",
+      "tagline": "Every Steam account, one click away.",
       "description": "Changes the signed-in Steam account without the account picker or a password prompt, and shows every game on every account.",
       "platforms": ["Windows"],
       "stack": "Tauri 2 · Rust",

@@ -454,3 +454,10 @@ kbd { font: 600 12px/1 var(--font); letter-spacing: 0; padding: 4px 7px; border-
   .tilt-inner { transition: none; }
 }
 @keyframes pulse { 50% { opacity: 0.45; } }
+
+/* App pages take their main button colour from the app's accent (set per page by build.mjs). */
+.app-page .btn-filled {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--blue)) 80%, #fff), var(--accent, var(--blue)));
+  color: var(--on-accent, #fff);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 8px 22px color-mix(in srgb, var(--accent, var(--blue)) 40%, transparent);
+}

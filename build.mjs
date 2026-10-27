@@ -48,7 +48,17 @@ const GLYPH = {
   source: '<path d="M7.7 5.3a1 1 0 0 1 0 1.4L4.4 10l3.3 3.3a1 1 0 1 1-1.4 1.4l-4-4a1 1 0 0 1 0-1.4l4-4a1 1 0 0 1 1.4 0Zm4.6 0a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 1 1-1.4-1.4l3.3-3.3-3.3-3.3a1 1 0 0 1 0-1.4Z"/>',
   check: '<path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/>',
 };
-const GLYPH_TINT = { website: "var(--blue)", download: "var(--green)", source: "#8e8e93" };
+const GLYPH_TINT = { website: "var(--blue)", download: "var(--accent, var(--green))", source: "#8e8e93" };
+
+// Text colour for a button filled with the app's accent: whichever of white or near-black reads better.
+function labelOn(hex) {
+  const [r, g, b] = hex.replace("#", "").match(/../g).map((c) => {
+    const v = parseInt(c, 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  });
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return 1.05 / (lum + 0.05) >= (lum + 0.05) / 0.05 ? "#fff" : "rgba(0, 0, 0, 0.86)";
+}
 const LINK_TITLE = { website: "Website", download: "Download", source: "Source Code" };
 const LINK_DETAIL = { website: "", download: "GitHub Releases", source: "GitHub" };
 const GITHUB_MARK =
@@ -228,7 +238,8 @@ function appPage(p) {
     )
     .join("\n          ");
 
-  const body = `    <article class="wrap app-page" aria-labelledby="app-title">
+  const accent = p.accent ? `--accent:${esc(p.accent)}; --on-accent:${labelOn(p.accent)}` : "";
+  const body = `    <article class="wrap app-page" aria-labelledby="app-title" style="${accent}">
       <div class="app-hero">
         <div class="tilt" data-tilt>
           <div class="tilt-inner">
