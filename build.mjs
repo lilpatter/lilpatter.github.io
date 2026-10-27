@@ -1,0 +1,282 @@
+// Builds the site from projects.json: the home page, one page per app at /<id>/, and 404.html.
+// Usage: node build.mjs
+import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+
+const SITE = "https://lilpatter.github.io";
+const { projects } = JSON.parse(await readFile("projects.json", "utf8"));
+
+const PLATFORM_FAMILY = {
+  iOS: "Apple", iPadOS: "Apple", macOS: "Apple", tvOS: "Apple", watchOS: "Apple", visionOS: "Apple",
+  Windows: "Windows", Linux: "Linux", Android: "Android", Web: "Web",
+};
+const STATUS_LABEL = { available: "Available", "in-development": "In Development", beta: "Beta" };
+
+// SF Symbols-style glyphs drawn on a 20×20 grid.
+const GLYPH = {
+  website: '<path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15Zm4.9 6.7h-2.3a12 12 0 0 0-1-4.4 5.9 5.9 0 0 1 3.3 4.4ZM10 4.2c.6.8 1.3 2.5 1.5 5H8.5c.2-2.5.9-4.2 1.5-5ZM8.4 4.8a12 12 0 0 0-1 4.4H5.1a5.9 5.9 0 0 1 3.3-4.4ZM5.1 10.8h2.3c.1 1.7.5 3.2 1 4.4a5.9 5.9 0 0 1-3.3-4.4Zm4.9 5c-.6-.8-1.3-2.5-1.5-5h3c-.2 2.5-.9 4.2-1.5 5Zm1.6-.6c.5-1.2.9-2.7 1-4.4h2.3a5.9 5.9 0 0 1-3.3 4.4Z"/>',
+  download: '<path d="M10 2.5a1 1 0 0 1 1 1v8.1l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0l-4.5-4.5a1 1 0 0 1 1.4-1.4L9 11.6V3.5a1 1 0 0 1 1-1ZM4 16a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Z"/>',
+  source: '<path d="M7.7 5.3a1 1 0 0 1 0 1.4L4.4 10l3.3 3.3a1 1 0 1 1-1.4 1.4l-4-4a1 1 0 0 1 0-1.4l4-4a1 1 0 0 1 1.4 0Zm4.6 0a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 1 1-1.4-1.4l3.3-3.3-3.3-3.3a1 1 0 0 1 0-1.4Z"/>',
+  check: '<path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/>',
+};
+const GLYPH_TINT = { website: "var(--blue)", download: "var(--green)", source: "#8e8e93" };
+const LINK_TITLE = { website: "Website", download: "Download", source: "Source Code" };
+const LINK_DETAIL = { website: "", download: "GitHub Releases", source: "GitHub" };
+const GITHUB_MARK =
+  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
+const CHEVRON = '<svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>';
+const BACK = '<svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8"/></svg>';
+
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const families = (p) => [...new Set(p.platforms.map((x) => PLATFORM_FAMILY[x] || x))];
+const isOpenSource = (p) => (p.links || []).some((l) => l.kind === "source");
+const asset = (path) => "/" + path.replace(/^\//, "");
+const icon = (p, size, alt = "") => `<img class="app-icon" src="${esc(asset(p.icon))}" alt="${esc(alt)}" width="${size}" height="${size}">`;
+const fact = (label, value, note = "") =>
+  `<div class="fact"><div class="fact-label">${esc(label)}</div><div class="fact-value">${esc(value)}</div>${note ? `<div class="fact-note">${esc(note)}</div>` : ""}</div>`;
+
+function layout({ title, description, path, image = "/assets/avatar.jpg", wash = image, bar, body }) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>${esc(title)}</title>
+  <meta name="description" content="${esc(description)}">
+  <link rel="canonical" href="${SITE}${path}">
+  <meta property="og:title" content="${esc(title)}">
+  <meta property="og:description" content="${esc(description)}">
+  <meta property="og:image" content="${SITE}${image}">
+  <meta property="og:url" content="${SITE}${path}">
+  <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="${esc(image)}">
+  <link rel="apple-touch-icon" href="${esc(image)}">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="bar" id="bar">
+    <div class="wrap bar-inner">
+      ${bar}
+    </div>
+  </header>
+  <main id="top">
+    <div class="wash" style="--art:url('${esc(wash)}')" aria-hidden="true"></div>
+${body}
+  </main>
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>Copyright © ${new Date().getFullYear()} PG. All rights reserved.</span>
+      <span>Not affiliated with Apple, Valve or NVIDIA.</span>
+    </div>
+  </footer>
+</body>
+</html>
+`;
+}
+
+// Floating controls. Home: a "PG" capsule and the section links.
+const homeBar = `<a class="pill glass" href="/" aria-label="PG, home">
+        <img src="/assets/avatar.jpg" alt="" width="32" height="32">PG
+      </a>
+      <nav class="bar-links glass" aria-label="Sections">
+        <a href="/#apps">Apps</a>
+        <a href="https://github.com/lilpatter">GitHub</a>
+      </nav>`;
+
+// App pages: a round back button, and the app's name settles into the middle once you scroll.
+const appBar = (p) => `<a class="circle glass" href="/" aria-label="Back to Apps">${BACK}</a>
+      <span class="bar-title glass" aria-hidden="true">
+        <img class="app-icon" src="${esc(asset(p.icon))}" alt="" width="32" height="32">${esc(p.name)}
+      </span>
+      <nav class="bar-links glass" aria-label="Sections">
+        <a href="/">Apps</a>
+        <a href="https://github.com/lilpatter">GitHub</a>
+      </nav>`;
+
+function appRow(p, { compact = false } = {}) {
+  return `<li data-families="${esc(families(p).join(" "))}">
+          <a class="row app-row${compact ? " compact" : ""}" href="/${esc(p.id)}/">
+            ${icon(p, compact ? 48 : 64)}
+            <div class="row-body">
+              <div class="row-title">${esc(p.name)}</div>
+              <div class="row-sub">${esc(p.tagline)}</div>
+              ${compact ? "" : `<div class="row-meta">${esc(p.platforms.join(" · "))}</div>`}
+            </div>
+            <span class="btn btn-tinted get" aria-hidden="true">View</span>
+          </a>
+        </li>`;
+}
+
+function homePage() {
+  const platforms = [...new Set(projects.flatMap((p) => p.platforms))];
+  const fams = [...new Set(projects.flatMap(families))];
+  const filter =
+    fams.length > 1
+      ? `<div class="segmented" id="filter" role="radiogroup" aria-label="Filter by platform">
+          <span class="segmented-thumb" style="width:calc((100% - 8px) / ${fams.length + 1})"></span>
+          ${["All", ...fams].map((f, i) => `<button type="button" role="radio" aria-checked="${i === 0}" data-family="${esc(f)}">${esc(f)}</button>`).join("\n          ")}
+        </div>`
+      : "";
+  const body = `    <section class="header wrap" aria-labelledby="page-title">
+      <div class="header-inner">
+        <img class="avatar" src="/assets/avatar.jpg" alt="" width="112" height="112">
+        <div>
+          <p class="kicker">Developer</p>
+          <h1 class="large-title" id="page-title">PG</h1>
+          <p class="header-sub">Native apps for Apple platforms and Windows.</p>
+          <div class="header-actions">
+            <a class="btn btn-filled" href="#apps">See Apps</a>
+            <a class="btn btn-tinted glass" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
+          </div>
+        </div>
+      </div>
+      <div class="facts glass" aria-label="At a glance">
+        ${fact("Apps", projects.length)}
+        ${fact("Platforms", platforms.length, fams.join(" & "))}
+        ${fact("Open Source", projects.filter(isOpenSource).length, "On GitHub")}
+        ${fact("Developer", "Since 2023", "github.com/lilpatter")}
+      </div>
+    </section>
+
+    <section class="section wrap" id="apps" aria-labelledby="apps-title">
+      <div class="section-head">
+        <h2 class="title-2" id="apps-title">Apps</h2>
+        ${filter}
+      </div>
+      <ul class="list" id="app-list">
+        ${projects.map((p) => appRow(p)).join("\n        ")}
+      </ul>
+    </section>
+
+    <section class="section wrap" id="github" aria-labelledby="github-title">
+      <div class="section-head">
+        <h2 class="title-2" id="github-title">On GitHub</h2>
+        <a class="btn btn-plain" href="https://github.com/lilpatter">View Profile</a>
+      </div>
+      <a class="gh-card" href="https://github.com/lilpatter">
+        <img src="https://raw.githubusercontent.com/lilpatter/lilpatter/main/card.svg" alt="PG's GitHub profile card with a year of contributions" width="1020" height="488" loading="lazy">
+      </a>
+    </section>`;
+  return layout({
+    title: "PG — Apps",
+    description: `Apps by PG: ${projects.map((p) => p.name).join(", ")}.`,
+    path: "/",
+    bar: homeBar,
+    body,
+  });
+}
+
+function appPage(p) {
+  const links = p.links || [];
+  const primary = links[0];
+  const fams = families(p);
+  const [stackMain, ...stackRest] = (p.stack || "").split(" · ");
+  const others = projects.filter((o) => o.id !== p.id);
+
+  const linkRows = links
+    .map(
+      (l) => `<a class="row has-glyph" href="${esc(l.url)}">
+            <span class="glyph" style="--tint:${GLYPH_TINT[l.kind] || "var(--blue)"}"><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH[l.kind] || GLYPH.website}</svg></span>
+            <span class="row-body row-title">${esc(LINK_TITLE[l.kind] || l.label)}</span>
+            <span class="row-detail">${esc(LINK_DETAIL[l.kind] ?? "")}</span>
+            ${CHEVRON}
+          </a>`
+    )
+    .join("\n          ");
+  const highlightRows = (p.highlights || [])
+    .map(
+      (h) => `<div class="row" style="--inset:52px">
+            <svg class="check" viewBox="0 0 20 20" aria-hidden="true" style="fill:${esc(p.accent || "var(--blue)")}">${GLYPH.check}</svg>
+            <span class="row-body row-title">${esc(h)}</span>
+          </div>`
+    )
+    .join("\n          ");
+
+  const body = `    <article class="wrap app-page" aria-labelledby="app-title">
+      <div class="app-hero">
+        ${icon(p, 128, `${p.name} app icon`)}
+        <div>
+          <h1 class="app-name" id="app-title">${esc(p.name)}</h1>
+          <p class="app-subtitle">${esc(p.tagline)}</p>
+          <div class="header-actions">
+            ${primary ? `<a class="btn btn-filled" href="${esc(primary.url)}">${esc(primary.label)}</a>` : ""}
+            <span class="status glass" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="facts glass">
+        ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : "")}
+        ${fact("Status", STATUS_LABEL[p.status] || p.status)}
+        ${p.stack ? fact("Built With", stackMain, stackRest.join(" · ")) : ""}
+        ${fact("Source", isOpenSource(p) ? "Open" : "Closed", isOpenSource(p) ? "On GitHub" : "")}
+      </div>
+      <p class="app-desc">${esc(p.description)}</p>
+      <div class="app-columns">
+        ${highlightRows ? `<div>
+          <h2 class="group-title">Highlights</h2>
+          <div class="list">
+          ${highlightRows}
+          </div>
+        </div>` : ""}
+        ${linkRows ? `<div>
+          <h2 class="group-title">Links</h2>
+          <div class="list">
+          ${linkRows}
+          </div>
+          ${p.note ? `<p class="group-note">${esc(p.note)}</p>` : ""}
+        </div>` : ""}
+      </div>
+    </article>
+${others.length ? `
+    <section class="section wrap" aria-labelledby="more-title">
+      <div class="section-head">
+        <h2 class="title-2" id="more-title">More Apps by PG</h2>
+        <a class="btn btn-plain" href="/">See All</a>
+      </div>
+      <ul class="list">
+        ${others.map((o) => appRow(o, { compact: true })).join("\n        ")}
+      </ul>
+    </section>` : ""}`;
+
+  return layout({
+    title: `${p.name} — ${p.tagline.replace(/\.$/, "")}`,
+    description: p.description,
+    path: `/${p.id}/`,
+    image: asset(p.icon),
+    wash: asset(p.icon),
+    bar: appBar(p),
+    body,
+  });
+}
+
+function notFound() {
+  return layout({
+    title: "Page Not Found — PG",
+    description: "This page doesn't exist.",
+    path: "/404.html",
+    bar: homeBar,
+    body: `    <section class="wrap empty-state">
+      <h1 class="large-title">Page Not Found</h1>
+      <p class="header-sub">The page you're looking for doesn't exist or has moved.</p>
+      <div class="header-actions"><a class="btn btn-filled" href="/">Go to Apps</a></div>
+    </section>`,
+  });
+}
+
+// Remove folders of apps that were taken out of projects.json.
+const ids = new Set(projects.map((p) => p.id));
+for (const entry of await readdir(".")) {
+  if (ids.has(entry) || entry.startsWith(".") || !(await stat(entry)).isDirectory()) continue;
+  const page = `${entry}/index.html`;
+  const generated = await readFile(page, "utf8").then((s) => s.includes('class="wrap app-page"'), () => false);
+  if (generated) await rm(entry, { recursive: true });
+}
+
+await writeFile("index.html", homePage());
+await writeFile("404.html", notFound());
+for (const p of projects) {
+  await mkdir(p.id, { recursive: true });
+  await writeFile(`${p.id}/index.html`, appPage(p));
+}
+console.log(`Built home, 404 and ${projects.length} app pages: ${projects.map((p) => "/" + p.id + "/").join(" ")}`);

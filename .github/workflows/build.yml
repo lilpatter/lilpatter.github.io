@@ -1,0 +1,30 @@
+name: Build pages
+
+# Rebuilds the home page and the /<app>/ pages whenever the app list or the builder changes,
+# so editing projects.json on github.com is enough to add or update an app.
+on:
+  push:
+    branches: [main]
+    paths:
+      - projects.json
+      - build.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node build.mjs
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || (git commit -m "Build pages" && git push)

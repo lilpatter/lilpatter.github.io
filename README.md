@@ -1,8 +1,11 @@
 # lilpatter.github.io
 
-PG's projects site, served by GitHub Pages from `main`.
+PG's apps site, served by GitHub Pages from `main`. The design follows Apple's Human Interface Guidelines.
 
-## Adding a project
+Every app has its own page at `/<id>/` (for example [/catalyst/](https://lilpatter.github.io/catalyst/)).
+The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`, `404.html` or the app folders by hand.
+
+## Adding an app
 
 1. Put a square icon (256×256 PNG, full-bleed, no rounded corners needed) in `assets/icons/`.
 2. Add an entry to `projects.json`:
@@ -12,7 +15,7 @@ PG's projects site, served by GitHub Pages from `main`.
   "id": "my-app",
   "name": "My App",
   "icon": "assets/icons/my-app.png",
-  "accent": "#4493f8",
+  "accent": "#007aff",
   "status": "available",
   "tagline": "One short line.",
   "description": "A sentence or two about what it does.",
@@ -26,8 +29,12 @@ PG's projects site, served by GitHub Pages from `main`.
 }
 ```
 
+3. Push. The **Build pages** workflow runs `node build.mjs` and commits the new page, so it's live at `/my-app/` a minute later.
+   To preview locally first, run `node build.mjs` and serve the folder.
+
 - `status`: `available`, `in-development` or `beta`.
-- `kind`: `website`, `download` or `source` picks the button icon. The first link is the primary button.
-- `featured: true` makes the card span the full row with a large icon.
-- Leave out the `source` link for closed-source projects.
-- The platform filter builds itself from `platforms`.
+- `kind`: `website`, `download` or `source` picks the link's icon. The first link is the main button.
+- `accent` colours the checkmarks on the app's page and the glow on its GitHub profile tile.
+- Leave out the `source` link for closed-source apps.
+- The Apple / Windows filter builds itself from `platforms`.
+- The GitHub profile's app tiles are generated from this same file once a day.
