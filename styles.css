@@ -368,11 +368,14 @@ a.row:active { background: var(--cell-pressed); }
 ::view-transition-group(app-icon) { animation-duration: 0.55s; animation-timing-function: var(--ease); }
 ::view-transition-old(root) { animation: vt-out 0.22s ease both; }
 ::view-transition-new(root) { animation: vt-in 0.34s ease both; }
-html[data-transition="to-content"]::view-transition-old(root) { animation: vt-fade 0.18s ease both reverse; }
+/* Skeleton to content: a true cross-fade. Same duration and curve on both sides, so the two
+   opacities always add up to one and the page never dims part-way through. */
+html[data-transition="to-content"]::view-transition-old(root) { animation: vt-fade-out 0.3s ease both; }
 html[data-transition="to-content"]::view-transition-new(root) { animation: vt-fade 0.3s ease both; }
 @keyframes vt-out { to { opacity: 0; transform: scale(0.985); } }
 @keyframes vt-in { from { opacity: 0; transform: translateY(10px); } }
 @keyframes vt-fade { from { opacity: 0; } }
+@keyframes vt-fade-out { to { opacity: 0; } }
 
 /* Content rises in, one block after another */
 main.is-entering :is(.hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-section) {
@@ -397,12 +400,16 @@ main h1:focus { outline: none; }
 .sk-line.c { margin-left: auto; margin-right: auto; }
 .w20 { width: 20%; } .w30 { width: 30%; } .w40 { width: 40%; } .w50 { width: 50%; } .w60 { width: 60%; } .w70 { width: 70%; } .w90 { width: 90%; }
 .sk-title { width: 45%; max-width: 260px; height: 40px; margin: 6px 0 10px; border-radius: 12px; }
-.sk-title.sm { width: 120px; height: 28px; margin: 0; }
+.sk-title.sm { width: 120px; height: 31px; margin: 0; }
 .sk-pill { width: 136px; height: 44px; border-radius: 999px; }
 .sk-pill.sm { width: 76px; height: 32px; }
 .sk-avatar { width: 128px; height: 128px; border-radius: 50%; }
 .sk-app { width: 112px; height: 112px; border-radius: 22.37%; }
 @media (max-width: 600px) { .sk-app { width: 76px; height: 76px; } }
+/* The home skeleton takes the real hero's measurements, so nothing shifts when the content fades in. */
+.hero .sk-title { width: 120px; height: clamp(48px, 7vw, 68px); margin: 24px auto 0; }
+.hero .sk-line { height: calc(clamp(17px, 2vw, 21px) * 1.35 - 8px); margin: 16px auto 4px; }
+.app-tile .sk-line { height: 14px; margin: 1px auto; }
 .sk-icon { width: 136px; height: 136px; border-radius: 22.37%; }
 .sk-dot { width: 24px; height: 24px; border-radius: 50%; }
 .sk-glyph { width: 32px; height: 32px; border-radius: 10px; }
@@ -412,7 +419,7 @@ main h1:focus { outline: none; }
 .skeleton .row { min-height: 52px; }
 .skeleton .row .sk-line { flex: 1; margin: 0; }
 @media (max-width: 600px) {
-  .sk-avatar { width: 96px; height: 96px; }
+  .sk-avatar { width: 108px; height: 108px; }
   .sk-icon { width: 100px; height: 100px; }
   .sk-title { width: 70%; }
 }
@@ -472,8 +479,8 @@ kbd { font: 600 12px/1 var(--font); letter-spacing: 0; padding: 4px 7px; border-
 /* Reduce Motion: keep the changes, swap movement for dissolves (as Apple's guidelines suggest). */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(app-icon) { animation: none; }
-  ::view-transition-old(root), html[data-transition]::view-transition-old(root) { animation: vt-fade 0.18s ease both reverse; }
-  ::view-transition-new(root), html[data-transition]::view-transition-new(root) { animation: vt-fade 0.28s ease both; }
+  ::view-transition-old(root), html[data-transition]::view-transition-old(root) { animation: vt-fade-out 0.25s ease both; }
+  ::view-transition-new(root), html[data-transition]::view-transition-new(root) { animation: vt-fade 0.25s ease both; }
   main.is-entering :is(.hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-section) { animation-name: vt-fade; animation-duration: 0.4s; }
   /* The colours still move, just much more slowly and gently. */
   .wash i:nth-child(1) { animation-duration: 90s; } .wash i:nth-child(2) { animation-duration: 110s; } .wash i:nth-child(3) { animation-duration: 130s; }

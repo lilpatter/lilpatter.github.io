@@ -79,10 +79,12 @@ function paletteFor(src) {
   return palettes.get(src);
 }
 
+// The image a wash is drawn from, read from its --art custom property.
+const artOf = (wash) => wash.style.getPropertyValue("--art").match(/url\(\s*["']?([^"')]+)["']?\s*\)/)?.[1] || null;
+
 function applyWash() {
   const wash = document.querySelector("main .wash");
-  const art = wash && getComputedStyle(wash).getPropertyValue("--art");
-  const src = art?.match(/url\(\s*["']?([^"')]+)["']?\s*\)/)?.[1];
+  const src = wash && artOf(wash);
   if (!src) return;
   paletteFor(src).then((colors) => {
     if (!colors || !wash.isConnected) return;
@@ -345,17 +347,26 @@ async function navigate(url, { pop = false, sourceIcon = null } = {}) {
   }
   if (id !== navId) return; // A newer navigation started meanwhile.
 
+  // The content cross-fades over the skeleton in place; nothing replays, so it reads as one motion.
   await transition(() => {
     document.title = doc.title;
     document.querySelector('meta[name="description"]')?.setAttribute("content", doc.querySelector('meta[name="description"]')?.content || "");
     document.querySelector("#bar .bar-inner").innerHTML = doc.querySelector("#bar .bar-inner").innerHTML;
-    main.innerHTML = doc.querySelector("main").innerHTML;
+    const next = document.importNode(doc.querySelector("main"), true); // a copy: the cached page stays whole
+    const wash = main.querySelector(".wash");
+    const nextWash = next.querySelector(".wash");
+    // Keep the skeleton's background when it shows the same image, so its colours don't restart.
+    if (wash && nextWash && artOf(wash) === artOf(nextWash)) {
+      nextWash.remove();
+      main.replaceChildren(wash, ...next.childNodes);
+    } else {
+      main.innerHTML = next.innerHTML;
+    }
     hydrate();
     const target = url.hash && document.querySelector(url.hash);
     if (target) target.scrollIntoView();
     else scrollTo(0, pop ? history.state?.scroll || 0 : 0);
   }, "to-content");
-  playEntrance();
   document.querySelector("main h1")?.focus({ preventScroll: true });
 }
 
@@ -374,7 +385,11 @@ function wireRouter() {
 
   const prefetch = (e) => {
     const url = internalUrl(e.target.closest?.("a[href]"));
-    if (url && url.pathname !== location.pathname) fetchPage(url.pathname);
+    if (!url || url.pathname === location.pathname) return;
+    fetchPage(url.pathname);
+    // Read the next page's colours now too, so its background is ready as soon as the skeleton shows.
+    const app = appById[appIdFor(url.pathname)];
+    paletteFor(app ? app.icon : "/assets/avatar.jpg");
   };
   document.addEventListener("pointerover", prefetch, { passive: true });
   document.addEventListener("touchstart", prefetch, { passive: true });
