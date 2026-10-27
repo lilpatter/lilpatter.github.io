@@ -305,9 +305,19 @@ a.row:active { background: var(--cell-pressed); }
   .app-tile:hover .app-icon { transform: translateY(-4px) scale(1.04); box-shadow: 0 0 0 0.5px var(--icon-border), 0 16px 34px rgba(0, 0, 0, 0.22); }
 }
 .app-tile:active .app-icon { transform: scale(0.92); transition-duration: 0.18s; }
+/* "More Coming": an empty icon-shaped slot with three dots */
+.more-slot {
+  flex: none; display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 112px; height: 112px; border-radius: 22.37%;
+  border: 1.5px dashed var(--label-3); background: var(--fill);
+}
+.more-slot i { width: 9px; height: 9px; border-radius: 50%; background: var(--label-3); }
+.tile-more .tile-name { color: var(--label-2); }
 @media (max-width: 600px) {
   .app-grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 22px 8px; }
-  .app-tile .app-icon { width: 76px; height: 76px; }
+  .app-tile .app-icon, .more-slot { width: 76px; height: 76px; }
+  .more-slot { gap: 6px; }
+  .more-slot i { width: 7px; height: 7px; }
   .tile-name { font-size: 13px; }
 }
 .app-row { --inset: 92px; padding-top: 12px; padding-bottom: 12px; }

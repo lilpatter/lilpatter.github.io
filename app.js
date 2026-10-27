@@ -138,7 +138,7 @@ function wireFilter() {
     thumb.style.transform = `translateX(${buttons.indexOf(btn) * 100}%)`;
     const f = btn.dataset.family;
     const update = () =>
-      document.querySelectorAll("#app-list > li").forEach((li) => {
+      document.querySelectorAll("#app-list > li[data-families]").forEach((li) => {
         li.hidden = f !== "All" && !li.dataset.families.split(" ").includes(f);
       });
     transition(update);
@@ -283,7 +283,7 @@ function skeleton(path) {
       </section>
       <section class="section wrap skeleton">
         <div class="section-head"><span class="sk sk-title sm"></span></div>
-        <ul class="app-grid">${`<li><div class="app-tile"><span class="sk sk-app"></span><span class="sk sk-line w50 c"></span></div></li>`.repeat(Math.max(APPS.length, 3))}</ul>
+        <ul class="app-grid">${`<li><div class="app-tile"><span class="sk sk-app"></span><span class="sk sk-line w50 c"></span></div></li>`.repeat(APPS.length + 1)}</ul>
       </section>`,
   };
 }

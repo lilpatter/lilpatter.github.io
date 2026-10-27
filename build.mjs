@@ -167,6 +167,14 @@ function appCard(p, heading = "h3") {
         </li>`;
 }
 
+// An empty slot after the apps, shaped like an icon, saying there are more on the way. Not a link.
+const MORE_COMING = `<li class="tile-more">
+          <span class="app-tile">
+            <span class="more-slot" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="tile-name">More Coming</span>
+          </span>
+        </li>`;
+
 // The platform filter only earns its place once there are enough apps to sift through.
 const FILTER_FROM = 7;
 
@@ -196,6 +204,7 @@ function homePage() {
       </div>
       <ul class="app-grid" id="app-list">
         ${projects.map((p) => appCard(p)).join("\n        ")}
+        ${MORE_COMING}
       </ul>
     </section>`;
   return layout({
