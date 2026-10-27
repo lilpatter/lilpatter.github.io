@@ -5,6 +5,15 @@ PG's apps site, served by GitHub Pages from `main`. The design follows Apple's H
 Every app has its own page at `/<id>/` (for example [/catalyst/](https://lilpatter.github.io/catalyst/)).
 The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`, `404.html` or the app folders by hand.
 
+## How it works
+
+- `build.mjs` writes plain HTML for every page, so the site works without JavaScript.
+  It also reads each app's latest GitHub release (version, date, installer size); the **Build pages**
+  workflow reruns it daily and whenever the site's source changes.
+- `app.js` adds the extras: in-place navigation with a skeleton of the next page and the app icon
+  flying into place (View Transitions), prefetching on hover, the tilting icon on app pages, and
+  search with Ctrl/⌘ K or `/`. With Reduce Motion turned on, movement becomes simple fades.
+
 ## Adding an app
 
 1. Put a square icon (256×256 PNG, full-bleed, no rounded corners needed) in `assets/icons/`.

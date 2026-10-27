@@ -12,6 +12,29 @@ const version = async (file) => createHash("sha256").update(await readFile(file)
 const CSS = `/styles.css?v=${await version("styles.css")}`;
 const JS = `/app.js?v=${await version("app.js")}`;
 
+// Latest GitHub release for apps whose download link points at GitHub Releases.
+// Set GITHUB_TOKEN to avoid the unauthenticated rate limit; without network the pages build without it.
+async function latestRelease(p) {
+  const dl = (p.links || []).find((l) => l.kind === "download");
+  const repo = dl?.url.match(/github\.com\/([^/]+\/[^/]+)\/releases/)?.[1];
+  if (!repo) return null;
+  try {
+    const headers = { Accept: "application/vnd.github+json" };
+    if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, { headers });
+    if (!res.ok) return null;
+    const r = await res.json();
+    const installer = r.assets.find((a) => /setup\.exe$/i.test(a.name)) || r.assets[0];
+    const [, version = r.tag_name, build] = r.tag_name.match(/^v?([\d.]+)(?:-build\.(\d+))?/) || [];
+    return { version, build, date: r.published_at, size: installer?.size };
+  } catch {
+    return null;
+  }
+}
+const releases = Object.fromEntries(await Promise.all(projects.map(async (p) => [p.id, await latestRelease(p)])));
+const formatSize = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`);
+const formatDate = (iso) => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+
 const PLATFORM_FAMILY = {
   iOS: "Apple", iPadOS: "Apple", macOS: "Apple", tvOS: "Apple", watchOS: "Apple", visionOS: "Apple",
   Windows: "Windows", Linux: "Linux", Android: "Android", Web: "Web",
@@ -32,6 +55,7 @@ const GITHUB_MARK =
   '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
 const CHEVRON = '<svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>';
 const BACK = '<svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8"/></svg>';
+const SEARCH = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 0 1 4.4 8.8l3.6 3.7a.9.9 0 0 1-1.3 1.3l-3.7-3.6A5.5 5.5 0 1 1 8.5 3Zm0 1.8a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Z"/></svg>';
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const families = (p) => [...new Set(p.platforms.map((x) => PLATFORM_FAMILY[x] || x))];
@@ -40,6 +64,13 @@ const asset = (path) => "/" + path.replace(/^\//, "");
 const icon = (p, size, alt = "") => `<img class="app-icon" src="${esc(asset(p.icon))}" alt="${esc(alt)}" width="${size}" height="${size}">`;
 const fact = (label, value, note = "") =>
   `<div class="fact"><div class="fact-label">${esc(label)}</div><div class="fact-value">${esc(value)}</div>${note ? `<div class="fact-note">${esc(note)}</div>` : ""}</div>`;
+
+const appData = JSON.stringify(
+  projects.map((p) => ({
+    id: p.id, name: p.name, tagline: p.tagline, icon: asset(p.icon), platforms: p.platforms,
+    links: (p.links || []).map(({ label, url, kind }) => ({ label, url, kind })),
+  }))
+).replace(/</g, "\\u003c");
 
 function layout({ title, description, path, image = "/assets/avatar.jpg", wash = image, bar, body }) {
   return `<!doctype html>
@@ -71,6 +102,15 @@ function layout({ title, description, path, image = "/assets/avatar.jpg", wash =
     <div class="wash" style="--art:url('${esc(wash)}')" aria-hidden="true"></div>
 ${body}
   </main>
+  <dialog class="palette" id="palette" aria-label="Search">
+    <div class="palette-field">
+      ${SEARCH}
+      <input id="palette-input" type="search" placeholder="Search apps and actions" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="palette-results">
+      <kbd>esc</kbd>
+    </div>
+    <ul class="palette-results" id="palette-results" role="listbox"></ul>
+  </dialog>
+  <script type="application/json" id="apps-data">${appData}</script>
   <footer class="footer">
     <div class="wrap footer-inner">
       <span>Copyright © ${new Date().getFullYear()} PG. All rights reserved.</span>
@@ -91,6 +131,7 @@ const homeBar = `<a class="pill glass reveal" href="/" aria-label="PG, home">
       <nav class="bar-links glass reveal" aria-label="Sections">
         <a href="/#apps">Apps</a>
         <a href="https://github.com/lilpatter">GitHub</a>
+        <button class="bar-search" type="button" data-palette aria-label="Search">${SEARCH}</button>
       </nav>`;
 
 // App pages: the back button always shows; the app's name and the links come in on scroll.
@@ -101,6 +142,7 @@ const appBar = (p) => `<a class="circle glass" href="/" aria-label="Back to Apps
       <nav class="bar-links glass reveal" aria-label="Sections">
         <a href="/">Apps</a>
         <a href="https://github.com/lilpatter">GitHub</a>
+        <button class="bar-search" type="button" data-palette aria-label="Search">${SEARCH}</button>
       </nav>`;
 
 function appRow(p, { compact = false } = {}) {
@@ -132,11 +174,11 @@ function homePage() {
         <img class="avatar" src="/assets/avatar.jpg" alt="" width="112" height="112">
         <div>
           <p class="kicker">Developer</p>
-          <h1 class="large-title" id="page-title">PG</h1>
+          <h1 class="large-title" id="page-title" tabindex="-1">PG</h1>
           <p class="header-sub">Native apps for Apple platforms and Windows.</p>
           <div class="header-actions">
-            <a class="btn btn-filled" href="#apps">See Apps</a>
             <a class="btn btn-tinted glass" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
+            <button class="btn btn-tinted glass" type="button" data-palette>${SEARCH}Search<kbd class="shortcut" data-shortcut>Ctrl K</kbd></button>
           </div>
         </div>
       </div>
@@ -172,6 +214,7 @@ function appPage(p) {
   const fams = families(p);
   const [stackMain, ...stackRest] = (p.stack || "").split(" · ");
   const others = projects.filter((o) => o.id !== p.id);
+  const release = releases[p.id];
 
   const linkRows = links
     .map(
@@ -194,9 +237,14 @@ function appPage(p) {
 
   const body = `    <article class="wrap app-page" aria-labelledby="app-title">
       <div class="app-hero">
-        ${icon(p, 128, `${p.name} app icon`)}
+        <div class="tilt" data-tilt>
+          <div class="tilt-inner">
+            ${icon(p, 128, `${p.name} app icon`)}
+            <span class="glare" aria-hidden="true"></span>
+          </div>
+        </div>
         <div>
-          <h1 class="app-name" id="app-title">${esc(p.name)}</h1>
+          <h1 class="app-name" id="app-title" tabindex="-1">${esc(p.name)}</h1>
           <p class="app-subtitle">${esc(p.tagline)}</p>
           <div class="header-actions">
             ${primary ? `<a class="btn btn-filled" href="${esc(primary.url)}">${esc(primary.label)}</a>` : ""}
@@ -206,8 +254,10 @@ function appPage(p) {
       </div>
       <div class="facts glass">
         ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : "")}
-        ${fact("Status", STATUS_LABEL[p.status] || p.status)}
-        ${p.stack ? fact("Built With", stackMain, stackRest.join(" · ")) : ""}
+        ${release
+          ? fact("Version", release.version, release.build ? `Build ${release.build} · ${formatDate(release.date)}` : formatDate(release.date)) +
+            (release.size ? fact("Size", formatSize(release.size), "Installer") : "")
+          : fact("Status", STATUS_LABEL[p.status] || p.status) + (p.stack ? fact("Built With", stackMain, stackRest.join(" · ")) : "")}
         ${fact("Source", isOpenSource(p) ? "Open" : "Closed", isOpenSource(p) ? "On GitHub" : "")}
       </div>
       <p class="app-desc">${esc(p.description)}</p>
@@ -278,4 +328,6 @@ for (const p of projects) {
   await mkdir(p.id, { recursive: true });
   await writeFile(`${p.id}/index.html`, appPage(p));
 }
+const withRelease = Object.entries(releases).filter(([, r]) => r).map(([id, r]) => `${id} ${r.version}`);
+console.log(`Release info: ${withRelease.join(", ") || "none (offline or rate limited)"}`);
 console.log(`Built home, 404 and ${projects.length} app pages: ${projects.map((p) => "/" + p.id + "/").join(" ")}`);

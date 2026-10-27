@@ -10,6 +10,9 @@ on:
       - build.mjs
       - styles.css
       - app.js
+  # Refresh version, date and size from the apps' latest GitHub releases.
+  schedule:
+    - cron: "30 6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,6 +27,8 @@ jobs:
         with:
           node-version: 22
       - run: node build.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
