@@ -1,0 +1,68 @@
+{
+  "projects": [
+    {
+      "id": "catalyst",
+      "name": "Catalyst",
+      "icon": "assets/icons/catalyst.png",
+      "accent": "#a78bfa",
+      "status": "in-development",
+      "featured": true,
+      "tagline": "One home for movies and series.",
+      "description": "A native app for iPhone, iPad, Mac and Apple TV. Discover what to watch, keep your place across devices, and play from the sources you already use.",
+      "platforms": ["iOS", "iPadOS", "macOS", "tvOS"],
+      "stack": "Swift",
+      "highlights": [
+        "Home, arranged your way",
+        "Built-in player, or the one you prefer",
+        "Your place synced with Trakt and CataSync",
+        "Media servers and Stremio add-ons"
+      ],
+      "links": [
+        { "label": "Visit website", "url": "https://catalystapp.pages.dev/", "kind": "website" }
+      ]
+    },
+    {
+      "id": "hangar",
+      "name": "Hangar",
+      "icon": "assets/icons/hangar.png",
+      "accent": "#ff9f43",
+      "status": "available",
+      "tagline": "Switch Steam accounts silently.",
+      "description": "Changes the signed-in Steam account without the account picker or a password prompt, and shows every game on every account.",
+      "platforms": ["Windows"],
+      "stack": "Tauri 2 · Rust",
+      "highlights": [
+        "Silent switching, straight to the tray",
+        "Play as… launches a game on the account that owns it",
+        "Your whole library, installed or not",
+        "Never reads or stores passwords"
+      ],
+      "links": [
+        { "label": "Download", "url": "https://github.com/lilpatter/hangar/releases/latest", "kind": "download" },
+        { "label": "Source", "url": "https://github.com/lilpatter/hangar", "kind": "source" }
+      ]
+    },
+    {
+      "id": "verdant",
+      "name": "Verdant",
+      "icon": "assets/icons/verdant.png",
+      "accent": "#76b900",
+      "status": "available",
+      "tagline": "Your GeForce driver, always current.",
+      "description": "Finds the latest Game Ready and Studio drivers for your NVIDIA card, checks they're genuine and installs them with one prompt.",
+      "platforms": ["Windows"],
+      "stack": "Tauri 2 · Rust",
+      "highlights": [
+        "Matches your exact card with NVIDIA's catalog",
+        "Only runs installers signed by NVIDIA",
+        "Express or custom install, with roll back",
+        "Live GPU temperature, load and VRAM"
+      ],
+      "note": "Not affiliated with NVIDIA.",
+      "links": [
+        { "label": "Download", "url": "https://github.com/lilpatter/verdant/releases/latest", "kind": "download" },
+        { "label": "Source", "url": "https://github.com/lilpatter/verdant", "kind": "source" }
+      ]
+    }
+  ]
+}
