@@ -144,6 +144,13 @@ main { position: relative; isolation: isolate; }
   pointer-events: none;
 }
 .bar-title .app-icon { width: 32px; height: 32px; }
+/* Controls that only appear once the page's own title has scrolled out of view.
+   visibility keeps them out of the tab order while hidden. */
+.bar .reveal {
+  opacity: 0; visibility: hidden; transform: translateY(-8px) scale(0.94);
+  transition: opacity 0.25s, transform 0.45s var(--spring), visibility 0s linear 0.25s;
+}
+.bar.is-scrolled .reveal { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
 .bar.is-scrolled .bar-title { opacity: 1; transform: translate(-50%, 0); }
 @media (max-width: 520px) {
   .bar-links a:not(:last-child) { display: none; }
@@ -275,10 +282,6 @@ a.row:active { background: var(--cell-pressed); }
   .app-desc { font-size: 17px; }
 }
 
-/* GitHub card */
-.gh-card { display: block; overflow: hidden; border-radius: var(--r-card); box-shadow: var(--card-shadow); transition: transform 0.5s var(--spring); }
-.gh-card:hover { transform: scale(1.006); }
-.gh-card img { width: 100%; }
 
 .empty-state { padding-top: 96px; padding-bottom: 64px; text-align: center; }
 .empty-state .header-actions { justify-content: center; }
@@ -288,7 +291,7 @@ a.row:active { background: var(--cell-pressed); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .btn, .pill, .circle, .segmented-thumb, .bar-title, .gh-card { transition: none; }
+  .btn, .pill, .circle, .segmented-thumb, .bar-title, .bar .reveal { transition: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .glass { background: var(--glass-strong); -webkit-backdrop-filter: none; backdrop-filter: none; }

@@ -82,21 +82,23 @@ ${body}
 `;
 }
 
-// Floating controls. Home: a "PG" capsule and the section links.
-const homeBar = `<a class="pill glass" href="/" aria-label="PG, home">
+// Floating controls. Elements marked "reveal" stay hidden at the top of the page and
+// appear once the large title scrolls away, so the header isn't repeated.
+// Home: a "PG" capsule and the section links.
+const homeBar = `<a class="pill glass reveal" href="/" aria-label="PG, home">
         <img src="/assets/avatar.jpg" alt="" width="32" height="32">PG
       </a>
-      <nav class="bar-links glass" aria-label="Sections">
+      <nav class="bar-links glass reveal" aria-label="Sections">
         <a href="/#apps">Apps</a>
         <a href="https://github.com/lilpatter">GitHub</a>
       </nav>`;
 
-// App pages: a round back button, and the app's name settles into the middle once you scroll.
+// App pages: the back button always shows; the app's name and the links come in on scroll.
 const appBar = (p) => `<a class="circle glass" href="/" aria-label="Back to Apps">${BACK}</a>
       <span class="bar-title glass" aria-hidden="true">
         <img class="app-icon" src="${esc(asset(p.icon))}" alt="" width="32" height="32">${esc(p.name)}
       </span>
-      <nav class="bar-links glass" aria-label="Sections">
+      <nav class="bar-links glass reveal" aria-label="Sections">
         <a href="/">Apps</a>
         <a href="https://github.com/lilpatter">GitHub</a>
       </nav>`;
@@ -154,16 +156,6 @@ function homePage() {
       <ul class="list" id="app-list">
         ${projects.map((p) => appRow(p)).join("\n        ")}
       </ul>
-    </section>
-
-    <section class="section wrap" id="github" aria-labelledby="github-title">
-      <div class="section-head">
-        <h2 class="title-2" id="github-title">On GitHub</h2>
-        <a class="btn btn-plain" href="https://github.com/lilpatter">View Profile</a>
-      </div>
-      <a class="gh-card" href="https://github.com/lilpatter">
-        <img src="https://raw.githubusercontent.com/lilpatter/lilpatter/main/card.svg" alt="PG's GitHub profile card with a year of contributions" width="1020" height="488" loading="lazy">
-      </a>
     </section>`;
   return layout({
     title: "PG — Apps",
@@ -262,7 +254,7 @@ function notFound() {
     title: "Page Not Found — PG",
     description: "This page doesn't exist.",
     path: "/404.html",
-    bar: homeBar,
+    bar: homeBar.replaceAll(" reveal", ""),
     body: `    <section class="wrap empty-state">
       <h1 class="large-title">Page Not Found</h1>
       <p class="header-sub">The page you're looking for doesn't exist or has moved.</p>
