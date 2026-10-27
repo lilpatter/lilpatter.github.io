@@ -188,8 +188,8 @@ function homePage() {
       <h1 class="hero-title" id="page-title" tabindex="-1">PG</h1>
       <p class="hero-sub">Native apps for Apple platforms and Windows.</p>
       <div class="hero-actions">
-        <a class="btn btn-tinted glass" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
-        <button class="btn btn-tinted glass" type="button" data-palette>${SEARCH}Search<kbd class="shortcut" data-shortcut>Ctrl K</kbd></button>
+        <a class="btn btn-soft" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
+        <button class="btn btn-soft" type="button" data-palette>${SEARCH}Search<kbd class="shortcut" data-shortcut>Ctrl K</kbd></button>
       </div>
     </section>
 
@@ -211,6 +211,38 @@ function homePage() {
   });
 }
 
+function gallery(p) {
+  const shots = p.screenshots || [];
+  if (!shots.length) return "";
+  const devices = [...new Set(shots.map((x) => x.device))];
+  const slug = (d) => d.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const tabs =
+    devices.length > 1
+      ? `<div class="segmented device-tabs" role="tablist" aria-label="Device">
+          <span class="segmented-thumb" style="width:calc((100% - 8px) / ${devices.length})"></span>
+          ${devices.map((d, i) => `<button type="button" role="tab" id="tab-${slug(d)}" aria-controls="shots-${slug(d)}" aria-selected="${i === 0}" aria-checked="${i === 0}">${esc(d)}</button>`).join("\n          ")}
+        </div>`
+      : "";
+  const rows = devices
+    .map(
+      (d, i) => `<div class="shot-row" id="shots-${slug(d)}" data-device="${slug(d)}" ${devices.length > 1 ? `role="tabpanel" aria-labelledby="tab-${slug(d)}"` : ""} ${i ? "hidden" : ""} tabindex="0">
+          ${shots
+            .filter((x) => x.device === d)
+            .map((x) => `<figure class="shot"><img src="${esc(asset(x.src))}" alt="${esc(x.alt || "")}" loading="lazy" decoding="async"></figure>`)
+            .join("\n          ")}
+        </div>`
+    )
+    .join("\n        ");
+  return `      <section class="app-section" aria-labelledby="shots-title">
+        <div class="section-head">
+          <h2 class="title-2" id="shots-title">Screenshots</h2>
+          ${tabs}
+        </div>
+        ${rows}
+      </section>
+`;
+}
+
 function appPage(p) {
   const links = p.links || [];
   const primary = links[0];
@@ -229,18 +261,33 @@ function appPage(p) {
           </a>`
     )
     .join("\n          ");
-  const highlightRows = (p.highlights || [])
+  const features = (p.highlights || [])
     .map(
-      (h) => `<div class="row" style="--inset:52px">
-            <svg class="check" viewBox="0 0 20 20" aria-hidden="true" style="fill:${esc(p.accent || "var(--blue)")}">${GLYPH.check}</svg>
-            <span class="row-body row-title">${esc(h)}</span>
-          </div>`
+      (h) => `<li class="feature">
+            <svg class="check" viewBox="0 0 20 20" aria-hidden="true">${GLYPH.check}</svg>
+            <span>${esc(h)}</span>
+          </li>`
     )
+    .join("\n          ");
+
+  // Information, like the bottom of an App Store page.
+  const info = [
+    ["Developer", "PG"],
+    [p.platforms.length > 1 ? "Compatibility" : "Platform", p.platforms.join(", ")],
+    release && ["Version", release.build ? `${release.version} (build ${release.build})` : release.version],
+    release && ["Updated", formatDate(release.date)],
+    release?.size && ["Size", formatSize(release.size)],
+    p.stack && ["Built With", p.stack],
+    ["Source", isOpenSource(p) ? "Open source" : "Closed source"],
+    ["Status", STATUS_LABEL[p.status] || p.status],
+  ]
+    .filter(Boolean)
+    .map(([k, v]) => `<div class="row info-row"><span class="row-body">${esc(k)}</span><span class="row-detail">${esc(v)}</span></div>`)
     .join("\n          ");
 
   const accent = p.accent ? `--accent:${esc(p.accent)}; --on-accent:${labelOn(p.accent)}` : "";
   const body = `    <article class="wrap app-page" aria-labelledby="app-title" style="${accent}">
-      <div class="app-hero">
+      <header class="app-hero">
         <div class="tilt" data-tilt>
           <div class="tilt-inner">
             ${icon(p, 128, `${p.name} app icon`)}
@@ -252,34 +299,47 @@ function appPage(p) {
           <p class="app-subtitle">${esc(p.tagline)}</p>
           <div class="header-actions">
             ${primary ? `<a class="btn btn-filled" href="${esc(primary.url)}">${esc(primary.label)}</a>` : ""}
-            <span class="status glass" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>
+            <span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>
           </div>
         </div>
-      </div>
-      <div class="facts glass">
+      </header>
+
+      <div class="facts">
         ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : "")}
         ${release
-          ? fact("Version", release.version, release.build ? `Build ${release.build} · ${formatDate(release.date)}` : formatDate(release.date)) +
+          ? fact("Version", release.version, release.build ? `Build ${release.build}` : "") +
             (release.size ? fact("Size", formatSize(release.size), "Installer") : "")
           : fact("Status", STATUS_LABEL[p.status] || p.status) + (p.stack ? fact("Built With", stackMain, stackRest.join(" · ")) : "")}
         ${fact("Source", isOpenSource(p) ? "Open" : "Closed", isOpenSource(p) ? "On GitHub" : "")}
       </div>
-      <p class="app-desc">${esc(p.description)}</p>
-      <div class="app-columns">
-        ${highlightRows ? `<div>
-          <h2 class="group-title">Highlights</h2>
+
+${gallery(p)}
+      <section class="app-section" aria-labelledby="about-title">
+        <h2 class="title-2" id="about-title">About</h2>
+        <p class="app-desc">${esc(p.description)}</p>
+      </section>
+
+${features ? `      <section class="app-section" aria-labelledby="features-title">
+        <h2 class="title-2" id="features-title">Features</h2>
+        <ul class="feature-grid">
+          ${features}
+        </ul>
+      </section>
+` : ""}
+      <section class="app-section" aria-labelledby="info-title">
+        <h2 class="title-2" id="info-title">Information</h2>
+        <div class="info-columns">
           <div class="list">
-          ${highlightRows}
+          ${info}
           </div>
-        </div>` : ""}
-        ${linkRows ? `<div>
-          <h2 class="group-title">Links</h2>
-          <div class="list">
-          ${linkRows}
-          </div>
-          ${p.note ? `<p class="group-note">${esc(p.note)}</p>` : ""}
-        </div>` : ""}
-      </div>
+          ${linkRows ? `<div>
+            <div class="list">
+            ${linkRows}
+            </div>
+            ${p.note ? `<p class="group-note">${esc(p.note)}</p>` : ""}
+          </div>` : ""}
+        </div>
+      </section>
     </article>
 ${others.length ? `
     <section class="section wrap" aria-labelledby="more-title">

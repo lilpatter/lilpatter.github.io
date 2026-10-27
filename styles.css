@@ -98,49 +98,62 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 main { position: relative; isolation: isolate; }
 
 /* Colour wash behind the top of the page, taken from the avatar or the app icon. */
-/* A soft base of the whole image, then three blobs that each show a different part of it
-   (different colours) and wander on their own timing, so the colours keep moving around.
-   The fade at the bottom follows an ease-out curve so it never ends in a visible edge. */
+/* Three soft blobs in colours read from the image (see app.js), drifting on their own timing.
+   They're plain radial gradients moved with transform only, so the browser never re-blurs
+   anything per frame. The fade into the page is an overlay, not a mask, for the same reason.
+   Without JavaScript the blurred image is shown still. */
 .wash {
   position: absolute; z-index: -1; inset: -160px 0 auto; height: 1040px; overflow: hidden; pointer-events: none;
-  --fade: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.92) 22%, rgba(0, 0, 0, 0.72) 38%, rgba(0, 0, 0, 0.46) 52%,
-    rgba(0, 0, 0, 0.24) 65%, rgba(0, 0, 0, 0.1) 77%, rgba(0, 0, 0, 0.03) 88%, transparent 100%);
-  -webkit-mask-image: var(--fade);
-  mask-image: var(--fade);
+  contain: strict;
 }
 .wash::before {
   content: ""; position: absolute; inset: -25%;
   background: var(--art) center / cover no-repeat;
   filter: blur(100px) saturate(1.5);
-  opacity: calc(var(--wash-opacity) * 0.6);
+  opacity: var(--wash-opacity);
+}
+.wash.is-ready::before { display: none; }
+.wash::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--bg) 8%, transparent) 30%,
+    color-mix(in srgb, var(--bg) 30%, transparent) 46%,
+    color-mix(in srgb, var(--bg) 58%, transparent) 60%,
+    color-mix(in srgb, var(--bg) 82%, transparent) 74%,
+    color-mix(in srgb, var(--bg) 95%, transparent) 86%,
+    var(--bg) 96%);
 }
 .wash i {
-  position: absolute; width: max(62%, 460px); aspect-ratio: 1; border-radius: 50%;
-  background: var(--art) no-repeat; background-size: 320%;
-  filter: blur(90px) saturate(1.9);
+  display: none; position: absolute; width: max(66%, 520px); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(closest-side,
+    var(--c) 0%, color-mix(in srgb, var(--c) 72%, transparent) 30%,
+    color-mix(in srgb, var(--c) 34%, transparent) 60%,
+    color-mix(in srgb, var(--c) 10%, transparent) 82%, transparent 100%);
   opacity: var(--wash-opacity);
   will-change: transform;
 }
-.wash i:nth-child(1) { left: -18%; top: -12%; background-position: 15% 35%; animation: orbit-a 19s ease-in-out infinite alternate; }
-.wash i:nth-child(2) { right: -20%; top: -4%; background-position: 85% 30%; animation: orbit-b 23s ease-in-out infinite alternate; }
-.wash i:nth-child(3) { left: 18%; top: 22%; background-position: 50% 85%; animation: orbit-c 29s ease-in-out infinite alternate; }
+.wash.is-ready i { display: block; }
+.wash i:nth-child(1) { --c: var(--c1); left: -16%; top: -14%; animation: orbit-a 19s ease-in-out infinite alternate; }
+.wash i:nth-child(2) { --c: var(--c2); right: -18%; top: -6%; animation: orbit-b 23s ease-in-out infinite alternate; }
+.wash i:nth-child(3) { --c: var(--c3); left: 16%; top: 20%; animation: orbit-c 29s ease-in-out infinite alternate; }
 @keyframes orbit-a {
-  0% { transform: translate(0, 0) scale(1); }
-  35% { transform: translate(24%, 14%) scale(1.15); }
-  70% { transform: translate(46%, -6%) scale(0.92); }
-  100% { transform: translate(14%, 20%) scale(1.08); }
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  35% { transform: translate3d(24%, 14%, 0) scale(1.12); }
+  70% { transform: translate3d(46%, -6%, 0) scale(0.94); }
+  100% { transform: translate3d(14%, 20%, 0) scale(1.06); }
 }
 @keyframes orbit-b {
-  0% { transform: translate(0, 0) scale(1.05); }
-  40% { transform: translate(-30%, 18%) scale(0.9); }
-  75% { transform: translate(-12%, -10%) scale(1.18); }
-  100% { transform: translate(-42%, 6%) scale(1); }
+  0% { transform: translate3d(0, 0, 0) scale(1.04); }
+  40% { transform: translate3d(-30%, 18%, 0) scale(0.92); }
+  75% { transform: translate3d(-12%, -10%, 0) scale(1.14); }
+  100% { transform: translate3d(-42%, 6%, 0) scale(1); }
 }
 @keyframes orbit-c {
-  0% { transform: translate(0, 0) scale(0.95); }
-  30% { transform: translate(-22%, -16%) scale(1.12); }
-  65% { transform: translate(26%, -22%) scale(1); }
-  100% { transform: translate(8%, 6%) scale(1.2); }
+  0% { transform: translate3d(0, 0, 0) scale(0.96); }
+  30% { transform: translate3d(-22%, -16%, 0) scale(1.1); }
+  65% { transform: translate3d(26%, -22%, 0) scale(1); }
+  100% { transform: translate3d(8%, 6%, 0) scale(1.16); }
 }
 
 /* Glass surfaces */
@@ -374,11 +387,11 @@ html[data-transition="to-content"]::view-transition-new(root) { animation: vt-fa
 @keyframes vt-fade { from { opacity: 0; } }
 
 /* Content rises in, one block after another */
-main.is-entering :is(.hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-desc, .app-columns > div) {
+main.is-entering :is(.hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-section) {
   animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   animation-delay: calc(var(--i, 0) * 50ms);
 }
-@keyframes rise { from { opacity: 0; transform: translateY(18px) scale(0.985); filter: blur(6px); } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px) scale(0.985); } }
 main h1:focus { outline: none; }
 
 /* ---------- Skeletons ---------- */
@@ -472,7 +485,7 @@ kbd { font: 600 12px/1 var(--font); letter-spacing: 0; padding: 4px 7px; border-
   ::view-transition-group(app-icon) { animation: none; }
   ::view-transition-old(root), html[data-transition]::view-transition-old(root) { animation: vt-fade 0.18s ease both reverse; }
   ::view-transition-new(root), html[data-transition]::view-transition-new(root) { animation: vt-fade 0.28s ease both; }
-  main.is-entering :is(.hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-desc, .app-columns > div) { animation-name: vt-fade; animation-duration: 0.4s; }
+  main.is-entering :is(.hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-section) { animation-name: vt-fade; animation-duration: 0.4s; }
   /* The colours still move, just much more slowly and gently. */
   .wash i:nth-child(1) { animation-duration: 90s; } .wash i:nth-child(2) { animation-duration: 110s; } .wash i:nth-child(3) { animation-duration: 130s; }
   .app-card, .app-card .app-icon, .card-tint { transition: none; }
@@ -487,4 +500,56 @@ kbd { font: 600 12px/1 var(--font); letter-spacing: 0; padding: 4px 7px; border-
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--blue)) 80%, #fff), var(--accent, var(--blue)));
   color: var(--on-accent, #fff);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 8px 22px color-mix(in srgb, var(--accent, var(--blue)) 40%, transparent);
+}
+
+/* Surfaces over the moving colours stay solid-ish: no backdrop blur to recompute every frame. */
+.facts { background: color-mix(in srgb, var(--cell) 82%, transparent); box-shadow: var(--card-shadow); }
+.status { background: var(--fill); }
+.btn-soft { background: color-mix(in srgb, var(--cell) 72%, transparent); color: var(--label); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); }
+.btn-soft:hover { background: var(--cell); }
+
+/* ---------- App page sections ---------- */
+.app-section { margin-top: 48px; }
+.app-section > .title-2 { margin: 0 4px 14px; }
+.app-section .app-desc { margin: 0 4px; }
+
+/* Screenshots: one swipeable row per device */
+.device-tabs button { min-width: 74px; }
+.shot-row {
+  display: flex; gap: 14px; margin: 0 calc(var(--gutter) * -1); padding: 4px var(--gutter) 22px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter);
+  overscroll-behavior-x: contain; scrollbar-width: thin;
+}
+.shot-row[hidden] { display: none; }
+.shot-row:focus-visible { outline-offset: -3px; border-radius: var(--r-card); }
+.shot {
+  flex: none; margin: 0; height: var(--shot-h, 320px); aspect-ratio: var(--shot-ar, auto);
+  overflow: hidden; border-radius: var(--shot-r, 18px); scroll-snap-align: start;
+  background: var(--cell); box-shadow: 0 0 0 0.5px var(--icon-border), 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+[data-device="iphone"] { --shot-h: 500px; --shot-ar: 900 / 1951; --shot-r: 34px; }
+[data-device="ipad"] { --shot-h: 460px; --shot-ar: 3 / 4; --shot-r: 24px; }
+[data-device="mac"] { --shot-h: 320px; --shot-ar: 1600 / 898; --shot-r: 14px; }
+[data-device="apple-tv"] { --shot-h: 320px; --shot-ar: 16 / 9; --shot-r: 14px; }
+[data-device="windows"] { --shot-h: 340px; --shot-ar: 16 / 10; --shot-r: 12px; }
+@media (max-width: 600px) {
+  [data-device="iphone"] { --shot-h: 420px; }
+  [data-device="ipad"] { --shot-h: 380px; }
+  [data-device="mac"], [data-device="apple-tv"], [data-device="windows"] { --shot-h: 190px; }
+  .device-tabs button { min-width: 0; padding: 0 12px; }
+}
+
+/* Features: a grid of short points */
+.feature-grid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.feature { display: flex; align-items: flex-start; gap: 12px; padding: 18px; border-radius: var(--r-inner); background: var(--cell); box-shadow: var(--card-shadow); font-size: 16px; line-height: 1.35; }
+.feature .check { flex: none; width: 24px; height: 24px; fill: var(--accent, var(--blue)); }
+
+/* Information and links */
+.info-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+.info-row { min-height: 48px; }
+.info-row .row-body { color: var(--label-2); font-size: 16px; }
+.info-row .row-detail { color: var(--label); font-size: 16px; text-align: right; }
+@media (max-width: 760px) {
+  .feature-grid, .info-columns { grid-template-columns: 1fr; }
 }

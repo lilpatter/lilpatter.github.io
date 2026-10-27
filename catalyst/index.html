@@ -14,8 +14,8 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/icons/catalyst.png">
   <link rel="apple-touch-icon" href="/assets/icons/catalyst.png">
-  <link rel="stylesheet" href="/styles.css?v=60bf0f7f4d">
-  <script src="/app.js?v=5c32b6b153" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=e03a8f22fc">
+  <script src="/app.js?v=500e3afab9" defer></script>
 </head>
 <body>
   <header class="bar" id="bar">
@@ -34,7 +34,7 @@
   <main id="top">
     <div class="wash" style="--art:url('/assets/icons/catalyst.png')" aria-hidden="true"><i></i><i></i><i></i></div>
     <article class="wrap app-page" aria-labelledby="app-title" style="--accent:#a78bfa; --on-accent:rgba(0, 0, 0, 0.86)">
-      <div class="app-hero">
+      <header class="app-hero">
         <div class="tilt" data-tilt>
           <div class="tilt-inner">
             <img class="app-icon" src="/assets/icons/catalyst.png" alt="Catalyst app icon" width="128" height="128">
@@ -46,51 +46,100 @@
           <p class="app-subtitle">One home for movies and series.</p>
           <div class="header-actions">
             <a class="btn btn-filled" href="https://catalystapp.pages.dev/">Visit website</a>
-            <span class="status glass" data-status="in-development">In Development</span>
+            <span class="status" data-status="in-development">In Development</span>
           </div>
         </div>
-      </div>
-      <div class="facts glass">
+      </header>
+
+      <div class="facts">
         <div class="fact"><div class="fact-label">Platforms</div><div class="fact-value">Apple</div><div class="fact-note">iOS, iPadOS, macOS, tvOS</div></div>
         <div class="fact"><div class="fact-label">Status</div><div class="fact-value">In Development</div></div><div class="fact"><div class="fact-label">Built With</div><div class="fact-value">Swift</div></div>
         <div class="fact"><div class="fact-label">Source</div><div class="fact-value">Closed</div></div>
       </div>
-      <p class="app-desc">A native app for iPhone, iPad, Mac and Apple TV. Discover what to watch, keep your place across devices, and play from the sources you already use.</p>
-      <div class="app-columns">
-        <div>
-          <h2 class="group-title">Highlights</h2>
-          <div class="list">
-          <div class="row" style="--inset:52px">
-            <svg class="check" viewBox="0 0 20 20" aria-hidden="true" style="fill:#a78bfa"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-            <span class="row-body row-title">Home, arranged your way</span>
-          </div>
-          <div class="row" style="--inset:52px">
-            <svg class="check" viewBox="0 0 20 20" aria-hidden="true" style="fill:#a78bfa"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-            <span class="row-body row-title">Built-in player, or the one you prefer</span>
-          </div>
-          <div class="row" style="--inset:52px">
-            <svg class="check" viewBox="0 0 20 20" aria-hidden="true" style="fill:#a78bfa"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-            <span class="row-body row-title">Your place synced with Trakt and CataSync</span>
-          </div>
-          <div class="row" style="--inset:52px">
-            <svg class="check" viewBox="0 0 20 20" aria-hidden="true" style="fill:#a78bfa"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-            <span class="row-body row-title">Media servers and Stremio add-ons</span>
-          </div>
-          </div>
+
+      <section class="app-section" aria-labelledby="shots-title">
+        <div class="section-head">
+          <h2 class="title-2" id="shots-title">Screenshots</h2>
+          <div class="segmented device-tabs" role="tablist" aria-label="Device">
+          <span class="segmented-thumb" style="width:calc((100% - 8px) / 4)"></span>
+          <button type="button" role="tab" id="tab-iphone" aria-controls="shots-iphone" aria-selected="true" aria-checked="true">iPhone</button>
+          <button type="button" role="tab" id="tab-ipad" aria-controls="shots-ipad" aria-selected="false" aria-checked="false">iPad</button>
+          <button type="button" role="tab" id="tab-mac" aria-controls="shots-mac" aria-selected="false" aria-checked="false">Mac</button>
+          <button type="button" role="tab" id="tab-apple-tv" aria-controls="shots-apple-tv" aria-selected="false" aria-checked="false">Apple TV</button>
         </div>
-        <div>
-          <h2 class="group-title">Links</h2>
+        </div>
+        <div class="shot-row" id="shots-iphone" data-device="iphone" role="tabpanel" aria-labelledby="tab-iphone"  tabindex="0">
+          <figure class="shot"><img src="/assets/screens/catalyst/iphone-home.jpg" alt="Home on iPhone with Slow Horses in the hero, a new-episode badge, Go to Show, and Continue Watching above the tab bar." loading="lazy" decoding="async"></figure>
+          <figure class="shot"><img src="/assets/screens/catalyst/iphone-detail.jpg" alt="The page for Rogue One: A Star Wars Story on iPhone, with Start Watching, genres, synopsis, runtime, rating and trailers." loading="lazy" decoding="async"></figure>
+          <figure class="shot"><img src="/assets/screens/catalyst/iphone-library.jpg" alt="The Library on iPhone: watch plans for the Marvel Cinematic Universe and Star Wars, Coming Soon and History." loading="lazy" decoding="async"></figure>
+          <figure class="shot"><img src="/assets/screens/catalyst/iphone-settings.jpg" alt="Settings on iPhone: Customize Home, Appearance, Automatic Previews, Discovery and Library, Video Player, Playback Source and Providers." loading="lazy" decoding="async"></figure>
+        </div>
+        <div class="shot-row" id="shots-ipad" data-device="ipad" role="tabpanel" aria-labelledby="tab-ipad" hidden tabindex="0">
+          <figure class="shot"><img src="/assets/screens/catalyst/ipad-home.jpg" alt="Catalyst on iPad showing Nosferatu (1922), with the profile in the native sidebar and shelves of classic films." loading="lazy" decoding="async"></figure>
+          <figure class="shot"><img src="/assets/screens/catalyst/ipad-caligari.jpg" alt="Catalyst on iPad showing The Cabinet of Dr. Caligari (1920), with synopsis, playback controls, details and recommendations." loading="lazy" decoding="async"></figure>
+        </div>
+        <div class="shot-row" id="shots-mac" data-device="mac" role="tabpanel" aria-labelledby="tab-mac" hidden tabindex="0">
+          <figure class="shot"><img src="/assets/screens/catalyst/mac-home.jpg" alt="Home on Mac with Slow Horses in the hero, the sidebar with Downloads, Watch plans, Movies, TV Shows and custom lists." loading="lazy" decoding="async"></figure>
+          <figure class="shot"><img src="/assets/screens/catalyst/mac-detail.jpg" alt="The page for Project Hail Mary on Mac, with Rewatch, download and watched buttons, the cast, and a rating prompt." loading="lazy" decoding="async"></figure>
+          <figure class="shot"><img src="/assets/screens/catalyst/mac-year.jpg" alt="Your year in film on Mac: hours watched, films, viewings, repeat viewings and TV episodes, with a month-by-month chart." loading="lazy" decoding="async"></figure>
+        </div>
+        <div class="shot-row" id="shots-apple-tv" data-device="apple-tv" role="tabpanel" aria-labelledby="tab-apple-tv" hidden tabindex="0">
+          <figure class="shot"><img src="/assets/screens/catalyst/tv-home.jpg" alt="Home on Apple TV, scrolled to Continue Watching with resume progress, above the Streaming Services row." loading="lazy" decoding="async"></figure>
+          <figure class="shot"><img src="/assets/screens/catalyst/tv-detail.jpg" alt="The page for Sinners (2025) on Apple TV, with genres, synopsis, runtime, rating, cast and a Start Watching button." loading="lazy" decoding="async"></figure>
+          <figure class="shot"><img src="/assets/screens/catalyst/tv-library.jpg" alt="The Library on Apple TV: Marvel Cinematic Universe and Star Wars watch plans, Coming Soon and History." loading="lazy" decoding="async"></figure>
+        </div>
+      </section>
+
+      <section class="app-section" aria-labelledby="about-title">
+        <h2 class="title-2" id="about-title">About</h2>
+        <p class="app-desc">A native app for iPhone, iPad, Mac and Apple TV. Discover what to watch, keep your place across devices, and play from the sources you already use.</p>
+      </section>
+
+      <section class="app-section" aria-labelledby="features-title">
+        <h2 class="title-2" id="features-title">Features</h2>
+        <ul class="feature-grid">
+          <li class="feature">
+            <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+            <span>Home, arranged your way</span>
+          </li>
+          <li class="feature">
+            <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+            <span>Built-in player, or the one you prefer</span>
+          </li>
+          <li class="feature">
+            <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+            <span>Your place synced with Trakt and CataSync</span>
+          </li>
+          <li class="feature">
+            <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+            <span>Media servers and Stremio add-ons</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="app-section" aria-labelledby="info-title">
+        <h2 class="title-2" id="info-title">Information</h2>
+        <div class="info-columns">
           <div class="list">
-          <a class="row has-glyph" href="https://catalystapp.pages.dev/">
+          <div class="row info-row"><span class="row-body">Developer</span><span class="row-detail">PG</span></div>
+          <div class="row info-row"><span class="row-body">Compatibility</span><span class="row-detail">iOS, iPadOS, macOS, tvOS</span></div>
+          <div class="row info-row"><span class="row-body">Built With</span><span class="row-detail">Swift</span></div>
+          <div class="row info-row"><span class="row-body">Source</span><span class="row-detail">Closed source</span></div>
+          <div class="row info-row"><span class="row-body">Status</span><span class="row-detail">In Development</span></div>
+          </div>
+          <div>
+            <div class="list">
+            <a class="row has-glyph" href="https://catalystapp.pages.dev/">
             <span class="glyph" style="--tint:var(--blue)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15Zm4.9 6.7h-2.3a12 12 0 0 0-1-4.4 5.9 5.9 0 0 1 3.3 4.4ZM10 4.2c.6.8 1.3 2.5 1.5 5H8.5c.2-2.5.9-4.2 1.5-5ZM8.4 4.8a12 12 0 0 0-1 4.4H5.1a5.9 5.9 0 0 1 3.3-4.4ZM5.1 10.8h2.3c.1 1.7.5 3.2 1 4.4a5.9 5.9 0 0 1-3.3-4.4Zm4.9 5c-.6-.8-1.3-2.5-1.5-5h3c-.2 2.5-.9 4.2-1.5 5Zm1.6-.6c.5-1.2.9-2.7 1-4.4h2.3a5.9 5.9 0 0 1-3.3 4.4Z"/></svg></span>
             <span class="row-body row-title">Website</span>
             <span class="row-detail"></span>
             <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
           </a>
+            </div>
+            
           </div>
-          
         </div>
-      </div>
+      </section>
     </article>
 
     <section class="section wrap" aria-labelledby="more-title">

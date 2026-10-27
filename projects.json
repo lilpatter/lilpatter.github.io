@@ -9,7 +9,12 @@
       "featured": true,
       "tagline": "One home for movies and series.",
       "description": "A native app for iPhone, iPad, Mac and Apple TV. Discover what to watch, keep your place across devices, and play from the sources you already use.",
-      "platforms": ["iOS", "iPadOS", "macOS", "tvOS"],
+      "platforms": [
+        "iOS",
+        "iPadOS",
+        "macOS",
+        "tvOS"
+      ],
       "stack": "Swift",
       "highlights": [
         "Home, arranged your way",
@@ -18,7 +23,73 @@
         "Media servers and Stremio add-ons"
       ],
       "links": [
-        { "label": "Visit website", "url": "https://catalystapp.pages.dev/", "kind": "website" }
+        {
+          "label": "Visit website",
+          "url": "https://catalystapp.pages.dev/",
+          "kind": "website"
+        }
+      ],
+      "screenshots": [
+        {
+          "src": "assets/screens/catalyst/iphone-home.jpg",
+          "device": "iPhone",
+          "alt": "Home on iPhone with Slow Horses in the hero, a new-episode badge, Go to Show, and Continue Watching above the tab bar."
+        },
+        {
+          "src": "assets/screens/catalyst/iphone-detail.jpg",
+          "device": "iPhone",
+          "alt": "The page for Rogue One: A Star Wars Story on iPhone, with Start Watching, genres, synopsis, runtime, rating and trailers."
+        },
+        {
+          "src": "assets/screens/catalyst/iphone-library.jpg",
+          "device": "iPhone",
+          "alt": "The Library on iPhone: watch plans for the Marvel Cinematic Universe and Star Wars, Coming Soon and History."
+        },
+        {
+          "src": "assets/screens/catalyst/iphone-settings.jpg",
+          "device": "iPhone",
+          "alt": "Settings on iPhone: Customize Home, Appearance, Automatic Previews, Discovery and Library, Video Player, Playback Source and Providers."
+        },
+        {
+          "src": "assets/screens/catalyst/ipad-home.jpg",
+          "device": "iPad",
+          "alt": "Catalyst on iPad showing Nosferatu (1922), with the profile in the native sidebar and shelves of classic films."
+        },
+        {
+          "src": "assets/screens/catalyst/ipad-caligari.jpg",
+          "device": "iPad",
+          "alt": "Catalyst on iPad showing The Cabinet of Dr. Caligari (1920), with synopsis, playback controls, details and recommendations."
+        },
+        {
+          "src": "assets/screens/catalyst/mac-home.jpg",
+          "device": "Mac",
+          "alt": "Home on Mac with Slow Horses in the hero, the sidebar with Downloads, Watch plans, Movies, TV Shows and custom lists."
+        },
+        {
+          "src": "assets/screens/catalyst/mac-detail.jpg",
+          "device": "Mac",
+          "alt": "The page for Project Hail Mary on Mac, with Rewatch, download and watched buttons, the cast, and a rating prompt."
+        },
+        {
+          "src": "assets/screens/catalyst/mac-year.jpg",
+          "device": "Mac",
+          "alt": "Your year in film on Mac: hours watched, films, viewings, repeat viewings and TV episodes, with a month-by-month chart."
+        },
+        {
+          "src": "assets/screens/catalyst/tv-home.jpg",
+          "device": "Apple TV",
+          "alt": "Home on Apple TV, scrolled to Continue Watching with resume progress, above the Streaming Services row."
+        },
+        {
+          "src": "assets/screens/catalyst/tv-detail.jpg",
+          "device": "Apple TV",
+          "alt": "The page for Sinners (2025) on Apple TV, with genres, synopsis, runtime, rating, cast and a Start Watching button."
+        },
+        {
+          "src": "assets/screens/catalyst/tv-library.jpg",
+          "device": "Apple TV",
+          "alt": "The Library on Apple TV: Marvel Cinematic Universe and Star Wars watch plans, Coming Soon and History."
+        }
       ]
     },
     {
@@ -29,7 +100,9 @@
       "status": "available",
       "tagline": "Every Steam account, one click away.",
       "description": "Changes the signed-in Steam account without the account picker or a password prompt, and shows every game on every account.",
-      "platforms": ["Windows"],
+      "platforms": [
+        "Windows"
+      ],
       "stack": "Tauri 2 · Rust",
       "highlights": [
         "Silent switching, straight to the tray",
@@ -38,8 +111,16 @@
         "Never reads or stores passwords"
       ],
       "links": [
-        { "label": "Download", "url": "https://github.com/lilpatter/hangar/releases/latest", "kind": "download" },
-        { "label": "Source", "url": "https://github.com/lilpatter/hangar", "kind": "source" }
+        {
+          "label": "Download",
+          "url": "https://github.com/lilpatter/hangar/releases/latest",
+          "kind": "download"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/lilpatter/hangar",
+          "kind": "source"
+        }
       ]
     },
     {
@@ -50,7 +131,9 @@
       "status": "available",
       "tagline": "Your GeForce driver, always current.",
       "description": "Finds the latest Game Ready and Studio drivers for your NVIDIA card, checks they're genuine and installs them with one prompt.",
-      "platforms": ["Windows"],
+      "platforms": [
+        "Windows"
+      ],
       "stack": "Tauri 2 · Rust",
       "highlights": [
         "Matches your exact card with NVIDIA's catalog",
@@ -60,8 +143,16 @@
       ],
       "note": "Not affiliated with NVIDIA.",
       "links": [
-        { "label": "Download", "url": "https://github.com/lilpatter/verdant/releases/latest", "kind": "download" },
-        { "label": "Source", "url": "https://github.com/lilpatter/verdant", "kind": "source" }
+        {
+          "label": "Download",
+          "url": "https://github.com/lilpatter/verdant/releases/latest",
+          "kind": "download"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/lilpatter/verdant",
+          "kind": "source"
+        }
       ]
     }
   ]

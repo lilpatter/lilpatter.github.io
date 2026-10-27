@@ -27,6 +27,101 @@ function watchBar() {
   barObserver.observe(title);
 }
 
+/* ---------- Background colours ---------- */
+
+// Reads three characteristic colours from an image once (on a 32×32 canvas) and caches them.
+// The moving background is drawn from these as plain gradients, which are cheap to animate.
+const palettes = new Map();
+function paletteFor(src) {
+  if (!palettes.has(src)) {
+    palettes.set(
+      src,
+      new Promise((resolve) => {
+        const img = new Image();
+        img.src = src;
+        img
+          .decode()
+          .then(() => {
+            const size = 32;
+            const canvas = document.createElement("canvas");
+            canvas.width = canvas.height = size;
+            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            ctx.drawImage(img, 0, 0, size, size);
+            const { data } = ctx.getImageData(0, 0, size, size);
+            const buckets = new Map();
+            for (let i = 0; i < data.length; i += 4) {
+              const [r, g, b, a] = [data[i], data[i + 1], data[i + 2], data[i + 3]];
+              if (a < 200) continue;
+              const max = Math.max(r, g, b), min = Math.min(r, g, b);
+              const light = (max + min) / 510;
+              if (light < 0.08 || light > 0.94) continue; // near black or white says little about the image
+              const sat = max === min ? 0 : (max - min) / (255 - Math.abs(max + min - 255));
+              const key = ((r >> 5) << 6) | ((g >> 5) << 3) | (b >> 5);
+              const e = buckets.get(key) || { r: 0, g: 0, b: 0, n: 0, sat: 0 };
+              e.r += r; e.g += g; e.b += b; e.sat += sat; e.n++;
+              buckets.set(key, e);
+            }
+            const candidates = [...buckets.values()]
+              .map((e) => ({ r: e.r / e.n, g: e.g / e.n, b: e.b / e.n, score: e.n * (0.35 + e.sat / e.n) }))
+              .sort((x, y) => y.score - x.score);
+            const picked = [];
+            for (const c of candidates) {
+              if (picked.every((p) => Math.hypot(p.r - c.r, p.g - c.g, p.b - c.b) > 70)) picked.push(c);
+              if (picked.length === 3) break;
+            }
+            while (picked.length && picked.length < 3) picked.push(picked[picked.length - 1]);
+            resolve(picked.length ? picked.map((c) => `rgb(${c.r | 0} ${c.g | 0} ${c.b | 0})`) : null);
+          })
+          .catch(() => resolve(null));
+      })
+    );
+  }
+  return palettes.get(src);
+}
+
+function applyWash() {
+  const wash = document.querySelector("main .wash");
+  const art = wash && getComputedStyle(wash).getPropertyValue("--art");
+  const src = art?.match(/url\(\s*["']?([^"')]+)["']?\s*\)/)?.[1];
+  if (!src) return;
+  paletteFor(src).then((colors) => {
+    if (!colors || !wash.isConnected) return;
+    colors.forEach((c, i) => wash.style.setProperty(`--c${i + 1}`, c));
+    wash.classList.add("is-ready");
+  });
+}
+
+/* ---------- Screenshot device switch ---------- */
+
+function wireDeviceTabs() {
+  document.querySelectorAll(".device-tabs").forEach((tabs) => {
+    const buttons = [...tabs.querySelectorAll('[role="tab"]')];
+    const thumb = tabs.querySelector(".segmented-thumb");
+    const select = (btn) => {
+      buttons.forEach((b) => {
+        const on = b === btn;
+        b.setAttribute("aria-selected", String(on));
+        b.setAttribute("aria-checked", String(on));
+        b.tabIndex = on ? 0 : -1;
+        document.getElementById(b.getAttribute("aria-controls")).hidden = !on;
+      });
+      thumb.style.transform = `translateX(${buttons.indexOf(btn) * 100}%)`;
+    };
+    buttons.forEach((b, i) => (b.tabIndex = i ? -1 : 0));
+    tabs.addEventListener("click", (e) => {
+      const btn = e.target.closest('[role="tab"]');
+      if (btn) select(btn);
+    });
+    tabs.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const i = buttons.indexOf(document.activeElement);
+      const next = buttons[(i + (e.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length];
+      next.focus();
+      select(next);
+    });
+  });
+}
+
 /* ---------- Platform filter ---------- */
 
 function wireFilter() {
@@ -96,6 +191,8 @@ function playEntrance() {
 }
 
 function hydrate() {
+  applyWash();
+  wireDeviceTabs();
   watchBar();
   wireFilter();
   wireTilt();
@@ -166,11 +263,10 @@ function skeleton(path) {
             <div class="header-actions"><span class="sk sk-pill"></span><span class="sk sk-pill sm"></span></div>
           </div>
         </div>
-        <div class="facts glass">${`<div class="fact"><span class="sk sk-line w40 c"></span><span class="sk sk-line w70 c lg"></span></div>`.repeat(4)}</div>
-        <div class="sk-para">${bars(2, "w90")}${bars(1, "w60")}</div>
-        <div class="app-columns">
-          <div><span class="sk sk-line w30 label"></span><div class="list">${`<div class="row"><span class="sk sk-dot"></span><span class="sk sk-line w70"></span></div>`.repeat(4)}</div></div>
-          <div><span class="sk sk-line w30 label"></span><div class="list">${`<div class="row"><span class="sk sk-glyph"></span><span class="sk sk-line w50"></span></div>`.repeat(2)}</div></div>
+        <div class="facts">${`<div class="fact"><span class="sk sk-line w40 c"></span><span class="sk sk-line w70 c lg"></span></div>`.repeat(4)}</div>
+        <div class="app-section"><span class="sk sk-title sm"></span><div class="sk-para">${bars(2, "w90")}${bars(1, "w60")}</div></div>
+        <div class="app-section"><span class="sk sk-title sm"></span>
+          <ul class="feature-grid">${`<li class="feature"><span class="sk sk-dot"></span><span class="sk sk-line w70"></span></li>`.repeat(4)}</ul>
         </div>
       </article>`,
     };
@@ -229,6 +325,7 @@ async function navigate(url, { pop = false, sourceIcon = null } = {}) {
   await transition(() => {
     main.innerHTML = `<div class="wash" aria-hidden="true"><i></i><i></i><i></i></div>${html}`;
     setWash(wash);
+    applyWash();
     // The bar of the page being opened: a back button on app pages, nothing yet on home.
     barObserver?.disconnect();
     document.getElementById("bar").classList.remove("is-scrolled");
