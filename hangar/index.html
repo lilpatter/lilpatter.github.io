@@ -14,8 +14,8 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/icons/hangar.png">
   <link rel="apple-touch-icon" href="/assets/icons/hangar.png">
-  <link rel="stylesheet" href="/styles.css?v=eea337a08f">
-  <script src="/app.js?v=5841bd9e0b" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=bb49129692">
+  <script src="/app.js?v=476ef818d5" defer></script>
 </head>
 <body>
   <header class="bar" id="bar">
@@ -101,30 +101,30 @@
 
     <section class="section wrap" aria-labelledby="more-title">
       <div class="section-head">
-        <h2 class="title-2" id="more-title">More Apps by PG</h2>
+        <h2 class="title-2" id="more-title">More Apps</h2>
         <a class="btn btn-plain" href="/">See All</a>
       </div>
-      <ul class="list">
+      <ul class="app-grid">
         <li data-families="Apple">
-          <a class="row app-row compact" href="/catalyst/">
-            <img class="app-icon" src="/assets/icons/catalyst.png" alt="" width="48" height="48">
-            <div class="row-body">
-              <div class="row-title">Catalyst</div>
-              <div class="row-sub">One home for movies and series.</div>
-              
-            </div>
-            <span class="btn btn-tinted get" aria-hidden="true">View</span>
+          <a class="app-card" href="/catalyst/" style="--art:url('/assets/icons/catalyst.png')">
+            <span class="card-tint" aria-hidden="true"></span>
+            <span class="card-top"><img class="app-icon" src="/assets/icons/catalyst.png" alt="" width="88" height="88"><span class="card-badge">Coming Soon</span></span>
+            <span class="card-text">
+              <h3 class="card-name">Catalyst</h3>
+              <span class="card-tagline">One home for movies and series.</span>
+            </span>
+            <span class="card-meta">iOS · iPadOS · macOS · tvOS</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="row app-row compact" href="/verdant/">
-            <img class="app-icon" src="/assets/icons/verdant.png" alt="" width="48" height="48">
-            <div class="row-body">
-              <div class="row-title">Verdant</div>
-              <div class="row-sub">Your GeForce driver, always current.</div>
-              
-            </div>
-            <span class="btn btn-tinted get" aria-hidden="true">View</span>
+          <a class="app-card" href="/verdant/" style="--art:url('/assets/icons/verdant.png')">
+            <span class="card-tint" aria-hidden="true"></span>
+            <span class="card-top"><img class="app-icon" src="/assets/icons/verdant.png" alt="" width="88" height="88"></span>
+            <span class="card-text">
+              <h3 class="card-name">Verdant</h3>
+              <span class="card-tagline">Your GeForce driver, always current.</span>
+            </span>
+            <span class="card-meta">Windows</span>
           </a>
         </li>
       </ul>

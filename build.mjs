@@ -145,48 +145,41 @@ const appBar = (p) => `<a class="circle glass" href="/" aria-label="Back to Apps
         <button class="bar-search" type="button" data-palette aria-label="Search">${SEARCH}</button>
       </nav>`;
 
-function appRow(p, { compact = false } = {}) {
+// An app card: the whole card is the link, tinted by a blur of the app's own icon.
+function appCard(p, heading = "h3") {
+  const soon = p.status === "in-development" ? `<span class="card-badge">Coming Soon</span>` : "";
   return `<li data-families="${esc(families(p).join(" "))}">
-          <a class="row app-row${compact ? " compact" : ""}" href="/${esc(p.id)}/">
-            ${icon(p, compact ? 48 : 64)}
-            <div class="row-body">
-              <div class="row-title">${esc(p.name)}</div>
-              <div class="row-sub">${esc(p.tagline)}</div>
-              ${compact ? "" : `<div class="row-meta">${esc(p.platforms.join(" · "))}</div>`}
-            </div>
-            <span class="btn btn-tinted get" aria-hidden="true">View</span>
+          <a class="app-card" href="/${esc(p.id)}/" style="--art:url('${esc(asset(p.icon))}')">
+            <span class="card-tint" aria-hidden="true"></span>
+            <span class="card-top">${icon(p, 88)}${soon}</span>
+            <span class="card-text">
+              <${heading} class="card-name">${esc(p.name)}</${heading}>
+              <span class="card-tagline">${esc(p.tagline)}</span>
+            </span>
+            <span class="card-meta">${esc(p.platforms.join(" · "))}</span>
           </a>
         </li>`;
 }
 
+// The platform filter only earns its place once there are enough apps to sift through.
+const FILTER_FROM = 7;
+
 function homePage() {
-  const platforms = [...new Set(projects.flatMap((p) => p.platforms))];
   const fams = [...new Set(projects.flatMap(families))];
   const filter =
-    fams.length > 1
+    fams.length > 1 && projects.length >= FILTER_FROM
       ? `<div class="segmented" id="filter" role="radiogroup" aria-label="Filter by platform">
           <span class="segmented-thumb" style="width:calc((100% - 8px) / ${fams.length + 1})"></span>
           ${["All", ...fams].map((f, i) => `<button type="button" role="radio" aria-checked="${i === 0}" data-family="${esc(f)}">${esc(f)}</button>`).join("\n          ")}
         </div>`
       : "";
-  const body = `    <section class="header wrap" aria-labelledby="page-title">
-      <div class="header-inner">
-        <img class="avatar" src="/assets/avatar.jpg" alt="" width="112" height="112">
-        <div>
-          <p class="kicker">Developer</p>
-          <h1 class="large-title" id="page-title" tabindex="-1">PG</h1>
-          <p class="header-sub">Native apps for Apple platforms and Windows.</p>
-          <div class="header-actions">
-            <a class="btn btn-tinted glass" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
-            <button class="btn btn-tinted glass" type="button" data-palette>${SEARCH}Search<kbd class="shortcut" data-shortcut>Ctrl K</kbd></button>
-          </div>
-        </div>
-      </div>
-      <div class="facts glass" aria-label="At a glance">
-        ${fact("Apps", projects.length)}
-        ${fact("Platforms", platforms.length, fams.join(" & "))}
-        ${fact("Open Source", projects.filter(isOpenSource).length, "On GitHub")}
-        ${fact("Developer", "Since 2023", "github.com/lilpatter")}
+  const body = `    <section class="hero wrap" aria-labelledby="page-title">
+      <img class="avatar" src="/assets/avatar.jpg" alt="" width="128" height="128">
+      <h1 class="hero-title" id="page-title" tabindex="-1">PG</h1>
+      <p class="hero-sub">Native apps for Apple platforms and Windows.</p>
+      <div class="hero-actions">
+        <a class="btn btn-tinted glass" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
+        <button class="btn btn-tinted glass" type="button" data-palette>${SEARCH}Search<kbd class="shortcut" data-shortcut>Ctrl K</kbd></button>
       </div>
     </section>
 
@@ -195,8 +188,8 @@ function homePage() {
         <h2 class="title-2" id="apps-title">Apps</h2>
         ${filter}
       </div>
-      <ul class="list" id="app-list">
-        ${projects.map((p) => appRow(p)).join("\n        ")}
+      <ul class="app-grid" id="app-list">
+        ${projects.map((p) => appCard(p)).join("\n        ")}
       </ul>
     </section>`;
   return layout({
@@ -280,11 +273,11 @@ function appPage(p) {
 ${others.length ? `
     <section class="section wrap" aria-labelledby="more-title">
       <div class="section-head">
-        <h2 class="title-2" id="more-title">More Apps by PG</h2>
+        <h2 class="title-2" id="more-title">More Apps</h2>
         <a class="btn btn-plain" href="/">See All</a>
       </div>
-      <ul class="list">
-        ${others.map((o) => appRow(o, { compact: true })).join("\n        ")}
+      <ul class="app-grid">
+        ${others.map((o) => appCard(o)).join("\n        ")}
       </ul>
     </section>` : ""}`;
 

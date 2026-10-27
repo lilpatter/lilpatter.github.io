@@ -85,7 +85,7 @@ function wireTilt() {
 function playEntrance() {
   const main = document.querySelector("main");
   const parts = main.querySelectorAll(
-    ".header-inner, .header > .facts, .app-hero, .app-page > .facts, .app-desc, .app-columns > div, .section"
+    ".hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-desc, .app-columns > div"
   );
   parts.forEach((el, i) => el.style.setProperty("--i", i));
   main.classList.remove("is-entering");
@@ -177,17 +177,15 @@ function skeleton(path) {
   }
   return {
     wash: "/assets/avatar.jpg",
-    html: `<section class="header wrap skeleton" aria-busy="true" aria-label="Loading">
-        <div class="header-inner">
-          <span class="sk sk-avatar"></span>
-          <div class="sk-stack"><span class="sk sk-line w20"></span><span class="sk sk-title"></span><span class="sk sk-line w60"></span>
-            <div class="header-actions"><span class="sk sk-pill"></span><span class="sk sk-pill"></span></div></div>
-        </div>
-        <div class="facts glass">${`<div class="fact"><span class="sk sk-line w40 c"></span><span class="sk sk-line w30 c lg"></span></div>`.repeat(4)}</div>
+    html: `<section class="hero wrap skeleton" aria-busy="true" aria-label="Loading">
+        <span class="sk sk-avatar"></span>
+        <span class="sk sk-title c"></span>
+        <span class="sk sk-line w40 c"></span>
+        <div class="hero-actions"><span class="sk sk-pill"></span><span class="sk sk-pill"></span></div>
       </section>
       <section class="section wrap skeleton">
         <div class="section-head"><span class="sk sk-title sm"></span></div>
-        <ul class="list">${`<li><div class="row app-row"><span class="sk sk-app"></span><div class="row-body"><span class="sk sk-line w40"></span><span class="sk sk-line w70"></span></div><span class="sk sk-pill sm"></span></div></li>`.repeat(Math.max(APPS.length, 3))}</ul>
+        <ul class="app-grid">${`<li><div class="app-card"><span class="sk sk-app"></span><span class="card-text"><span class="sk sk-line w40 lg"></span><span class="sk sk-line w70"></span></span><span class="sk sk-line w30"></span></div></li>`.repeat(Math.max(APPS.length, 3))}</ul>
       </section>`,
   };
 }
