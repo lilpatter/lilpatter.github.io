@@ -227,7 +227,7 @@ async function navigate(url, { pop = false, sourceIcon = null } = {}) {
   const main = document.querySelector("main");
   const { html, wash } = skeleton(path);
   await transition(() => {
-    main.innerHTML = `<div class="wash" aria-hidden="true"></div>${html}`;
+    main.innerHTML = `<div class="wash" aria-hidden="true"><i></i><i></i><i></i></div>${html}`;
     setWash(wash);
     // The bar of the page being opened: a back button on app pages, nothing yet on home.
     barObserver?.disconnect();

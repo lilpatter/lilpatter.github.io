@@ -98,23 +98,49 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 main { position: relative; isolation: isolate; }
 
 /* Colour wash behind the top of the page, taken from the avatar or the app icon. */
+/* A soft base of the whole image, then three blobs that each show a different part of it
+   (different colours) and wander on their own timing, so the colours keep moving around.
+   The fade at the bottom follows an ease-out curve so it never ends in a visible edge. */
 .wash {
-  position: absolute; z-index: -1; inset: -120px 0 auto; height: 620px; overflow: hidden; pointer-events: none;
-  -webkit-mask-image: linear-gradient(#000 30%, transparent);
-  mask-image: linear-gradient(#000 30%, transparent);
+  position: absolute; z-index: -1; inset: -160px 0 auto; height: 1040px; overflow: hidden; pointer-events: none;
+  --fade: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.92) 22%, rgba(0, 0, 0, 0.72) 38%, rgba(0, 0, 0, 0.46) 52%,
+    rgba(0, 0, 0, 0.24) 65%, rgba(0, 0, 0, 0.1) 77%, rgba(0, 0, 0, 0.03) 88%, transparent 100%);
+  -webkit-mask-image: var(--fade);
+  mask-image: var(--fade);
 }
 .wash::before {
-  content: ""; position: absolute; inset: -20%;
+  content: ""; position: absolute; inset: -25%;
   background: var(--art) center / cover no-repeat;
-  filter: blur(80px) saturate(1.7);
-  opacity: var(--wash-opacity);
-  transform: scale(1.2);
-  animation: drift 40s ease-in-out infinite alternate;
+  filter: blur(100px) saturate(1.5);
+  opacity: calc(var(--wash-opacity) * 0.6);
 }
-/* The colours slowly shift, like a lock screen wallpaper. */
-@keyframes drift {
-  from { transform: scale(1.2) translate(-4%, -2%) rotate(0deg); }
-  to { transform: scale(1.4) translate(4%, 3%) rotate(10deg); }
+.wash i {
+  position: absolute; width: max(62%, 460px); aspect-ratio: 1; border-radius: 50%;
+  background: var(--art) no-repeat; background-size: 320%;
+  filter: blur(90px) saturate(1.9);
+  opacity: var(--wash-opacity);
+  will-change: transform;
+}
+.wash i:nth-child(1) { left: -18%; top: -12%; background-position: 15% 35%; animation: orbit-a 19s ease-in-out infinite alternate; }
+.wash i:nth-child(2) { right: -20%; top: -4%; background-position: 85% 30%; animation: orbit-b 23s ease-in-out infinite alternate; }
+.wash i:nth-child(3) { left: 18%; top: 22%; background-position: 50% 85%; animation: orbit-c 29s ease-in-out infinite alternate; }
+@keyframes orbit-a {
+  0% { transform: translate(0, 0) scale(1); }
+  35% { transform: translate(24%, 14%) scale(1.15); }
+  70% { transform: translate(46%, -6%) scale(0.92); }
+  100% { transform: translate(14%, 20%) scale(1.08); }
+}
+@keyframes orbit-b {
+  0% { transform: translate(0, 0) scale(1.05); }
+  40% { transform: translate(-30%, 18%) scale(0.9); }
+  75% { transform: translate(-12%, -10%) scale(1.18); }
+  100% { transform: translate(-42%, 6%) scale(1); }
+}
+@keyframes orbit-c {
+  0% { transform: translate(0, 0) scale(0.95); }
+  30% { transform: translate(-22%, -16%) scale(1.12); }
+  65% { transform: translate(26%, -22%) scale(1); }
+  100% { transform: translate(8%, 6%) scale(1.2); }
 }
 
 /* Glass surfaces */
@@ -447,7 +473,8 @@ kbd { font: 600 12px/1 var(--font); letter-spacing: 0; padding: 4px 7px; border-
   ::view-transition-old(root), html[data-transition]::view-transition-old(root) { animation: vt-fade 0.18s ease both reverse; }
   ::view-transition-new(root), html[data-transition]::view-transition-new(root) { animation: vt-fade 0.28s ease both; }
   main.is-entering :is(.hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-desc, .app-columns > div) { animation-name: vt-fade; animation-duration: 0.4s; }
-  .wash::before { animation: none; }
+  /* The colours still move, just much more slowly and gently. */
+  .wash i:nth-child(1) { animation-duration: 90s; } .wash i:nth-child(2) { animation-duration: 110s; } .wash i:nth-child(3) { animation-duration: 130s; }
   .app-card, .app-card .app-icon, .card-tint { transition: none; }
   .sk { background: var(--sk-hi); animation: pulse 1.6s ease-in-out infinite; }
   .palette[open] { animation: vt-fade 0.2s ease both; }

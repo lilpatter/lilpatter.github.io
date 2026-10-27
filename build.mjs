@@ -109,7 +109,7 @@ function layout({ title, description, path, image = "/assets/avatar.jpg", wash =
     </div>
   </header>
   <main id="top">
-    <div class="wash" style="--art:url('${esc(wash)}')" aria-hidden="true"></div>
+    <div class="wash" style="--art:url('${esc(wash)}')" aria-hidden="true"><i></i><i></i><i></i></div>
 ${body}
   </main>
   <dialog class="palette" id="palette" aria-label="Search">
