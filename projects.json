@@ -116,6 +116,23 @@
           "url": "https://github.com/lilpatter/hangar/releases/latest",
           "kind": "download"
         }
+      ],
+      "screenshots": [
+        {
+          "src": "assets/screens/hangar/home.jpg",
+          "device": "Windows",
+          "alt": "Home with a featured game, playtime and Continue Playing for the signed-in account."
+        },
+        {
+          "src": "assets/screens/hangar/games.jpg",
+          "device": "Windows",
+          "alt": "Installed games in a grid of Steam cover art, with playtime for each."
+        },
+        {
+          "src": "assets/screens/hangar/accounts.jpg",
+          "device": "Windows",
+          "alt": "Three remembered Steam accounts, each with a Switch button, and Add Account."
+        }
       ]
     },
     {
@@ -143,6 +160,23 @@
           "url": "https://github.com/lilpatter/verdant/releases/latest",
           "kind": "download"
         }
+      ],
+      "screenshots": [
+        {
+          "src": "assets/screens/verdant/home.jpg",
+          "device": "Windows",
+          "alt": "Home with the latest Game Ready driver, 621.14, installed and up to date."
+        },
+        {
+          "src": "assets/screens/verdant/gameready.jpg",
+          "device": "Windows",
+          "alt": "Every Game Ready driver for a GeForce RTX 2060, with the installed one marked and roll back for the rest."
+        },
+        {
+          "src": "assets/screens/verdant/gpu.jpg",
+          "device": "Windows",
+          "alt": "My GPU: live temperature, load, video memory, power, clock and fan speed, with driver and hardware details."
+        }
       ]
     },
     {
@@ -169,6 +203,33 @@
           "label": "Download",
           "url": "https://github.com/lilpatter/keepsake/releases/latest",
           "kind": "download"
+        }
+      ],
+      "screenshots": [
+        {
+          "src": "assets/screens/keepsake/home.jpg",
+          "device": "Windows",
+          "alt": "Home with LEGO Batman in the hero: Play, Edit Save, 88.9% complete, and Recently Saved games from RPCS3 and Lichii."
+        },
+        {
+          "src": "assets/screens/keepsake/games.jpg",
+          "device": "Windows",
+          "alt": "Games in a grid: games with saves first, then PlayStation 3 and Switch games with no saves yet."
+        },
+        {
+          "src": "assets/screens/keepsake/editor.jpg",
+          "device": "Windows",
+          "alt": "Editing a LEGO Batman save: studs, levels, Mini-kits, Red Power Bricks, characters, vehicles, Extras, suit upgrades and Batman facts."
+        },
+        {
+          "src": "assets/screens/keepsake/characters.jpg",
+          "device": "Windows",
+          "alt": "The Batcomputer roster with each character’s portrait and price, bought or locked."
+        },
+        {
+          "src": "assets/screens/keepsake/indy.jpg",
+          "device": "Windows",
+          "alt": "LEGO Indiana Jones levels: story, parcel, 100% flags and Artefacts for each level of Raiders of the Lost Ark."
         }
       ]
     }
