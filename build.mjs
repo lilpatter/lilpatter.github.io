@@ -39,10 +39,14 @@ const PLATFORM_FAMILY = {
   iOS: "Apple", iPadOS: "Apple", macOS: "Apple", tvOS: "Apple", watchOS: "Apple", visionOS: "Apple",
   Windows: "Windows", Linux: "Linux", Android: "Android", Web: "Web",
 };
+// Windows apps here borrow the Mac's look (sidebar, traffic-light buttons), so the site spells out where they run.
+const windowsOnly = (p) => families(p).join() === "Windows";
+const WINDOWS_VERSIONS = "Windows 10 and 11";
 const STATUS_LABEL = { available: "Available", "in-development": "In Development", beta: "Beta" };
 
 // SF Symbols-style glyphs drawn on a 20×20 grid.
 const GLYPH = {
+  windows: '<path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/>',
   website: '<path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15Zm4.9 6.7h-2.3a12 12 0 0 0-1-4.4 5.9 5.9 0 0 1 3.3 4.4ZM10 4.2c.6.8 1.3 2.5 1.5 5H8.5c.2-2.5.9-4.2 1.5-5ZM8.4 4.8a12 12 0 0 0-1 4.4H5.1a5.9 5.9 0 0 1 3.3-4.4ZM5.1 10.8h2.3c.1 1.7.5 3.2 1 4.4a5.9 5.9 0 0 1-3.3-4.4Zm4.9 5c-.6-.8-1.3-2.5-1.5-5h3c-.2 2.5-.9 4.2-1.5 5Zm1.6-.6c.5-1.2.9-2.7 1-4.4h2.3a5.9 5.9 0 0 1-3.3 4.4Z"/>',
   download: '<path d="M10 2.5a1 1 0 0 1 1 1v8.1l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0l-4.5-4.5a1 1 0 0 1 1.4-1.4L9 11.6V3.5a1 1 0 0 1 1-1ZM4 16a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Z"/>',
   source: '<path d="M7.7 5.3a1 1 0 0 1 0 1.4L4.4 10l3.3 3.3a1 1 0 1 1-1.4 1.4l-4-4a1 1 0 0 1 0-1.4l4-4a1 1 0 0 1 1.4 0Zm4.6 0a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 1 1-1.4-1.4l3.3-3.3-3.3-3.3a1 1 0 0 1 0-1.4Z"/>',
@@ -157,7 +161,12 @@ const appBar = (p) => `<a class="circle glass" href="/" aria-label="Back to Apps
 
 // An app tile, like a Home Screen icon: the icon and its name. The tagline stays for screen readers and hover.
 function appCard(p, heading = "h3") {
-  const soon = p.status === "in-development" ? `<span class="tile-badge">Coming Soon</span>` : "";
+  const soon =
+    p.status === "in-development"
+      ? `<span class="tile-badge">Coming Soon</span>`
+      : windowsOnly(p)
+        ? `<span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.windows}</svg>Windows</span>`
+        : "";
   return `<li data-families="${esc(families(p).join(" "))}">
           <a class="app-tile" href="/${esc(p.id)}/" title="${esc(p.tagline)}">
             ${icon(p, 112)}
@@ -244,6 +253,7 @@ function gallery(p) {
           ${tabs}
         </div>
         ${rows}
+        ${windowsOnly(p) ? `<p class="shots-note">Screenshots from Windows 11. The Mac-style sidebar and window buttons are part of ${esc(p.name)}’s design; it runs on Windows only.</p>` : ""}
       </section>
 `;
 }
@@ -278,7 +288,7 @@ function appPage(p) {
   // Information, like the bottom of an App Store page.
   const info = [
     ["Developer", "PG"],
-    [p.platforms.length > 1 ? "Compatibility" : "Platform", p.platforms.join(", ")],
+    [p.platforms.length > 1 ? "Compatibility" : "Platform", windowsOnly(p) ? WINDOWS_VERSIONS : p.platforms.join(", ")],
     release && ["Version", release.build ? `${release.version} (build ${release.build})` : release.version],
     release && ["Updated", formatDate(release.date)],
     release?.size && ["Size", formatSize(release.size)],
@@ -303,14 +313,15 @@ function appPage(p) {
           <h1 class="app-name" id="app-title" tabindex="-1">${esc(p.name)}</h1>
           <p class="app-subtitle">${esc(p.tagline)}</p>
           <div class="header-actions">
-            ${primary ? `<a class="btn btn-filled" href="${esc(primary.url)}">${esc(primary.label)}</a>` : ""}
+            ${primary ? `<a class="btn btn-filled" href="${esc(primary.url)}">${esc(windowsOnly(p) && primary.kind === "download" ? "Download for Windows" : primary.label)}</a>` : ""}
             <span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>
           </div>
+          ${windowsOnly(p) ? `<p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.windows}</svg>For ${WINDOWS_VERSIONS}. There’s no Mac version yet.</p>` : ""}
         </div>
       </header>
 
       <div class="facts">
-        ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : "")}
+        ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : windowsOnly(p) ? "10 and 11 · not Mac" : "")}
         ${release
           ? fact("Version", release.version, release.build ? `Build ${release.build}` : "") +
             (release.size ? fact("Size", formatSize(release.size), "Installer") : "")
