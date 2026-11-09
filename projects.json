@@ -115,11 +115,6 @@
           "label": "Download",
           "url": "https://github.com/lilpatter/hangar/releases/latest",
           "kind": "download"
-        },
-        {
-          "label": "Source",
-          "url": "https://github.com/lilpatter/hangar",
-          "kind": "source"
         }
       ]
     },
@@ -147,11 +142,6 @@
           "label": "Download",
           "url": "https://github.com/lilpatter/verdant/releases/latest",
           "kind": "download"
-        },
-        {
-          "label": "Source",
-          "url": "https://github.com/lilpatter/verdant",
-          "kind": "source"
         }
       ]
     }

@@ -32,8 +32,7 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
   "stack": "Tauri 2 · Rust",
   "highlights": ["Up to four short points"],
   "links": [
-    { "label": "Download", "url": "https://github.com/lilpatter/my-app/releases/latest", "kind": "download" },
-    { "label": "Source", "url": "https://github.com/lilpatter/my-app", "kind": "source" }
+    { "label": "Download", "url": "https://github.com/lilpatter/my-app/releases/latest", "kind": "download" }
   ]
 }
 ```
