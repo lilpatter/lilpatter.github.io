@@ -76,8 +76,16 @@ const families = (p) => [...new Set(p.platforms.map((x) => PLATFORM_FAMILY[x] ||
 const isOpenSource = (p) => (p.links || []).some((l) => l.kind === "source");
 const asset = (path) => "/" + path.replace(/^\//, "");
 const icon = (p, size, alt = "") => `<img class="app-icon" src="${esc(asset(p.icon))}" alt="${esc(alt)}" width="${size}" height="${size}">`;
-const fact = (label, value, note = "") =>
-  `<div class="fact"><div class="fact-label">${esc(label)}</div><div class="fact-value">${esc(value)}</div>${note ? `<div class="fact-note">${esc(note)}</div>` : ""}</div>`;
+// Platform marks for the facts strip: the Windows logo, and the Apple logo (Simple Icons, CC0) for Apple platforms.
+const PLATFORM_GLYPH = {
+  Windows: ["0 0 20 20", GLYPH.windows],
+  Apple: ["0 0 24 24", '<path d="M12.15 6.9c-.95 0-2.42-1.08-3.96-1.04-2.04.03-3.91 1.18-4.96 3.01-2.12 3.68-.55 9.1 1.52 12.09 1.01 1.45 2.21 3.09 3.79 3.04 1.52-.07 2.09-.99 3.94-.99 1.83 0 2.35.99 3.96.95 1.64-.03 2.68-1.48 3.68-2.95 1.16-1.69 1.64-3.33 1.66-3.42-.04-.01-3.18-1.22-3.22-4.86-.03-3.04 2.48-4.49 2.6-4.56-1.43-2.09-3.62-2.32-4.39-2.38-2-.16-3.68 1.09-4.62 1.09Zm3.38-3.07c.84-1.01 1.4-2.43 1.25-3.83-1.21.05-2.66.81-3.53 1.82-.78.9-1.45 2.34-1.27 3.71 1.34.1 2.71-.69 3.55-1.7"/>'],
+};
+const platformIcon = (fam) =>
+  PLATFORM_GLYPH[fam] ? `<svg class="platform-glyph" viewBox="${PLATFORM_GLYPH[fam][0]}" aria-hidden="true">${PLATFORM_GLYPH[fam][1]}</svg>` : "";
+
+const fact = (label, value, note = "", iconHtml = "") =>
+  `<div class="fact"><div class="fact-label">${esc(label)}</div><div class="fact-value">${iconHtml}${esc(value)}</div>${note ? `<div class="fact-note">${esc(note)}</div>` : ""}</div>`;
 
 const appData = JSON.stringify(
   projects.map((p) => ({
@@ -321,12 +329,11 @@ function appPage(p) {
       </header>
 
       <div class="facts">
-        ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : windowsOnly(p) ? "10 and 11 · not Mac" : "")}
+        ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : windowsOnly(p) ? "10 and 11 · not Mac" : "", fams.map(platformIcon).join(""))}
         ${release
           ? fact("Version", release.version, release.build ? `Build ${release.build}` : "") +
             (release.size ? fact("Size", formatSize(release.size), "Installer") : "")
           : fact("Status", STATUS_LABEL[p.status] || p.status) + (p.stack ? fact("Built With", stackMain, stackRest.join(" · ")) : "")}
-        ${fact("Source", isOpenSource(p) ? "Open" : "Closed", isOpenSource(p) ? "On GitHub" : "")}
       </div>
 
 ${gallery(p)}
