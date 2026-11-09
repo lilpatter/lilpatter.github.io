@@ -144,6 +144,33 @@
           "kind": "download"
         }
       ]
+    },
+    {
+      "id": "keepsake",
+      "name": "Keepsake",
+      "icon": "assets/icons/keepsake.png",
+      "accent": "#ffcc00",
+      "status": "available",
+      "tagline": "Your emulator saves, in one place.",
+      "description": "Finds your RPCS3 and Lichii games and every save, starts any game straight from its library, and edits the saves of supported games with each game's own artwork.",
+      "platforms": [
+        "Windows"
+      ],
+      "stack": "Tauri 2 · Rust",
+      "highlights": [
+        "RPCS3 and Lichii in one library",
+        "Play without the emulator's game list",
+        "Save editors for LEGO Batman and LEGO Indiana Jones",
+        "A backup before every change"
+      ],
+      "note": "Not affiliated with the RPCS3 or Lichii projects, Nintendo, Sony, Warner Bros. Games, TT Games or the LEGO Group.",
+      "links": [
+        {
+          "label": "Download",
+          "url": "https://github.com/lilpatter/keepsake/releases/latest",
+          "kind": "download"
+        }
+      ]
     }
   ]
 }
