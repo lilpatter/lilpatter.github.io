@@ -232,6 +232,50 @@
           "alt": "LEGO Indiana Jones levels: story, parcel, 100% flags and Artefacts for each level of Raiders of the Lost Ark."
         }
       ]
+    },
+    {
+      "id": "prism",
+      "name": "Prism",
+      "icon": "assets/icons/prism.png",
+      "accent": "#7d7aff",
+      "status": "available",
+      "tagline": "Your games, in their own colours.",
+      "description": "Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.",
+      "platforms": [
+        "Windows"
+      ],
+      "stack": "Tauri 2 · Rust",
+      "highlights": [
+        "Switches with the game in focus",
+        "Vibrance up to 200%, past the driver",
+        "NVIDIA, AMD and Intel, no admin rights",
+        "About 2 MB in the tray"
+      ],
+      "note": "Based on Digital Vibrance by SYTStudio. Not affiliated with NVIDIA, AMD or Intel.",
+      "links": [
+        {
+          "label": "Download",
+          "url": "https://github.com/lilpatter/prism/releases/latest",
+          "kind": "download"
+        }
+      ],
+      "screenshots": [
+        {
+          "src": "assets/screens/prism/home.jpg",
+          "device": "Windows",
+          "alt": "Home with FragPunk active at 200% vibrance, the colours on screen, and a shelf of game profiles."
+        },
+        {
+          "src": "assets/screens/prism/games.jpg",
+          "device": "Windows",
+          "alt": "Games in a grid, each with its own icon and vibrance."
+        },
+        {
+          "src": "assets/screens/prism/editor.jpg",
+          "device": "Windows",
+          "alt": "Editing the Counter-Strike 2 profile: when it applies, vibrance at 200% with Override, contrast and brightness."
+        }
+      ]
     }
   ]
 }
