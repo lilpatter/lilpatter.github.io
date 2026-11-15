@@ -276,6 +276,34 @@
           "alt": "Editing the Counter-Strike 2 profile: when it applies, vibrance at 200% with Override, contrast and brightness."
         }
       ]
+    },
+    {
+      "id": "parley",
+      "name": "Parley",
+      "icon": "assets/icons/parley.png",
+      "accent": "#8b5cf6",
+      "status": "available",
+      "tagline": "Discord, light.",
+      "description": "A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls with Discord's own end-to-end encryption, in a single exe with no Electron and no browser engine.",
+      "platforms": [
+        "Windows"
+      ],
+      "stack": "Rust · Slint",
+      "highlights": [
+        "Servers, DMs and encrypted voice calls",
+        "Stays signed in across restarts",
+        "Sign in by scanning a QR code",
+        "One light exe, idle in the tray"
+      ],
+      "note": "Based on Litecord. Not affiliated with Discord; using a third-party client is against Discord's Terms of Service.",
+      "links": [
+        {
+          "label": "Download",
+          "url": "https://github.com/lilpatter/parley/releases/latest",
+          "kind": "download"
+        }
+      ],
+      "screenshots": []
     }
   ]
 }
