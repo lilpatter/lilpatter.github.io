@@ -45,5 +45,15 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
   and uses it for the Download button, the checkmarks and the glow on its GitHub profile tile (via `accents.json`).
   Change the icon and the colour follows. Add `"accent": "#rrggbb"` only to override it.
 - Leave out the `source` link for closed-source apps.
+- Optional, for a fuller app page:
+  - `story`: a paragraph (or a list of them) under About: the problem the app solves and why you built it.
+  - `engineering`: `[{ "title", "text" }]`, shown as **Under the Hood**: how it works, not what it does.
+  - `video`: `{ "src", "poster", "caption" }`, a short screen recording (MP4) shown above the screenshots. It only plays when clicked.
+  - `cardShot`: which screenshot the home page card uses. By default it's the first Windows or Mac one.
+- **Link previews** (the 1200×630 image shown when a page is shared) live in `assets/og/`. They aren't redrawn by the
+  workflow: after adding an app or changing a name, tagline, icon or screenshot, run `python scripts/og.py`
+  (needs Pillow) and commit the images.
+- **Release History** builds itself from each app's GitHub releases: the first line of a release's notes is its title,
+  and releases that only say "Download the setup to install it…" are left out. Write that first line for visitors.
 - The Apple / Windows filter builds itself from `platforms`.
 - The GitHub profile's app tiles are generated from this same file once a day.

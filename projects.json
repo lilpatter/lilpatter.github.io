@@ -111,6 +111,20 @@
         "Idle Steam at about 50 MB instead of 330 MB",
         "Never reads or stores passwords"
       ],
+      "engineering": [
+        {
+          "title": "Low memory without breaking Steam",
+          "text": "Launch flags barely help: the best set saved about 25 MB of Steam's ~330 MB, because most of it is a hidden web renderer every client keeps loaded. Instead, Hangar asks Windows to page out the memory steam.exe and steamwebhelper aren't using, a minute after Steam signs in and every five minutes after, never while a game is running. Idle in the tray, Steam drops to about 30–70 MB and stays signed in."
+        },
+        {
+          "title": "No passwords, ever",
+          "text": "Accounts connect with a QR code from the Steam Mobile App, so Hangar never sees a password. The sign-in token it gets back is stored encrypted with Windows DPAPI, readable only by your Windows account."
+        },
+        {
+          "title": "Its own line to Steam",
+          "text": "Friends, chat and profiles run over Hangar's own connection to Steam's servers, so the Steam client stays signed in alongside it and games still launch through Steam as usual."
+        }
+      ],
       "links": [
         {
           "label": "Download",
@@ -135,14 +149,41 @@
           "alt": "Three remembered Steam accounts, each with a Switch button, and Add Account."
         }
       ],
-      "note": "Not affiliated with Valve."
+      "note": "Not affiliated with Valve.",
+      "privacy": {
+        "contacts": [
+          [
+            "Steam",
+            "QR sign-in, your library, friends, chat, profiles and game artwork"
+          ],
+          [
+            "Steam Web API",
+            "only if you add your own key, to list games an account owns but hasn't played on this PC"
+          ],
+          [
+            "GitHub",
+            "to check for and download updates"
+          ]
+        ],
+        "local": [
+          "Hangar never sees, reads or stores your Steam password",
+          "The sign-in token Steam gives Hangar is encrypted with Windows' own data protection (DPAPI), so only your Windows account can read it",
+          "Settings and favourites"
+        ]
+      },
+      "updates": "Updates itself from its GitHub Releases page and checks each download against its SHA-256 hash before installing. You can turn this off under Settings › About.",
+      "requirements": [
+        "Windows 10 or 11, 64-bit",
+        "Steam installed",
+        "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
+      ]
     },
     {
       "id": "verdant",
       "name": "Verdant",
       "icon": "assets/icons/verdant.png",
       "status": "available",
-      "tagline": "Your GeForce driver, always current.",
+      "tagline": "GeForce driver updates, without the NVIDIA App.",
       "description": "Finds the latest Game Ready and Studio drivers for your NVIDIA card, checks they're signed by NVIDIA and installs them with one prompt, without the NVIDIA App.",
       "platforms": [
         "Windows"
@@ -155,6 +196,16 @@
         "Express or custom install, with roll back",
         "Live GPU temperature, load and VRAM",
         "Compact mode: a small window that keeps you current"
+      ],
+      "engineering": [
+        {
+          "title": "Keeping the NVIDIA App out",
+          "text": "Verdant unpacks NVIDIA's driver package itself and runs the installer from what's left. The NVIDIA App's folders are never extracted, any component the package marks as part of it is removed, and the install is refused if one remains. If NVIDIA's installer adds the app anyway, Verdant uninstalls it."
+        },
+        {
+          "title": "Only NVIDIA's own installers",
+          "text": "Before anything runs, Verdant checks the driver installer is signed by NVIDIA and refuses it if not, so a tampered download never gets a chance to run."
+        }
       ],
       "note": "Not affiliated with NVIDIA.",
       "links": [
@@ -180,6 +231,33 @@
           "device": "Windows",
           "alt": "My GPU: live temperature, load, video memory, power, clock and fan speed, with driver and hardware details."
         }
+      ],
+      "privacy": {
+        "contacts": [
+          [
+            "NVIDIA",
+            "your card's model, to find matching drivers, their release notes and the driver downloads"
+          ],
+          [
+            "Steam store",
+            "artwork for the games each driver is made for"
+          ],
+          [
+            "GitHub",
+            "to check for and download updates"
+          ]
+        ],
+        "local": [
+          "Your GPU, driver version and live readings are read on your PC",
+          "Drivers download to Downloads\\NVIDIA Drivers",
+          "Only installers signed by NVIDIA Corporation are run"
+        ]
+      },
+      "updates": "Updates itself from its GitHub Releases page and checks each download against its SHA-256 hash before installing. You can turn this off under Settings › About.",
+      "requirements": [
+        "Windows 10 or 11, 64-bit",
+        "An NVIDIA GeForce graphics card",
+        "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
       ]
     },
     {
@@ -187,7 +265,7 @@
       "name": "Keepsake",
       "icon": "assets/icons/keepsake.png",
       "status": "available",
-      "tagline": "Your emulator saves, in one place.",
+      "tagline": "Your emulator games and saves, in one place.",
       "description": "Finds your RPCS3, Lichii and Fritchii games and every save, starts any game straight from its library, and edits the saves of supported games with each game's own artwork.",
       "platforms": [
         "Windows"
@@ -200,6 +278,20 @@
         "Opens saves copied from a real PS3",
         "Artwork from the eShop, Steam and SteamGridDB",
         "A backup before every change"
+      ],
+      "engineering": [
+        {
+          "title": "Saves from a real PS3",
+          "text": "Saves copied off a PS3 are encrypted and signed. Keepsake decrypts them with each game's secure file ID and writes them back plain for RPCS3. Re-encrypting and re-signing is kept too, and tested against real saves."
+        },
+        {
+          "title": "Reading Switch 2 save data",
+          "text": "Ocarina of Time on Switch 2 stores its save in Nintendo's GameData format, where every field name is a MurmurHash3 hash. Keepsake maps those hashes to rupees, hearts, items, songs and more, per save slot, and keeps the save's caption file in sync."
+        },
+        {
+          "title": "The game's own icons",
+          "text": "Switch games are encrypted, so Keepsake takes icons from the files your emulator already keeps: a game dump or a mod. It decodes the compressed archives and texture formats itself. Switch 2 lays texture bytes out differently from Switch 1, and that layout was worked out from real textures until every icon decoded cleanly."
+        }
       ],
       "note": "Not affiliated with the RPCS3, Lichii or Fritchii projects, Nintendo, Sony Interactive Entertainment, Warner Bros. Games, Disney, TT Games or the LEGO Group.",
       "links": [
@@ -235,6 +327,33 @@
           "device": "Windows",
           "alt": "LEGO Indiana Jones levels: story, parcel, 100% flags and Artefacts for each level of Raiders of the Lost Ark."
         }
+      ],
+      "privacy": {
+        "contacts": [
+          [
+            "Nintendo eShop and Steam store",
+            "library artwork for your games"
+          ],
+          [
+            "SteamGridDB",
+            "only if you add your own key, for more artwork"
+          ],
+          [
+            "GitHub",
+            "to check for and download updates"
+          ]
+        ],
+        "local": [
+          "Your games and saves are found, read and edited on your PC only",
+          "A backup of every save is kept on your PC before Keepsake changes it",
+          "In-game artwork is read from your own copy of each game"
+        ]
+      },
+      "updates": "Updates itself from its GitHub Releases page and checks each download against its SHA-256 hash before installing. You can turn this off under Settings › About.",
+      "requirements": [
+        "Windows 10 or 11, 64-bit",
+        "RPCS3, Lichii or Fritchii, with your own games",
+        "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
       ]
     },
     {
@@ -242,7 +361,7 @@
       "name": "Prism",
       "icon": "assets/icons/prism.png",
       "status": "available",
-      "tagline": "Your games, in their own colours.",
+      "tagline": "Colour profiles for every game, switched automatically.",
       "description": "Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.",
       "platforms": [
         "Windows"
@@ -256,7 +375,17 @@
         "Nothing injected into your games",
         "About 2 MB in the tray"
       ],
-      "note": "Based on Digital Vibrance by SYTStudio. Not affiliated with NVIDIA, AMD or Intel.",
+      "engineering": [
+        {
+          "title": "Idle means idle",
+          "text": "One engine thread owns the colour effect. It sleeps until Windows reports a new window in front, and only checks again while a profile needs it. Closing Prism's window destroys it and its web view entirely, so in the tray it uses about 2 MB and no CPU."
+        },
+        {
+          "title": "Better than the original",
+          "text": "Prism is a rewrite of Digital Vibrance in Rust. Along the way: the live preview no longer sticks on screen, a colour change Windows refuses is retried, and the list of running processes is no longer read every 1.5 seconds."
+        }
+      ],
+      "note": "Not affiliated with NVIDIA, AMD or Intel.",
       "links": [
         {
           "label": "Download",
@@ -280,6 +409,35 @@
           "device": "Windows",
           "alt": "Editing the Counter-Strike 2 profile: when it applies, vibrance at 200% with Override, contrast and brightness."
         }
+      ],
+      "credits": [
+        {
+          "name": "Digital Vibrance",
+          "by": "SYTStudio",
+          "url": "https://github.com/SYTStudio/DigitalVibrance",
+          "license": "",
+          "text": "Prism is a rewrite of Digital Vibrance in Rust, and imports its profiles."
+        }
+      ],
+      "privacy": {
+        "contacts": [
+          [
+            "GitHub",
+            "to check for and download updates. Prism connects to nothing else"
+          ]
+        ],
+        "local": [
+          "Your game profiles and settings",
+          "Prism watches which window is in front to switch profiles. That never leaves your PC",
+          "Nothing is injected into your games, and no admin rights are needed"
+        ]
+      },
+      "updates": "Updates itself from its GitHub Releases page, also while it's in the tray, and checks each download against its SHA-256 hash before installing. You can turn this off under Settings › About.",
+      "requirements": [
+        "Windows 10 or 11, 64-bit",
+        "Any NVIDIA, AMD or Intel graphics card",
+        "Games in borderless or windowed mode: exclusive fullscreen skips the effect, and HDR may change it",
+        "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
       ]
     },
     {
@@ -287,7 +445,7 @@
       "name": "Parley",
       "icon": "assets/icons/parley.png",
       "status": "available",
-      "tagline": "Discord, light.",
+      "tagline": "An unofficial, lightweight Discord client for Windows.",
       "description": "A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls with Discord's own end-to-end encryption, in a single exe with no Electron and no browser engine.",
       "platforms": [
         "Windows"
@@ -301,7 +459,21 @@
         "No Electron and no browser engine",
         "One light exe, idle in the tray"
       ],
-      "note": "Based on Litecord. Not affiliated with Discord; using a third-party client is against Discord's Terms of Service.",
+      "engineering": [
+        {
+          "title": "Stays signed in",
+          "text": "A failed first request after boot, before the network is up, no longer signs you out. Parley retries with backoff and only drops an account when Discord says its session is no longer valid. Saved accounts are written atomically, with a backup copy."
+        },
+        {
+          "title": "Lighter by subtraction",
+          "text": "Screen sharing, camera, the bundled video library and the diagnostics tools were cut, taking the exe from 93 MB to 42 MB. The window idles at around 7 MB of memory."
+        },
+        {
+          "title": "Careful updates",
+          "text": "Parley updates itself from its GitHub releases and checks each download's SHA-256 hash first. It waits until you're not busy, gives you ten seconds to say Later, then updates quietly in the tray."
+        }
+      ],
+      "note": "Not made, approved or endorsed by Discord Inc.",
       "links": [
         {
           "label": "Download",
@@ -309,7 +481,50 @@
           "kind": "download"
         }
       ],
-      "screenshots": []
+      "screenshots": [],
+      "warning": {
+        "title": "Unofficial client: use at your own risk",
+        "text": "Parley isn't made or approved by Discord. Discord's Terms of Service forbid “unauthorized software designed to modify the services”, and Discord can suspend or close accounts that break its terms. Discord can also change its service at any time, which may stop Parley working until it's updated. Screen sharing and camera aren't supported. Don't use it on an account you can't afford to lose.",
+        "link": {
+          "label": "Read Discord's Terms of Service",
+          "url": "https://discord.com/terms"
+        }
+      },
+      "credits": [
+        {
+          "name": "Litecord",
+          "by": "the Litecord Project",
+          "url": "https://github.com/Ak4ai/Litecord",
+          "license": "MIT License",
+          "text": "Parley began as Litecord. Its licence ships with Parley in the NOTICE file."
+        }
+      ],
+      "privacy": {
+        "contacts": [
+          [
+            "Discord",
+            "everything a Discord client does: sign-in, messages and voice"
+          ],
+          [
+            "hCaptcha",
+            "only if Discord asks for a captcha while you sign in"
+          ],
+          [
+            "GitHub",
+            "to check for and download updates"
+          ]
+        ],
+        "local": [
+          "Your Discord session is encrypted with Windows' own data protection (DPAPI) and never leaves your PC except to talk to Discord",
+          "Settings live in %APPDATA%\\Parley"
+        ]
+      },
+      "updates": "Checks its GitHub Releases page for updates, verifies each download against its SHA-256 hash, and asks before installing.",
+      "requirements": [
+        "Windows 10 or 11, 64-bit",
+        "A Discord account you're willing to risk (see the warning above)",
+        "WebView2, only for the captcha window"
+      ]
     }
   ]
 }

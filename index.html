@@ -3,30 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>PG — Apps</title>
-  <meta name="description" content="Apps by PG: Catalyst, Hangar, Verdant, Keepsake, Prism, Parley.">
+  <title>PG — Small, fast apps</title>
+  <meta name="description" content="Small, fast Windows apps that do one job well: switch Steam accounts, update GeForce drivers without the NVIDIA App, manage emulator saves and give every game its own colours. Free, and made by one developer.">
   <link rel="canonical" href="https://lilpatter.github.io/">
-  <meta property="og:title" content="PG — Apps">
-  <meta property="og:description" content="Apps by PG: Catalyst, Hangar, Verdant, Keepsake, Prism, Parley.">
-  <meta property="og:image" content="https://lilpatter.github.io/assets/avatar.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PG">
+  <meta property="og:title" content="PG — Small, fast apps">
+  <meta property="og:description" content="Small, fast Windows apps that do one job well: switch Steam accounts, update GeForce drivers without the NVIDIA App, manage emulator saves and give every game its own colours. Free, and made by one developer.">
+  <meta property="og:image" content="https://lilpatter.github.io/assets/og/pg.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PG — Small, fast apps">
   <meta property="og:url" content="https://lilpatter.github.io/">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/avatar.jpg">
   <link rel="apple-touch-icon" href="/assets/avatar.jpg">
-  <link rel="stylesheet" href="/styles.css?v=08ba860e11">
-  <script src="/app.js?v=4e19dc8b84" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=5feac3bc2e">
+  <script src="/app.js?v=c90647a080" defer></script>
 </head>
 <body>
   <header class="bar" id="bar">
     <div class="wrap bar-inner">
-      <a class="pill glass reveal" href="/" aria-label="PG, home">
+      <a class="pill glass" href="/" aria-label="PG, home">
         <img src="/assets/avatar.jpg" alt="" width="32" height="32">PG
       </a>
-      <nav class="bar-links glass reveal" aria-label="Sections">
-        <a href="/#apps">Apps</a>
+      <nav class="bar-links glass" aria-label="Sections">
+        <a class="hide-narrow" href="/#apps">Apps</a>
+        <a href="/#about">About</a>
         <a href="https://github.com/lilpatter">GitHub</a>
-        <button class="bar-search" type="button" data-palette aria-label="Search"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 0 1 4.4 8.8l3.6 3.7a.9.9 0 0 1-1.3 1.3l-3.7-3.6A5.5 5.5 0 1 1 8.5 3Zm0 1.8a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Z"/></svg></button>
       </nav>
     </div>
   </header>
@@ -35,11 +41,7 @@
     <section class="hero wrap" aria-labelledby="page-title">
       <img class="avatar" src="/assets/avatar.jpg" alt="" width="128" height="128">
       <h1 class="hero-title" id="page-title" tabindex="-1">PG</h1>
-      <p class="hero-sub">Native apps for Apple platforms and Windows.</p>
-      <div class="hero-actions">
-        <a class="btn btn-soft" href="https://github.com/lilpatter"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
-        <button class="btn btn-soft" type="button" data-palette><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 0 1 4.4 8.8l3.6 3.7a.9.9 0 0 1-1.3 1.3l-3.7-3.6A5.5 5.5 0 1 1 8.5 3Zm0 1.8a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Z"/></svg>Search<kbd class="shortcut" data-shortcut>Ctrl K</kbd></button>
-      </div>
+      <p class="hero-sub">Small, fast apps that do one job well. Made by one developer.</p>
     </section>
 
     <section class="section wrap" id="apps" aria-labelledby="apps-title">
@@ -47,56 +49,135 @@
         <h2 class="title-2" id="apps-title">Apps</h2>
         
       </div>
-      <ul class="app-grid" id="app-list">
-        <li data-families="Apple">
-          <a class="app-tile" href="/catalyst/" title="One home for movies and series.">
-            <img class="app-icon" src="/assets/icons/catalyst.png" alt="" width="112" height="112">
-            <h3 class="tile-name">Catalyst</h3>
-            <span class="sr-only">One home for movies and series.</span><span class="tile-badge">Coming Soon</span>
+      <ul class="app-grid card-grid" id="app-list">
+        <li data-families="Windows">
+          <a class="app-card" href="/hangar/" style="--accent:#2c90f3">
+            <span class="card-shot"><img src="/assets/screens/hangar/home.jpg" alt="" decoding="async"></span>
+            <span class="card-body">
+              <img class="app-icon" src="/assets/icons/hangar.png" alt="" width="52" height="52">
+              <span class="card-text">
+                <h3 class="card-name">Hangar</h3>
+                <span class="card-tagline">Every Steam account, one click away.</span>
+                <span class="card-meta">Windows<span class="card-status">Available</span></span>
+              </span>
+            </span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/hangar/" title="Every Steam account, one click away.">
-            <img class="app-icon" src="/assets/icons/hangar.png" alt="" width="112" height="112">
-            <h3 class="tile-name">Hangar</h3>
-            <span class="sr-only">Every Steam account, one click away.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+          <a class="app-card" href="/verdant/" style="--accent:#85d312">
+            <span class="card-shot"><img src="/assets/screens/verdant/home.jpg" alt="" decoding="async"></span>
+            <span class="card-body">
+              <img class="app-icon" src="/assets/icons/verdant.png" alt="" width="52" height="52">
+              <span class="card-text">
+                <h3 class="card-name">Verdant</h3>
+                <span class="card-tagline">GeForce driver updates, without the NVIDIA App.</span>
+                <span class="card-meta">Windows<span class="card-status">Available</span></span>
+              </span>
+            </span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/verdant/" title="Your GeForce driver, always current.">
-            <img class="app-icon" src="/assets/icons/verdant.png" alt="" width="112" height="112">
-            <h3 class="tile-name">Verdant</h3>
-            <span class="sr-only">Your GeForce driver, always current.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+          <a class="app-card" href="/keepsake/" style="--accent:#fac51c">
+            <span class="card-shot"><img src="/assets/screens/keepsake/home.jpg" alt="" decoding="async"></span>
+            <span class="card-body">
+              <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="52" height="52">
+              <span class="card-text">
+                <h3 class="card-name">Keepsake</h3>
+                <span class="card-tagline">Your emulator games and saves, in one place.</span>
+                <span class="card-meta">Windows<span class="card-status">Available</span></span>
+              </span>
+            </span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/keepsake/" title="Your emulator saves, in one place.">
-            <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="112" height="112">
-            <h3 class="tile-name">Keepsake</h3>
-            <span class="sr-only">Your emulator saves, in one place.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+          <a class="app-card" href="/prism/" style="--accent:#4ca8e5">
+            <span class="card-shot"><img src="/assets/screens/prism/home.jpg" alt="" loading="lazy" decoding="async"></span>
+            <span class="card-body">
+              <img class="app-icon" src="/assets/icons/prism.png" alt="" width="52" height="52">
+              <span class="card-text">
+                <h3 class="card-name">Prism</h3>
+                <span class="card-tagline">Colour profiles for every game, switched automatically.</span>
+                <span class="card-meta">Windows<span class="card-status">Available</span></span>
+              </span>
+            </span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/prism/" title="Your games, in their own colours.">
-            <img class="app-icon" src="/assets/icons/prism.png" alt="" width="112" height="112">
-            <h3 class="tile-name">Prism</h3>
-            <span class="sr-only">Your games, in their own colours.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+          <a class="app-card" href="/parley/" style="--accent:#505dec">
+            <span class="card-shot"><span class="card-shot-empty" aria-hidden="true"><img class="app-icon" src="/assets/icons/parley.png" alt="" width="96" height="96"></span></span>
+            <span class="card-body">
+              
+              <span class="card-text">
+                <h3 class="card-name">Parley</h3>
+                <span class="card-tagline">An unofficial, lightweight Discord client for Windows.</span>
+                <span class="card-meta">Windows<span class="card-status">Available</span></span>
+              </span>
+            </span>
           </a>
-        </li>
-        <li data-families="Windows">
-          <a class="app-tile" href="/parley/" title="Discord, light.">
-            <img class="app-icon" src="/assets/icons/parley.png" alt="" width="112" height="112">
-            <h3 class="tile-name">Parley</h3>
-            <span class="sr-only">Discord, light.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
-          </a>
-        </li>
-        <li class="tile-more">
-          <span class="app-tile">
-            <span class="more-slot" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="tile-name">More Coming</span>
-          </span>
         </li>
       </ul>
+    </section>
+
+    <section class="section wrap" id="upcoming" aria-labelledby="upcoming-title">
+      <div class="section-head">
+        <h2 class="title-2" id="upcoming-title">In the Works</h2>
+      </div>
+      <ul class="upcoming-list">
+        <li>
+          <a class="app-card upcoming-card" href="/catalyst/" style="--accent:#a78bfa">
+            <span class="card-shot"><img src="/assets/screens/catalyst/mac-home.jpg" alt="" loading="lazy" decoding="async"></span>
+            <span class="card-body">
+              <img class="app-icon" src="/assets/icons/catalyst.png" alt="" width="64" height="64">
+              <span class="card-text">
+                <h3 class="card-name">Catalyst</h3>
+                <span class="card-status is-soon">In Development</span>
+                <span class="card-tagline">One home for movies and series.</span>
+                <span class="card-desc">A native app for iPhone, iPad, Mac and Apple TV. Discover what to watch, keep your place across devices, and play from the sources you already use.</span>
+                <span class="card-meta">Coming to iPhone, iPad, Mac and Apple TV</span>
+                <span class="card-more">See Catalyst <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg></span>
+              </span>
+            </span>
+          </a>
+        </li>
+      </ul>
+      <p class="section-note grid-note">More apps are on the way.</p>
+    </section>
+
+    <section class="section wrap" id="principles" aria-labelledby="principles-title">
+      <div class="section-head">
+        <h2 class="title-2" id="principles-title">How They’re Built</h2>
+      </div>
+      <ul class="feature-grid">
+        <li class="feature">
+          <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+          <span><strong class="feature-title">Light on your PC</strong>Hangar keeps Steam idling at about 50 MB instead of 330 MB. Prism uses about 2 MB in the tray. Parley has no Electron and no browser engine.</span>
+        </li>
+        <li class="feature">
+          <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+          <span><strong class="feature-title">Your accounts stay yours</strong>Hangar never reads or stores a password: it signs in with a QR code from your phone, and the token it gets back is encrypted on your PC.</span>
+        </li>
+        <li class="feature">
+          <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+          <span><strong class="feature-title">Careful with your system</strong>Verdant only runs installers signed by NVIDIA. Keepsake makes a backup before every change. Prism injects nothing into your games and needs no admin rights.</span>
+        </li>
+        <li class="feature">
+          <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+          <span><strong class="feature-title">Straight from GitHub</strong>Every download comes from the app’s GitHub Releases page, and each app page shows the version and the date it was last updated.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section wrap" id="about" aria-labelledby="about-title">
+      <div class="section-head">
+        <h2 class="title-2" id="about-title">About</h2>
+      </div>
+      <div class="about-card">
+        <p>PG is one developer making the apps I want on my own PC. Most replace a heavy official app with something smaller, or do the one thing the official app leaves out.</p>
+        <p>The apps are closed source for now. Found a bug or have an idea? Open an issue on the app’s GitHub page.</p>
+        <div class="hero-actions about-actions">
+          <a class="btn btn-soft" href="https://github.com/lilpatter"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+        </div>
+      </div>
     </section>
   </main>
   <dialog class="palette" id="palette" aria-label="Search">
@@ -107,11 +188,11 @@
     </div>
     <ul class="palette-results" id="palette-results" role="listbox"></ul>
   </dialog>
-  <script type="application/json" id="apps-data">[{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"Your GeForce driver, always current.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"keepsake","name":"Keepsake","tagline":"Your emulator saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Your games, in their own colours.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"Discord, light.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
+  <script type="application/json" id="apps-data">[{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"GeForce driver updates, without the NVIDIA App.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"keepsake","name":"Keepsake","tagline":"Your emulator games and saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Colour profiles for every game, switched automatically.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"An unofficial, lightweight Discord client for Windows.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>Copyright © 2026 PG. All rights reserved.</span>
-      <span>Not affiliated with Apple, Valve or NVIDIA.</span>
+      <span>Copyright © 2026 PG. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
+      <span>Not affiliated with Apple, Valve, NVIDIA, Discord or the other companies named here.</span>
     </div>
   </footer>
 </body>

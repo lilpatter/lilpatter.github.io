@@ -13,26 +13,60 @@ const version = async (file) => createHash("sha256").update(await readFile(file)
 const CSS = `/styles.css?v=${await version("styles.css")}`;
 const JS = `/app.js?v=${await version("app.js")}`;
 
-// Latest GitHub release for apps whose download link points at GitHub Releases.
+// GitHub releases for apps whose download link points at GitHub Releases: the latest one for the
+// Version and Size facts, and the rest for the release history.
 // Set GITHUB_TOKEN to avoid the unauthenticated rate limit; without network the pages build without it.
-async function latestRelease(p) {
+const parseTag = (tag) => {
+  const [, version = tag, build] = tag.match(/^v?([\d.]+)(?:-build\.(\d+))?/) || [];
+  return { version, build };
+};
+
+// A release's headline: the first line of its notes, trimmed to a short title. Notes that only say
+// "<App> 1.0.0 (build 3) for Windows. Download the setup…" have nothing to tell, so they're skipped.
+function releaseTitle(body) {
+  const first = String(body || "").split(/\r?\n/).map((l) => l.trim()).find(Boolean);
+  if (!first || /Download the setup to install it/i.test(first)) return "";
+  let t = first.replace(/^[-*]\s+/, "").replace(/\*\*/g, "").replace(/\.$/, "");
+  if (t.length > 80) {
+    const colon = t.lastIndexOf(": ", 80);
+    const cut = colon > 20 ? colon : t.lastIndexOf(", ", 80);
+    t = cut > 20 ? t.slice(0, cut) : t.slice(0, 77).trimEnd() + "…";
+  }
+  return t;
+}
+
+async function githubReleases(p) {
   const dl = (p.links || []).find((l) => l.kind === "download");
   const repo = dl?.url.match(/github\.com\/([^/]+\/[^/]+)\/releases/)?.[1];
   if (!repo) return null;
   try {
     const headers = { Accept: "application/vnd.github+json" };
     if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-    const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, { headers });
+    const res = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=50`, { headers });
     if (!res.ok) return null;
-    const r = await res.json();
+    const list = (await res.json())
+      .filter((r) => !r.draft && !r.prerelease)
+      .sort((a, b) => b.published_at.localeCompare(a.published_at));
+    if (!list.length) return null;
+    const r = list[0];
     const installer = r.assets.find((a) => /setup\.exe$/i.test(a.name)) || r.assets[0];
-    const [, version = r.tag_name, build] = r.tag_name.match(/^v?([\d.]+)(?:-build\.(\d+))?/) || [];
-    return { version, build, date: r.published_at, size: installer?.size };
+    // Consecutive builds that shipped with the same notes are one entry: keep the newest.
+    const history = [];
+    for (const x of list) {
+      const title = releaseTitle(x.body);
+      if (!title || history.at(-1)?.title === title) continue;
+      history.push({ ...parseTag(x.tag_name), title, date: x.published_at, url: x.html_url });
+    }
+    return {
+      ...parseTag(r.tag_name), date: r.published_at, size: installer?.size, history,
+      all: `https://github.com/${repo}/releases`, issues: `https://github.com/${repo}/issues`,
+      installer: installer?.name, sha256: installer?.digest?.replace(/^sha256:/, ""),
+    };
   } catch {
     return null;
   }
 }
-const releases = Object.fromEntries(await Promise.all(projects.map(async (p) => [p.id, await latestRelease(p)])));
+const releases = Object.fromEntries(await Promise.all(projects.map(async (p) => [p.id, await githubReleases(p)])));
 const formatSize = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`);
 const formatDate = (iso) => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 
@@ -136,9 +170,15 @@ const GLYPH = {
   website: '<path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15Zm4.9 6.7h-2.3a12 12 0 0 0-1-4.4 5.9 5.9 0 0 1 3.3 4.4ZM10 4.2c.6.8 1.3 2.5 1.5 5H8.5c.2-2.5.9-4.2 1.5-5ZM8.4 4.8a12 12 0 0 0-1 4.4H5.1a5.9 5.9 0 0 1 3.3-4.4ZM5.1 10.8h2.3c.1 1.7.5 3.2 1 4.4a5.9 5.9 0 0 1-3.3-4.4Zm4.9 5c-.6-.8-1.3-2.5-1.5-5h3c-.2 2.5-.9 4.2-1.5 5Zm1.6-.6c.5-1.2.9-2.7 1-4.4h2.3a5.9 5.9 0 0 1-3.3 4.4Z"/>',
   download: '<path d="M10 2.5a1 1 0 0 1 1 1v8.1l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0l-4.5-4.5a1 1 0 0 1 1.4-1.4L9 11.6V3.5a1 1 0 0 1 1-1ZM4 16a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Z"/>',
   source: '<path d="M7.7 5.3a1 1 0 0 1 0 1.4L4.4 10l3.3 3.3a1 1 0 1 1-1.4 1.4l-4-4a1 1 0 0 1 0-1.4l4-4a1 1 0 0 1 1.4 0Zm4.6 0a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 1 1-1.4-1.4l3.3-3.3-3.3-3.3a1 1 0 0 1 0-1.4Z"/>',
+  warning: '<path d="M8.6 3.3a1.6 1.6 0 0 1 2.8 0l6.3 11.2a1.6 1.6 0 0 1-1.4 2.4H3.7a1.6 1.6 0 0 1-1.4-2.4Zm1.4 3.9a.9.9 0 0 0-.9.9v3.6a.9.9 0 1 0 1.8 0V8.1a.9.9 0 0 0-.9-.9Zm0 6.4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/>',
   check: '<path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/>',
 };
-const GLYPH_TINT = { website: "var(--blue)", download: "var(--accent, var(--green))", source: "#8e8e93" };
+GLYPH.support = '<path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 10.9a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm0-7.4c-1.7 0-3 1.1-3.2 2.6a.9.9 0 0 0 1.8.3c.1-.6.7-1.1 1.4-1.1.8 0 1.4.5 1.4 1.2 0 .5-.3.8-.9 1.2-.8.5-1.4 1.1-1.4 2.1a.9.9 0 0 0 1.8 0c0-.3.2-.5.7-.8.8-.5 1.6-1.2 1.6-2.5 0-1.7-1.4-3-3.2-3Z"/>';
+const GLYPH_TINT = { website: "var(--blue)", download: "var(--accent, var(--green))", source: "#8e8e93", support: "var(--orange)" };
+
+// True of every app on the site. Change these if that stops being so.
+const NO_TELEMETRY = "No analytics, telemetry or crash reports, and nothing is ever sent to PG.";
+const UNSIGNED = "The installers aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the one shown here.";
 
 // Text colour for a button filled with the app's accent: whichever of white or near-black reads better.
 function labelOn(hex) {
@@ -149,8 +189,8 @@ function labelOn(hex) {
   const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
   return 1.05 / (lum + 0.05) >= (lum + 0.05) / 0.05 ? "#fff" : "rgba(0, 0, 0, 0.86)";
 }
-const LINK_TITLE = { website: "Website", download: "Download", source: "Source Code" };
-const LINK_DETAIL = { website: "", download: "GitHub Releases", source: "GitHub" };
+const LINK_TITLE = { website: "Website", download: "Download", source: "Source Code", support: "Report a Problem" };
+const LINK_DETAIL = { website: "", download: "GitHub Releases", source: "GitHub", support: "GitHub Issues" };
 const GITHUB_MARK =
   '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
 const CHEVRON = '<svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>';
@@ -180,7 +220,9 @@ const appData = JSON.stringify(
   }))
 ).replace(/</g, "\\u003c");
 
-function layout({ title, description, path, image = "/assets/avatar.jpg", wash = image, bar, body }) {
+// image: the favicon; wash: the tint at the top of the page; social: the 1200×630 link preview,
+// drawn by scripts/og.py into assets/og/.
+function layout({ title, description, path, image = "/assets/avatar.jpg", wash = image, social = "/assets/og/pg.png", jsonld, bar, body }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -189,10 +231,17 @@ function layout({ title, description, path, image = "/assets/avatar.jpg", wash =
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}">
   <link rel="canonical" href="${SITE}${path}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PG">
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(description)}">
-  <meta property="og:image" content="${SITE}${image}">
+  <meta property="og:image" content="${SITE}${social}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${esc(title)}">
   <meta property="og:url" content="${SITE}${path}">
+  <meta name="twitter:card" content="summary_large_image">${jsonld ? `
+  <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>` : ""}
   <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="${esc(image)}">
@@ -221,8 +270,8 @@ ${body}
   <script type="application/json" id="apps-data">${appData}</script>
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>Copyright © ${new Date().getFullYear()} PG. All rights reserved.</span>
-      <span>Not affiliated with Apple, Valve or NVIDIA.</span>
+      <span>Copyright © ${new Date().getFullYear()} PG. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
+      <span>Not affiliated with Apple, Valve, NVIDIA, Discord or the other companies named here.</span>
     </div>
   </footer>
 </body>
@@ -230,61 +279,124 @@ ${body}
 `;
 }
 
-// Floating controls. Elements marked "reveal" stay hidden at the top of the page and
-// appear once the large title scrolls away, so the header isn't repeated.
+// Floating controls, always visible. Search has no button: Ctrl/⌘ K or / opens it (see app.js).
 // Home: a "PG" capsule and the section links.
-const homeBar = `<a class="pill glass reveal" href="/" aria-label="PG, home">
+const homeBar = `<a class="pill glass" href="/" aria-label="PG, home">
         <img src="/assets/avatar.jpg" alt="" width="32" height="32">PG
       </a>
-      <nav class="bar-links glass reveal" aria-label="Sections">
-        <a href="/#apps">Apps</a>
+      <nav class="bar-links glass" aria-label="Sections">
+        <a class="hide-narrow" href="/#apps">Apps</a>
+        <a href="/#about">About</a>
         <a href="https://github.com/lilpatter">GitHub</a>
-        <button class="bar-search" type="button" data-palette aria-label="Search">${SEARCH}</button>
       </nav>`;
 
-// App pages: the back button always shows; the app's name and the links come in on scroll.
-const appBar = (p) => `<a class="circle glass" href="/" aria-label="Back to Apps">${BACK}</a>
+// App pages: back to the apps, and links to this app's support and GitHub page.
+// Only the app's name waits for the large title to scroll away, so it isn't shown twice.
+const appBar = (p) => {
+  const repo = (p.links || []).find((l) => l.kind === "download")?.url.match(/^https:\/\/github\.com\/[^/]+\/[^/]+/)?.[0];
+  return `<a class="circle glass" href="/" aria-label="Back to Apps">${BACK}</a>
       <span class="bar-title glass" aria-hidden="true">
         <img class="app-icon" src="${esc(asset(p.icon))}" alt="" width="32" height="32">${esc(p.name)}
       </span>
-      <nav class="bar-links glass reveal" aria-label="Sections">
-        <a href="/">Apps</a>
-        <a href="https://github.com/lilpatter">GitHub</a>
-        <button class="bar-search" type="button" data-palette aria-label="Search">${SEARCH}</button>
+      <nav class="bar-links glass" aria-label="Sections">
+        <a href="${esc(releases[p.id]?.issues || "/privacy/#support")}">Support</a>
+        <a href="${esc(repo || "https://github.com/lilpatter")}">GitHub</a>
       </nav>`;
+};
 
-// An app tile, like a Home Screen icon: the icon and its name. The tagline stays for screen readers and hover.
+// An app tile, like a Home Screen icon: the icon, its name and what it does in one line.
+// Where each app runs is said once, above the grid, rather than on every tile.
 function appCard(p, heading = "h3") {
-  const soon =
-    p.status === "in-development"
-      ? `<span class="tile-badge">Coming Soon</span>`
-      : windowsOnly(p)
-        ? `<span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.windows}</svg>Windows</span>`
-        : "";
+  // Only a status that isn't "Available" earns a badge, in the same words as the app page.
+  const soon = p.status !== "available" ? `<span class="tile-badge">${esc(STATUS_LABEL[p.status] || p.status)}</span>` : "";
   return `<li data-families="${esc(families(p).join(" "))}">
-          <a class="app-tile" href="/${esc(p.id)}/" title="${esc(p.tagline)}">
+          <a class="app-tile" href="/${esc(p.id)}/">
             ${icon(p, 112)}
             <${heading} class="tile-name">${esc(p.name)}</${heading}>
-            <span class="sr-only">${esc(p.tagline)}</span>${soon}
+            <span class="tile-tagline">${esc(p.tagline)}</span>${soon}
           </a>
         </li>`;
 }
 
-// An empty slot after the apps, shaped like an icon, saying there are more on the way. Not a link.
-const MORE_COMING = `<li class="tile-more">
-          <span class="app-tile">
-            <span class="more-slot" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="tile-name">More Coming</span>
-          </span>
+const DEVICE = { iOS: "iPhone", iPadOS: "iPad", macOS: "Mac", tvOS: "Apple TV", watchOS: "Apple Watch", visionOS: "Apple Vision Pro" };
+const andList = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
+
+// The screenshot on an app's home card: "cardShot" in projects.json if set, otherwise the first
+// wide one (Windows or Mac), since a phone screenshot crops badly into a landscape card.
+const WIDE = ["Windows", "Mac", "iPad", "Apple TV"];
+const cardShot = (p) => {
+  const shots = p.screenshots || [];
+  return p.cardShot || (WIDE.map((d) => shots.find((s) => s.device === d)).find(Boolean) || shots[0])?.src;
+};
+
+// A home card: the app's screenshot, then its icon, name, what it does, where it runs and whether it's out.
+// The icon stays inside the link so it still flies into place on the app page.
+// The first row is on screen as the page opens, so only the cards below it load lazily.
+function appShowcase(p, i = Infinity) {
+  const shot = cardShot(p);
+  const accent = accents[p.id] ? ` style="--accent:${esc(accents[p.id])}"` : "";
+  const where = windowsOnly(p) ? "Windows" : p.platforms.map((x) => DEVICE[x] || x).join(", ");
+  const status = STATUS_LABEL[p.status] || p.status;
+  const art = shot
+    ? `<img src="${esc(asset(shot))}" alt=""${i < 3 ? "" : ' loading="lazy"'} decoding="async">`
+    : `<span class="card-shot-empty" aria-hidden="true">${icon(p, 96)}</span>`;
+  return `<li data-families="${esc(families(p).join(" "))}">
+          <a class="app-card" href="/${esc(p.id)}/"${accent}>
+            <span class="card-shot">${art}</span>
+            <span class="card-body">
+              ${shot ? icon(p, 52) : ""}
+              <span class="card-text">
+                <h3 class="card-name">${esc(p.name)}</h3>
+                <span class="card-tagline">${esc(p.tagline)}</span>
+                <span class="card-meta">${esc(where)}<span class="card-status${p.status === "available" ? "" : " is-soon"}">${esc(status)}</span></span>
+              </span>
+            </span>
+          </a>
         </li>`;
+}
+
+// What every app has in common. Each point names the apps that prove it, so it isn't just a slogan.
+const PRINCIPLES = [
+  ["Light on your PC", "Hangar keeps Steam idling at about 50 MB instead of 330 MB. Prism uses about 2 MB in the tray. Parley has no Electron and no browser engine."],
+  ["Your accounts stay yours", "Hangar never reads or stores a password: it signs in with a QR code from your phone, and the token it gets back is encrypted on your PC."],
+  ["Careful with your system", "Verdant only runs installers signed by NVIDIA. Keepsake makes a backup before every change. Prism injects nothing into your games and needs no admin rights."],
+  ["Straight from GitHub", "Every download comes from the app’s GitHub Releases page, and each app page shows the version and the date it was last updated."],
+];
+
+// An app still in development, shown wide under "In the Works": a big screenshot, what it is,
+// where it's coming and a plain "In Development" status, so it reads as a preview, not a download.
+function appPreview(p) {
+  const shot = cardShot(p);
+  const accent = accents[p.id] ? ` style="--accent:${esc(accents[p.id])}"` : "";
+  return `<li>
+          <a class="app-card upcoming-card" href="/${esc(p.id)}/"${accent}>
+            <span class="card-shot">${shot ? `<img src="${esc(asset(shot))}" alt="" loading="lazy" decoding="async">` : `<span class="card-shot-empty" aria-hidden="true">${icon(p, 96)}</span>`}</span>
+            <span class="card-body">
+              ${icon(p, 64)}
+              <span class="card-text">
+                <h3 class="card-name">${esc(p.name)}</h3>
+                <span class="card-status is-soon">${esc(STATUS_LABEL[p.status] || p.status)}</span>
+                <span class="card-tagline">${esc(p.tagline)}</span>
+                ${p.description ? `<span class="card-desc">${esc(p.description)}</span>` : ""}
+                <span class="card-meta">Coming to ${esc(andList(p.platforms.map((x) => DEVICE[x] || x)))}</span>
+                <span class="card-more">See ${esc(p.name)} ${CHEVRON}</span>
+              </span>
+            </span>
+          </a>
+        </li>`;
+}
 
 // The platform filter only earns its place once there are enough apps to sift through.
 const FILTER_FROM = 7;
 
 function homePage() {
-  const fams = [...new Set(projects.flatMap(families))];
+  // Released apps lead; apps still in development get their own section below, so the first thing
+  // a visitor meets is something they can download today.
+  const released = projects.filter((p) => p.status !== "in-development");
+  const upcoming = projects.filter((p) => p.status === "in-development");
+  const fams = [...new Set(released.flatMap(families))];
   const filter =
-    fams.length > 1 && projects.length >= FILTER_FROM
+    fams.length > 1 && released.length >= FILTER_FROM
       ? `<div class="segmented" id="filter" role="radiogroup" aria-label="Filter by platform">
           <span class="segmented-thumb" style="width:calc((100% - 8px) / ${fams.length + 1})"></span>
           ${["All", ...fams].map((f, i) => `<button type="button" role="radio" aria-checked="${i === 0}" data-family="${esc(f)}">${esc(f)}</button>`).join("\n          ")}
@@ -293,11 +405,7 @@ function homePage() {
   const body = `    <section class="hero wrap" aria-labelledby="page-title">
       <img class="avatar" src="/assets/avatar.jpg" alt="" width="128" height="128">
       <h1 class="hero-title" id="page-title" tabindex="-1">PG</h1>
-      <p class="hero-sub">Native apps for Apple platforms and Windows.</p>
-      <div class="hero-actions">
-        <a class="btn btn-soft" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
-        <button class="btn btn-soft" type="button" data-palette>${SEARCH}Search<kbd class="shortcut" data-shortcut>Ctrl K</kbd></button>
-      </div>
+      <p class="hero-sub">Small, fast apps that do one job well. Made by one developer.</p>
     </section>
 
     <section class="section wrap" id="apps" aria-labelledby="apps-title">
@@ -305,23 +413,130 @@ function homePage() {
         <h2 class="title-2" id="apps-title">Apps</h2>
         ${filter}
       </div>
-      <ul class="app-grid" id="app-list">
-        ${projects.map((p) => appCard(p)).join("\n        ")}
-        ${MORE_COMING}
+      <ul class="app-grid card-grid" id="app-list">
+        ${released.map(appShowcase).join("\n        ")}
+      </ul>${upcoming.length ? "" : `\n      <p class="section-note grid-note">More apps are on the way.</p>`}
+    </section>
+${upcoming.length ? `
+    <section class="section wrap" id="upcoming" aria-labelledby="upcoming-title">
+      <div class="section-head">
+        <h2 class="title-2" id="upcoming-title">In the Works</h2>
+      </div>
+      <ul class="upcoming-list">
+        ${upcoming.map(appPreview).join("\n        ")}
       </ul>
+      <p class="section-note grid-note">More apps are on the way.</p>
+    </section>
+` : ""}
+    <section class="section wrap" id="principles" aria-labelledby="principles-title">
+      <div class="section-head">
+        <h2 class="title-2" id="principles-title">How They’re Built</h2>
+      </div>
+      <ul class="feature-grid">
+        ${PRINCIPLES.map(
+          ([title, text]) => `<li class="feature">
+          <svg class="check" viewBox="0 0 20 20" aria-hidden="true">${GLYPH.check}</svg>
+          <span><strong class="feature-title">${esc(title)}</strong>${esc(text)}</span>
+        </li>`
+        ).join("\n        ")}
+      </ul>
+    </section>
+
+    <section class="section wrap" id="about" aria-labelledby="about-title">
+      <div class="section-head">
+        <h2 class="title-2" id="about-title">About</h2>
+      </div>
+      <div class="about-card">
+        <p>PG is one developer making the apps I want on my own PC. Most replace a heavy official app with something smaller, or do the one thing the official app leaves out.</p>
+        <p>The apps are closed source for now. Found a bug or have an idea? Open an issue on the app’s GitHub page.</p>
+        <div class="hero-actions about-actions">
+          <a class="btn btn-soft" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
+        </div>
+      </div>
     </section>`;
   return layout({
-    title: "PG — Apps",
-    description: `Apps by PG: ${projects.map((p) => p.name).join(", ")}.`,
+    title: "PG — Small, fast apps",
+    // What the apps do, not just their names: this is the line under the link in search results.
+    description:
+      "Small, fast Windows apps that do one job well: switch Steam accounts, update GeForce drivers without the NVIDIA App, manage emulator saves and give every game its own colours. Free, and made by one developer.",
     path: "/",
     bar: homeBar,
     body,
   });
 }
 
+// A risk the visitor should know before downloading, shown right under the Download button:
+// "warning": { "title", "text", "link": { "label", "url" } }.
+function warning(p) {
+  const w = p.warning;
+  if (!w) return "";
+  return `<div class="callout" role="note">
+            <svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.warning}</svg>
+            <div>
+              <strong>${esc(w.title)}</strong>
+              <p>${esc(w.text)}</p>
+              ${w.link ? `<a href="${esc(w.link.url)}">${esc(w.link.label)}</a>` : ""}
+            </div>
+          </div>`;
+}
+
+// What a visitor should know before installing: what the app talks to, what stays on the PC,
+// how downloads and updates are checked, and what it needs to run. Built from
+// "privacy": { "contacts": [[service, why]], "local": [..] }, "updates" and "requirements".
+function trustSection(p, release) {
+  const pv = p.privacy;
+  if (!pv && !p.requirements && !p.updates) return "";
+  const bullets = (xs) => `<ul class="trust-list">${xs.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  const cards = [];
+  if (pv?.contacts?.length) {
+    cards.push(`<div class="trust-card">
+            <h3 class="trust-title">What it connects to</h3>
+            <ul class="trust-list">${pv.contacts.map(([who, why]) => `<li><strong>${esc(who)}</strong>: ${esc(why)}</li>`).join("")}</ul>
+          </div>`);
+  }
+  if (pv) {
+    cards.push(`<div class="trust-card">
+            <h3 class="trust-title">What stays on your PC</h3>
+            ${bullets([...(pv.local || []), NO_TELEMETRY])}
+          </div>`);
+  }
+  if (p.updates || release?.sha256) {
+    cards.push(`<div class="trust-card">
+            <h3 class="trust-title">Downloads and updates</h3>
+            ${bullets([p.updates, UNSIGNED].filter(Boolean))}
+            ${release?.sha256 ? `<p class="hash"><span>SHA-256 of ${esc(release.installer)}</span><code>${esc(release.sha256)}</code></p>` : ""}
+          </div>`);
+  }
+  if (p.requirements?.length) {
+    cards.push(`<div class="trust-card">
+            <h3 class="trust-title">Requirements</h3>
+            ${bullets(p.requirements)}
+          </div>`);
+  }
+  return `
+      <section class="app-section" id="privacy" aria-labelledby="privacy-title">
+        <h2 class="title-2" id="privacy-title">Privacy &amp; Security</h2>
+        <div class="trust-grid">
+          ${cards.join("\n          ")}
+        </div>
+      </section>
+`;
+}
+
+// A short screen recording above the screenshots: "video": { "src", "poster", "caption" } in projects.json.
+// It never plays by itself; the viewer starts it.
+function demo(p) {
+  const v = p.video;
+  if (!v?.src) return "";
+  return `<figure class="demo">
+          <video src="${esc(asset(v.src))}"${v.poster ? ` poster="${esc(asset(v.poster))}"` : ""} controls muted playsinline preload="none"></video>
+          ${v.caption ? `<figcaption>${esc(v.caption)}</figcaption>` : ""}
+        </figure>`;
+}
+
 function gallery(p) {
   const shots = p.screenshots || [];
-  if (!shots.length) return "";
+  if (!shots.length && !p.video?.src) return "";
   const devices = [...new Set(shots.map((x) => x.device))];
   const slug = (d) => d.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const tabs =
@@ -343,9 +558,10 @@ function gallery(p) {
     .join("\n        ");
   return `      <section class="app-section" aria-labelledby="shots-title">
         <div class="section-head">
-          <h2 class="title-2" id="shots-title">Screenshots</h2>
+          <h2 class="title-2" id="shots-title">${shots.length ? "Screenshots" : "See It Work"}</h2>
           ${tabs}
         </div>
+        ${demo(p)}
         ${rows}
         ${windowsOnly(p) ? `<p class="shots-note">Screenshots from Windows 11. The Mac-style sidebar and window buttons are part of ${esc(p.name)}’s design; it runs on Windows only.</p>` : ""}
       </section>
@@ -360,7 +576,8 @@ function appPage(p) {
   const others = projects.filter((o) => o.id !== p.id);
   const release = releases[p.id];
 
-  const linkRows = links
+  // Every app hosted on GitHub gets a "Report a Problem" row under its download link.
+  const linkRows = [...links, ...(release?.issues ? [{ kind: "support", url: release.issues }] : [])]
     .map(
       (l) => `<a class="row has-glyph" href="${esc(l.url)}">
             <span class="glyph" style="--tint:${GLYPH_TINT[l.kind] || "var(--blue)"}"><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH[l.kind] || GLYPH.website}</svg></span>
@@ -368,6 +585,40 @@ function appPage(p) {
             <span class="row-detail">${esc(LINK_DETAIL[l.kind] ?? "")}</span>
             ${CHEVRON}
           </a>`
+    )
+    .join("\n          ");
+  // How it works, for people who want more than a feature list: "engineering": [{ "title", "text" }].
+  const engineering = (p.engineering || [])
+    .map(
+      (e) => `<li class="feature">
+            <span><strong class="feature-title">${esc(e.title)}</strong>${esc(e.text)}</span>
+          </li>`
+    )
+    .join("\n          ");
+  // Projects the app is built on: "credits": [{ "name", "by", "url", "license", "text" }].
+  const credits = (p.credits || [])
+    .map(
+      (c) => `<li><a class="row" href="${esc(c.url)}">
+            <span class="row-body">
+              <span class="row-title">${esc(c.name)}${c.by ? ` <span class="credit-by">by ${esc(c.by)}</span>` : ""}</span>
+              <span class="row-sub">${esc([c.license, c.text].filter(Boolean).join(" · "))}</span>
+            </span>
+            ${CHEVRON}
+          </a></li>`
+    )
+    .join("\n          ");
+  // The newest releases with something to say, newest first; the rest are a click away on GitHub.
+  const RELEASES_SHOWN = 6;
+  const history = (release?.history || [])
+    .slice(0, RELEASES_SHOWN)
+    .map(
+      (h) => `<li><a class="row" href="${esc(h.url)}">
+            <span class="row-body">
+              <span class="row-title release-title">${esc(h.title)}</span>
+              <span class="row-sub">${esc([h.version, h.build && `Build ${h.build}`, formatDate(h.date)].filter(Boolean).join(" · "))}</span>
+            </span>
+            ${CHEVRON}
+          </a></li>`
     )
     .join("\n          ");
   const features = (p.highlights || [])
@@ -379,16 +630,14 @@ function appPage(p) {
     )
     .join("\n          ");
 
-  // Information, like the bottom of an App Store page.
+  // Information, like the bottom of an App Store page. Only what the header and the facts strip
+  // don't already say: platform, version, size and status are shown once, up there.
   const info = [
     ["Developer", "PG"],
-    [p.platforms.length > 1 ? "Compatibility" : "Platform", windowsOnly(p) ? WINDOWS_VERSIONS : p.platforms.join(", ")],
-    release && ["Version", release.build ? `${release.version} (build ${release.build})` : release.version],
     release && ["Updated", formatDate(release.date)],
-    release?.size && ["Size", formatSize(release.size)],
-    p.stack && ["Built With", p.stack],
+    release && ["Price", "Free"],
+    release && p.stack && ["Built With", p.stack],
     ["Source", isOpenSource(p) ? "Open source" : "Closed source"],
-    ["Status", STATUS_LABEL[p.status] || p.status],
   ]
     .filter(Boolean)
     .map(([k, v]) => `<div class="row info-row"><span class="row-body">${esc(k)}</span><span class="row-detail">${esc(v)}</span></div>`)
@@ -411,6 +660,7 @@ function appPage(p) {
             <span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>
           </div>
           ${windowsOnly(p) ? `<p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.windows}</svg>For ${WINDOWS_VERSIONS}. There’s no Mac version yet.</p>` : ""}
+          ${warning(p)}
         </div>
       </header>
 
@@ -426,6 +676,7 @@ ${gallery(p)}
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
         <p class="app-desc">${esc(p.description)}</p>
+        ${[].concat(p.story || []).map((s) => `<p class="app-desc app-story">${esc(s)}</p>`).join("\n        ")}
       </section>
 
 ${features ? `      <section class="app-section" aria-labelledby="features-title">
@@ -434,7 +685,31 @@ ${features ? `      <section class="app-section" aria-labelledby="features-title
           ${features}
         </ul>
       </section>
-` : ""}
+` : ""}${engineering ? `
+      <section class="app-section" aria-labelledby="engineering-title">
+        <h2 class="title-2" id="engineering-title">Under the Hood</h2>
+        <ul class="feature-grid engineering">
+          ${engineering}
+        </ul>
+      </section>
+` : ""}${credits ? `
+      <section class="app-section" aria-labelledby="credits-title">
+        <h2 class="title-2" id="credits-title">Credits</h2>
+        <ul class="list credit-list">
+          ${credits}
+        </ul>
+      </section>
+` : ""}${history ? `
+      <section class="app-section" aria-labelledby="history-title">
+        <div class="section-head">
+          <h2 class="title-2" id="history-title">Release History</h2>
+          <a class="btn btn-plain" href="${esc(release.all)}">All Releases</a>
+        </div>
+        <ol class="list release-list">
+          ${history}
+        </ol>
+      </section>
+` : ""}${trustSection(p, release)}
       <section class="app-section" aria-labelledby="info-title">
         <h2 class="title-2" id="info-title">Information</h2>
         <div class="info-columns">
@@ -467,6 +742,25 @@ ${others.length ? `
     path: `/${p.id}/`,
     image: asset(p.icon),
     wash: asset(p.icon),
+    social: `/assets/og/${p.id}.png`,
+    // Lets search engines show the app as software: what it runs on, that it's free, its version.
+    jsonld: {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: p.name,
+      description: p.description,
+      url: `${SITE}/${p.id}/`,
+      image: `${SITE}${asset(p.icon)}`,
+      operatingSystem: windowsOnly(p) ? "Windows 10, Windows 11" : p.platforms.join(", "),
+      applicationCategory: "UtilitiesApplication",
+      author: { "@type": "Person", name: "PG", url: SITE },
+      ...(release && {
+        softwareVersion: release.version,
+        dateModified: release.date,
+        downloadUrl: links.find((l) => l.kind === "download")?.url,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      }),
+    },
     bar: appBar(p),
     body,
   });
@@ -486,6 +780,88 @@ function notFound() {
   });
 }
 
+// /privacy/: the site-wide answer to "what do these apps do with my data, and where do I get help?"
+// Built from the same privacy and support data as the app pages, so the two never disagree.
+function privacyPage() {
+  const shipped = projects.filter((p) => p.privacy);
+  const rows = shipped
+    .map((p) => {
+      const release = releases[p.id];
+      return `<li><a class="row has-glyph" href="/${esc(p.id)}/#privacy">
+            ${icon(p, 40)}
+            <span class="row-body">
+              <span class="row-title">${esc(p.name)}</span>
+              <span class="row-sub">Connects to ${esc(andList(p.privacy.contacts.map(([who]) => who)))}</span>
+            </span>
+            ${CHEVRON}
+          </a></li>`;
+    })
+    .join("\n          ");
+  const support = shipped
+    .filter((p) => releases[p.id]?.issues)
+    .map(
+      (p) => `<li><a class="row has-glyph" href="${esc(releases[p.id].issues)}">
+            ${icon(p, 40)}
+            <span class="row-body row-title">${esc(p.name)}</span>
+            <span class="row-detail">GitHub Issues</span>
+            ${CHEVRON}
+          </a></li>`
+    )
+    .join("\n          ");
+  const bar = `<a class="circle glass" href="/" aria-label="Back to Apps">${BACK}</a>
+      <nav class="bar-links glass" aria-label="Sections">
+        <a href="/">Apps</a>
+        <a href="https://github.com/lilpatter">GitHub</a>
+      </nav>`;
+  const body = `    <article class="wrap doc-page" aria-labelledby="page-title">
+      <h1 class="large-title" id="page-title" tabindex="-1">Privacy &amp; Support</h1>
+      <p class="app-desc">What PG’s apps do with your information, how to check a download is genuine, and where to get help. This covers the released apps: ${esc(andList(shipped.map((p) => p.name)))}.</p>
+
+      <section class="app-section" aria-labelledby="short-title">
+        <h2 class="title-2" id="short-title">The Short Version</h2>
+        <ul class="feature-grid">
+          <li class="feature"><svg class="check" viewBox="0 0 20 20" aria-hidden="true">${GLYPH.check}</svg><span><strong class="feature-title">No tracking</strong>${esc(NO_TELEMETRY)}</span></li>
+          <li class="feature"><svg class="check" viewBox="0 0 20 20" aria-hidden="true">${GLYPH.check}</svg><span><strong class="feature-title">Only what the app needs</strong>Each app talks to the services it works with, such as Steam, NVIDIA or Discord, and to GitHub for updates. Nothing else.</span></li>
+          <li class="feature"><svg class="check" viewBox="0 0 20 20" aria-hidden="true">${GLYPH.check}</svg><span><strong class="feature-title">Secrets stay encrypted</strong>Hangar and Parley sign in with a QR code from your phone, so they never see your password, and the tokens they get back are encrypted with Windows’ own data protection (DPAPI).</span></li>
+          <li class="feature"><svg class="check" viewBox="0 0 20 20" aria-hidden="true">${GLYPH.check}</svg><span><strong class="feature-title">This website</strong>No analytics, no cookies and no third-party scripts. It’s hosted on GitHub Pages, which keeps its own server logs under GitHub’s privacy statement.</span></li>
+        </ul>
+      </section>
+
+      <section class="app-section" aria-labelledby="apps-privacy-title">
+        <h2 class="title-2" id="apps-privacy-title">App by App</h2>
+        <ul class="list">
+          ${rows}
+        </ul>
+        <p class="group-note">Each app’s page lists exactly what it connects to and why, what stays on your PC, and what it needs to run.</p>
+      </section>
+
+      <section class="app-section" id="security" aria-labelledby="security-title">
+        <h2 class="title-2" id="security-title">Checking a Download</h2>
+        <div class="about-card">
+          <p>Every app downloads from its own GitHub Releases page, and updates itself from there too, checking each download against its SHA-256 hash before installing.</p>
+          <p>${esc(UNSIGNED)} In PowerShell, run this on the file you downloaded:</p>
+          <pre class="code"><code>Get-FileHash .\\Hangar_1.0.0_x64-setup.exe</code></pre>
+          <p>The hash it prints should match the one in the Privacy &amp; Security section of that app’s page, and the one GitHub shows next to the file.</p>
+        </div>
+      </section>
+
+      <section class="app-section" id="support" aria-labelledby="support-title">
+        <h2 class="title-2" id="support-title">Support</h2>
+        <ul class="list">
+          ${support}
+        </ul>
+        <p class="group-note">Found a bug or have an idea? Open an issue on that app’s GitHub page. You’ll need a free GitHub account.</p>
+      </section>
+    </article>`;
+  return layout({
+    title: "Privacy & Support — PG",
+    description: "What PG’s apps do with your information, how to check a download, and where to get help.",
+    path: "/privacy/",
+    bar,
+    body,
+  });
+}
+
 // Remove folders of apps that were taken out of projects.json.
 const ids = new Set(projects.map((p) => p.id));
 for (const entry of await readdir(".")) {
@@ -499,6 +875,17 @@ for (const entry of await readdir(".")) {
 await writeFile("accents.json", JSON.stringify(accents, null, 2) + "\n");
 await writeFile("index.html", homePage());
 await writeFile("404.html", notFound());
+await mkdir("privacy", { recursive: true });
+await writeFile("privacy/index.html", privacyPage());
+// Every page, for search engines (robots.txt points here).
+await writeFile(
+  "sitemap.xml",
+  `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${["/", ...projects.map((p) => `/${p.id}/`), "/privacy/"].map((u) => `  <url><loc>${SITE}${u}</loc></url>`).join("\n")}
+</urlset>
+`
+);
 for (const p of projects) {
   await mkdir(p.id, { recursive: true });
   await writeFile(`${p.id}/index.html`, appPage(p));
@@ -506,4 +893,4 @@ for (const p of projects) {
 const withRelease = Object.entries(releases).filter(([, r]) => r).map(([id, r]) => `${id} ${r.version}`);
 console.log(`Release info: ${withRelease.join(", ") || "none (offline or rate limited)"}`);
 console.log(`Accents: ${Object.entries(accents).map(([id, c]) => `${id} ${c}`).join(", ")}`);
-console.log(`Built home, 404 and ${projects.length} app pages: ${projects.map((p) => "/" + p.id + "/").join(" ")}`);
+console.log(`Built home, 404, privacy and ${projects.length} app pages: ${projects.map((p) => "/" + p.id + "/").join(" ")}`);

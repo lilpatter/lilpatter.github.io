@@ -279,11 +279,10 @@ function skeleton(path) {
         <span class="sk sk-avatar"></span>
         <span class="sk sk-title c"></span>
         <span class="sk sk-line w40 c"></span>
-        <div class="hero-actions"><span class="sk sk-pill"></span><span class="sk sk-pill"></span></div>
       </section>
       <section class="section wrap skeleton">
         <div class="section-head"><span class="sk sk-title sm"></span></div>
-        <ul class="app-grid">${`<li><div class="app-tile"><span class="sk sk-app"></span><span class="sk sk-line w50 c"></span></div></li>`.repeat(APPS.length + 1)}</ul>
+        <ul class="app-grid card-grid">${`<li><div class="app-card"><span class="card-shot"></span><span class="card-body"><span class="sk sk-glyph"></span><span class="sk-stack"><span class="sk sk-line w50"></span><span class="sk sk-line w70"></span></span></span></div></li>`.repeat(APPS.length)}</ul>
       </section>`,
   };
 }
@@ -328,12 +327,15 @@ async function navigate(url, { pop = false, sourceIcon = null } = {}) {
     main.innerHTML = `<div class="wash" aria-hidden="true"><i></i><i></i><i></i></div>${html}`;
     setWash(wash);
     applyWash();
-    // The bar of the page being opened: a back button on app pages, nothing yet on home.
+    // The bar of the page being opened: a back button on app pages, the PG capsule on home.
+    // The links stay where they are until the real page arrives, so the bar never blinks out.
     barObserver?.disconnect();
     document.getElementById("bar").classList.remove("is-scrolled");
-    document.querySelector("#bar .bar-inner").innerHTML = appIdFor(path)
-      ? `<a class="circle glass" href="/" aria-label="Back to Apps"><svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8"/></svg></a>`
-      : "";
+    const links = document.querySelector("#bar .bar-links")?.outerHTML || "";
+    document.querySelector("#bar .bar-inner").innerHTML =
+      (appIdFor(path)
+        ? `<a class="circle glass" href="/" aria-label="Back to Apps"><svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8"/></svg></a>`
+        : `<a class="pill glass" href="/" aria-label="PG, home"><img src="/assets/avatar.jpg" alt="" width="32" height="32">PG</a>`) + links;
     scrollTo(0, 0);
   }, "to-skeleton");
 

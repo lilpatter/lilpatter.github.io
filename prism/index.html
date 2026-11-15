@@ -3,19 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Prism — Your games, in their own colours</title>
+  <title>Prism — Colour profiles for every game, switched automatically</title>
   <meta name="description" content="Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.">
   <link rel="canonical" href="https://lilpatter.github.io/prism/">
-  <meta property="og:title" content="Prism — Your games, in their own colours">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PG">
+  <meta property="og:title" content="Prism — Colour profiles for every game, switched automatically">
   <meta property="og:description" content="Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.">
-  <meta property="og:image" content="https://lilpatter.github.io/assets/icons/prism.png">
+  <meta property="og:image" content="https://lilpatter.github.io/assets/og/prism.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Prism — Colour profiles for every game, switched automatically">
   <meta property="og:url" content="https://lilpatter.github.io/prism/">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Prism","description":"Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.","url":"https://lilpatter.github.io/prism/","image":"https://lilpatter.github.io/assets/icons/prism.png","operatingSystem":"Windows 10, Windows 11","applicationCategory":"UtilitiesApplication","author":{"@type":"Person","name":"PG","url":"https://lilpatter.github.io"},"softwareVersion":"1.0.0","dateModified":"2026-11-15T19:32:53Z","downloadUrl":"https://github.com/lilpatter/prism/releases/latest","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/icons/prism.png">
   <link rel="apple-touch-icon" href="/assets/icons/prism.png">
-  <link rel="stylesheet" href="/styles.css?v=08ba860e11">
-  <script src="/app.js?v=4e19dc8b84" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=5feac3bc2e">
+  <script src="/app.js?v=c90647a080" defer></script>
 </head>
 <body>
   <header class="bar" id="bar">
@@ -24,10 +31,9 @@
       <span class="bar-title glass" aria-hidden="true">
         <img class="app-icon" src="/assets/icons/prism.png" alt="" width="32" height="32">Prism
       </span>
-      <nav class="bar-links glass reveal" aria-label="Sections">
-        <a href="/">Apps</a>
-        <a href="https://github.com/lilpatter">GitHub</a>
-        <button class="bar-search" type="button" data-palette aria-label="Search"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 0 1 4.4 8.8l3.6 3.7a.9.9 0 0 1-1.3 1.3l-3.7-3.6A5.5 5.5 0 1 1 8.5 3Zm0 1.8a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Z"/></svg></button>
+      <nav class="bar-links glass" aria-label="Sections">
+        <a href="https://github.com/lilpatter/prism/issues">Support</a>
+        <a href="https://github.com/lilpatter/prism">GitHub</a>
       </nav>
     </div>
   </header>
@@ -43,12 +49,13 @@
         </div>
         <div>
           <h1 class="app-name" id="app-title" tabindex="-1">Prism</h1>
-          <p class="app-subtitle">Your games, in their own colours.</p>
+          <p class="app-subtitle">Colour profiles for every game, switched automatically.</p>
           <div class="header-actions">
             <a class="btn btn-filled" href="https://github.com/lilpatter/prism/releases/latest">Download for Windows</a>
             <span class="status" data-status="available">Available</span>
           </div>
           <p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>For Windows 10 and 11. There’s no Mac version yet.</p>
+          
         </div>
       </header>
 
@@ -62,6 +69,7 @@
           <h2 class="title-2" id="shots-title">Screenshots</h2>
           
         </div>
+        
         <div class="shot-row" id="shots-windows" data-device="windows"   tabindex="0">
           <figure class="shot"><img src="/assets/screens/prism/home.jpg" alt="Home with FragPunk active in the top bar, its colours on screen, and every game profile." loading="lazy" decoding="async"></figure>
           <figure class="shot"><img src="/assets/screens/prism/games.jpg" alt="Games in a grid, each with its own icon and vibrance." loading="lazy" decoding="async"></figure>
@@ -73,6 +81,7 @@
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
         <p class="app-desc">Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.</p>
+        
       </section>
 
       <section class="app-section" aria-labelledby="features-title">
@@ -105,18 +114,93 @@
         </ul>
       </section>
 
+      <section class="app-section" aria-labelledby="engineering-title">
+        <h2 class="title-2" id="engineering-title">Under the Hood</h2>
+        <ul class="feature-grid engineering">
+          <li class="feature">
+            <span><strong class="feature-title">Idle means idle</strong>One engine thread owns the colour effect. It sleeps until Windows reports a new window in front, and only checks again while a profile needs it. Closing Prism&#39;s window destroys it and its web view entirely, so in the tray it uses about 2 MB and no CPU.</span>
+          </li>
+          <li class="feature">
+            <span><strong class="feature-title">Better than the original</strong>Prism is a rewrite of Digital Vibrance in Rust. Along the way: the live preview no longer sticks on screen, a colour change Windows refuses is retried, and the list of running processes is no longer read every 1.5 seconds.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="app-section" aria-labelledby="credits-title">
+        <h2 class="title-2" id="credits-title">Credits</h2>
+        <ul class="list credit-list">
+          <li><a class="row" href="https://github.com/SYTStudio/DigitalVibrance">
+            <span class="row-body">
+              <span class="row-title">Digital Vibrance <span class="credit-by">by SYTStudio</span></span>
+              <span class="row-sub">Prism is a rewrite of Digital Vibrance in Rust, and imports its profiles.</span>
+            </span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
+        </ul>
+      </section>
+
+      <section class="app-section" aria-labelledby="history-title">
+        <div class="section-head">
+          <h2 class="title-2" id="history-title">Release History</h2>
+          <a class="btn btn-plain" href="https://github.com/lilpatter/prism/releases">All Releases</a>
+        </div>
+        <ol class="list release-list">
+          <li><a class="row" href="https://github.com/lilpatter/prism/releases/tag/v1.0.0-build.4">
+            <span class="row-body">
+              <span class="row-title release-title">New app icon: a white beam into the prism and a soft spectrum out</span>
+              <span class="row-sub">1.0.0 · Build 4 · Nov 15, 2026</span>
+            </span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
+          <li><a class="row" href="https://github.com/lilpatter/prism/releases/tag/v1.0.0-build.3">
+            <span class="row-body">
+              <span class="row-title release-title">Replace the hero with a status top bar</span>
+              <span class="row-sub">1.0.0 · Build 3 · Nov 14, 2026</span>
+            </span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
+          <li><a class="row" href="https://github.com/lilpatter/prism/releases/tag/v1.0.0-build.1">
+            <span class="row-body">
+              <span class="row-title release-title">Prism: per-game colour on Tauri 2, with the Hangar, Verdant and Keepsake look</span>
+              <span class="row-sub">1.0.0 · Build 1 · Nov 13, 2026</span>
+            </span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
+        </ol>
+      </section>
+
+      <section class="app-section" id="privacy" aria-labelledby="privacy-title">
+        <h2 class="title-2" id="privacy-title">Privacy &amp; Security</h2>
+        <div class="trust-grid">
+          <div class="trust-card">
+            <h3 class="trust-title">What it connects to</h3>
+            <ul class="trust-list"><li><strong>GitHub</strong>: to check for and download updates. Prism connects to nothing else</li></ul>
+          </div>
+          <div class="trust-card">
+            <h3 class="trust-title">What stays on your PC</h3>
+            <ul class="trust-list"><li>Your game profiles and settings</li><li>Prism watches which window is in front to switch profiles. That never leaves your PC</li><li>Nothing is injected into your games, and no admin rights are needed</li><li>No analytics, telemetry or crash reports, and nothing is ever sent to PG.</li></ul>
+          </div>
+          <div class="trust-card">
+            <h3 class="trust-title">Downloads and updates</h3>
+            <ul class="trust-list"><li>Updates itself from its GitHub Releases page, also while it&#39;s in the tray, and checks each download against its SHA-256 hash before installing. You can turn this off under Settings › About.</li><li>The installers aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the one shown here.</li></ul>
+            <p class="hash"><span>SHA-256 of Prism_1.0.0_x64-setup.exe</span><code>7fa204203c8d40a4367861f86eb9e8723c181cba3b86260a174e38809d192cf3</code></p>
+          </div>
+          <div class="trust-card">
+            <h3 class="trust-title">Requirements</h3>
+            <ul class="trust-list"><li>Windows 10 or 11, 64-bit</li><li>Any NVIDIA, AMD or Intel graphics card</li><li>Games in borderless or windowed mode: exclusive fullscreen skips the effect, and HDR may change it</li><li>The Microsoft Edge WebView2 runtime, which comes with Windows 11</li></ul>
+          </div>
+        </div>
+      </section>
+
       <section class="app-section" aria-labelledby="info-title">
         <h2 class="title-2" id="info-title">Information</h2>
         <div class="info-columns">
           <div class="list">
           <div class="row info-row"><span class="row-body">Developer</span><span class="row-detail">PG</span></div>
-          <div class="row info-row"><span class="row-body">Platform</span><span class="row-detail">Windows 10 and 11</span></div>
-          <div class="row info-row"><span class="row-body">Version</span><span class="row-detail">1.0.0 (build 4)</span></div>
           <div class="row info-row"><span class="row-body">Updated</span><span class="row-detail">Nov 15, 2026</span></div>
-          <div class="row info-row"><span class="row-body">Size</span><span class="row-detail">1.5 MB</span></div>
+          <div class="row info-row"><span class="row-body">Price</span><span class="row-detail">Free</span></div>
           <div class="row info-row"><span class="row-body">Built With</span><span class="row-detail">Tauri 2 · Rust</span></div>
           <div class="row info-row"><span class="row-body">Source</span><span class="row-detail">Closed source</span></div>
-          <div class="row info-row"><span class="row-body">Status</span><span class="row-detail">Available</span></div>
           </div>
           <div>
             <div class="list">
@@ -126,8 +210,14 @@
             <span class="row-detail">GitHub Releases</span>
             <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
           </a>
+          <a class="row has-glyph" href="https://github.com/lilpatter/prism/issues">
+            <span class="glyph" style="--tint:var(--orange)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 10.9a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm0-7.4c-1.7 0-3 1.1-3.2 2.6a.9.9 0 0 0 1.8.3c.1-.6.7-1.1 1.4-1.1.8 0 1.4.5 1.4 1.2 0 .5-.3.8-.9 1.2-.8.5-1.4 1.1-1.4 2.1a.9.9 0 0 0 1.8 0c0-.3.2-.5.7-.8.8-.5 1.6-1.2 1.6-2.5 0-1.7-1.4-3-3.2-3Z"/></svg></span>
+            <span class="row-body row-title">Report a Problem</span>
+            <span class="row-detail">GitHub Issues</span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a>
             </div>
-            <p class="group-note">Based on Digital Vibrance by SYTStudio. Not affiliated with NVIDIA, AMD or Intel.</p>
+            <p class="group-note">Not affiliated with NVIDIA, AMD or Intel.</p>
           </div>
         </div>
       </section>
@@ -140,38 +230,38 @@
       </div>
       <ul class="app-grid">
         <li data-families="Apple">
-          <a class="app-tile" href="/catalyst/" title="One home for movies and series.">
+          <a class="app-tile" href="/catalyst/">
             <img class="app-icon" src="/assets/icons/catalyst.png" alt="" width="112" height="112">
             <h3 class="tile-name">Catalyst</h3>
-            <span class="sr-only">One home for movies and series.</span><span class="tile-badge">Coming Soon</span>
+            <span class="tile-tagline">One home for movies and series.</span><span class="tile-badge">In Development</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/hangar/" title="Every Steam account, one click away.">
+          <a class="app-tile" href="/hangar/">
             <img class="app-icon" src="/assets/icons/hangar.png" alt="" width="112" height="112">
             <h3 class="tile-name">Hangar</h3>
-            <span class="sr-only">Every Steam account, one click away.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+            <span class="tile-tagline">Every Steam account, one click away.</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/verdant/" title="Your GeForce driver, always current.">
+          <a class="app-tile" href="/verdant/">
             <img class="app-icon" src="/assets/icons/verdant.png" alt="" width="112" height="112">
             <h3 class="tile-name">Verdant</h3>
-            <span class="sr-only">Your GeForce driver, always current.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+            <span class="tile-tagline">GeForce driver updates, without the NVIDIA App.</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/keepsake/" title="Your emulator saves, in one place.">
+          <a class="app-tile" href="/keepsake/">
             <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="112" height="112">
             <h3 class="tile-name">Keepsake</h3>
-            <span class="sr-only">Your emulator saves, in one place.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+            <span class="tile-tagline">Your emulator games and saves, in one place.</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/parley/" title="Discord, light.">
+          <a class="app-tile" href="/parley/">
             <img class="app-icon" src="/assets/icons/parley.png" alt="" width="112" height="112">
             <h3 class="tile-name">Parley</h3>
-            <span class="sr-only">Discord, light.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+            <span class="tile-tagline">An unofficial, lightweight Discord client for Windows.</span>
           </a>
         </li>
       </ul>
@@ -185,11 +275,11 @@
     </div>
     <ul class="palette-results" id="palette-results" role="listbox"></ul>
   </dialog>
-  <script type="application/json" id="apps-data">[{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"Your GeForce driver, always current.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"keepsake","name":"Keepsake","tagline":"Your emulator saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Your games, in their own colours.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"Discord, light.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
+  <script type="application/json" id="apps-data">[{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"GeForce driver updates, without the NVIDIA App.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"keepsake","name":"Keepsake","tagline":"Your emulator games and saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Colour profiles for every game, switched automatically.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"An unofficial, lightweight Discord client for Windows.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>Copyright © 2026 PG. All rights reserved.</span>
-      <span>Not affiliated with Apple, Valve or NVIDIA.</span>
+      <span>Copyright © 2026 PG. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
+      <span>Not affiliated with Apple, Valve, NVIDIA, Discord or the other companies named here.</span>
     </div>
   </footer>
 </body>

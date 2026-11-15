@@ -3,19 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Keepsake — Your emulator saves, in one place</title>
+  <title>Keepsake — Your emulator games and saves, in one place</title>
   <meta name="description" content="Finds your RPCS3, Lichii and Fritchii games and every save, starts any game straight from its library, and edits the saves of supported games with each game&#39;s own artwork.">
   <link rel="canonical" href="https://lilpatter.github.io/keepsake/">
-  <meta property="og:title" content="Keepsake — Your emulator saves, in one place">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PG">
+  <meta property="og:title" content="Keepsake — Your emulator games and saves, in one place">
   <meta property="og:description" content="Finds your RPCS3, Lichii and Fritchii games and every save, starts any game straight from its library, and edits the saves of supported games with each game&#39;s own artwork.">
-  <meta property="og:image" content="https://lilpatter.github.io/assets/icons/keepsake.png">
+  <meta property="og:image" content="https://lilpatter.github.io/assets/og/keepsake.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Keepsake — Your emulator games and saves, in one place">
   <meta property="og:url" content="https://lilpatter.github.io/keepsake/">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Keepsake","description":"Finds your RPCS3, Lichii and Fritchii games and every save, starts any game straight from its library, and edits the saves of supported games with each game's own artwork.","url":"https://lilpatter.github.io/keepsake/","image":"https://lilpatter.github.io/assets/icons/keepsake.png","operatingSystem":"Windows 10, Windows 11","applicationCategory":"UtilitiesApplication","author":{"@type":"Person","name":"PG","url":"https://lilpatter.github.io"},"softwareVersion":"1.0.0","dateModified":"2026-11-13T19:36:50Z","downloadUrl":"https://github.com/lilpatter/keepsake/releases/latest","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/icons/keepsake.png">
   <link rel="apple-touch-icon" href="/assets/icons/keepsake.png">
-  <link rel="stylesheet" href="/styles.css?v=08ba860e11">
-  <script src="/app.js?v=4e19dc8b84" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=5feac3bc2e">
+  <script src="/app.js?v=c90647a080" defer></script>
 </head>
 <body>
   <header class="bar" id="bar">
@@ -24,10 +31,9 @@
       <span class="bar-title glass" aria-hidden="true">
         <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="32" height="32">Keepsake
       </span>
-      <nav class="bar-links glass reveal" aria-label="Sections">
-        <a href="/">Apps</a>
-        <a href="https://github.com/lilpatter">GitHub</a>
-        <button class="bar-search" type="button" data-palette aria-label="Search"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 0 1 4.4 8.8l3.6 3.7a.9.9 0 0 1-1.3 1.3l-3.7-3.6A5.5 5.5 0 1 1 8.5 3Zm0 1.8a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Z"/></svg></button>
+      <nav class="bar-links glass" aria-label="Sections">
+        <a href="https://github.com/lilpatter/keepsake/issues">Support</a>
+        <a href="https://github.com/lilpatter/keepsake">GitHub</a>
       </nav>
     </div>
   </header>
@@ -43,12 +49,13 @@
         </div>
         <div>
           <h1 class="app-name" id="app-title" tabindex="-1">Keepsake</h1>
-          <p class="app-subtitle">Your emulator saves, in one place.</p>
+          <p class="app-subtitle">Your emulator games and saves, in one place.</p>
           <div class="header-actions">
             <a class="btn btn-filled" href="https://github.com/lilpatter/keepsake/releases/latest">Download for Windows</a>
             <span class="status" data-status="available">Available</span>
           </div>
           <p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>For Windows 10 and 11. There’s no Mac version yet.</p>
+          
         </div>
       </header>
 
@@ -62,6 +69,7 @@
           <h2 class="title-2" id="shots-title">Screenshots</h2>
           
         </div>
+        
         <div class="shot-row" id="shots-windows" data-device="windows"   tabindex="0">
           <figure class="shot"><img src="/assets/screens/keepsake/home.jpg" alt="Home with LEGO Batman in the hero: Play, Edit Save, 88.9% complete, and Recently Saved games from RPCS3 and Lichii." loading="lazy" decoding="async"></figure>
           <figure class="shot"><img src="/assets/screens/keepsake/games.jpg" alt="Games in a grid: games with saves first, then PlayStation 3 and Switch games with no saves yet." loading="lazy" decoding="async"></figure>
@@ -75,6 +83,7 @@
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
         <p class="app-desc">Finds your RPCS3, Lichii and Fritchii games and every save, starts any game straight from its library, and edits the saves of supported games with each game&#39;s own artwork.</p>
+        
       </section>
 
       <section class="app-section" aria-labelledby="features-title">
@@ -107,18 +116,83 @@
         </ul>
       </section>
 
+      <section class="app-section" aria-labelledby="engineering-title">
+        <h2 class="title-2" id="engineering-title">Under the Hood</h2>
+        <ul class="feature-grid engineering">
+          <li class="feature">
+            <span><strong class="feature-title">Saves from a real PS3</strong>Saves copied off a PS3 are encrypted and signed. Keepsake decrypts them with each game&#39;s secure file ID and writes them back plain for RPCS3. Re-encrypting and re-signing is kept too, and tested against real saves.</span>
+          </li>
+          <li class="feature">
+            <span><strong class="feature-title">Reading Switch 2 save data</strong>Ocarina of Time on Switch 2 stores its save in Nintendo&#39;s GameData format, where every field name is a MurmurHash3 hash. Keepsake maps those hashes to rupees, hearts, items, songs and more, per save slot, and keeps the save&#39;s caption file in sync.</span>
+          </li>
+          <li class="feature">
+            <span><strong class="feature-title">The game&#39;s own icons</strong>Switch games are encrypted, so Keepsake takes icons from the files your emulator already keeps: a game dump or a mod. It decodes the compressed archives and texture formats itself. Switch 2 lays texture bytes out differently from Switch 1, and that layout was worked out from real textures until every icon decoded cleanly.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="app-section" aria-labelledby="history-title">
+        <div class="section-head">
+          <h2 class="title-2" id="history-title">Release History</h2>
+          <a class="btn btn-plain" href="https://github.com/lilpatter/keepsake/releases">All Releases</a>
+        </div>
+        <ol class="list release-list">
+          <li><a class="row" href="https://github.com/lilpatter/keepsake/releases/tag/v1.0.0-build.9">
+            <span class="row-body">
+              <span class="row-title release-title">Show Ocarina of Time&#39;s own item, song and quest icons</span>
+              <span class="row-sub">1.0.0 · Build 9 · Nov 13, 2026</span>
+            </span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
+          <li><a class="row" href="https://github.com/lilpatter/keepsake/releases/tag/v1.0.0-build.8">
+            <span class="row-body">
+              <span class="row-title release-title">Edit LEGO Pirates and Ocarina of Time (Switch 2) saves, decrypt PS3 saves</span>
+              <span class="row-sub">1.0.0 · Build 8 · Nov 13, 2026</span>
+            </span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
+          <li><a class="row" href="https://github.com/lilpatter/keepsake/releases/tag/v1.0.0-build.7">
+            <span class="row-body">
+              <span class="row-title release-title">LEGO Indiana Jones: The Original Adventures save editor</span>
+              <span class="row-sub">1.0.0 · Build 7 · Nov 9, 2026</span>
+            </span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
+        </ol>
+      </section>
+
+      <section class="app-section" id="privacy" aria-labelledby="privacy-title">
+        <h2 class="title-2" id="privacy-title">Privacy &amp; Security</h2>
+        <div class="trust-grid">
+          <div class="trust-card">
+            <h3 class="trust-title">What it connects to</h3>
+            <ul class="trust-list"><li><strong>Nintendo eShop and Steam store</strong>: library artwork for your games</li><li><strong>SteamGridDB</strong>: only if you add your own key, for more artwork</li><li><strong>GitHub</strong>: to check for and download updates</li></ul>
+          </div>
+          <div class="trust-card">
+            <h3 class="trust-title">What stays on your PC</h3>
+            <ul class="trust-list"><li>Your games and saves are found, read and edited on your PC only</li><li>A backup of every save is kept on your PC before Keepsake changes it</li><li>In-game artwork is read from your own copy of each game</li><li>No analytics, telemetry or crash reports, and nothing is ever sent to PG.</li></ul>
+          </div>
+          <div class="trust-card">
+            <h3 class="trust-title">Downloads and updates</h3>
+            <ul class="trust-list"><li>Updates itself from its GitHub Releases page and checks each download against its SHA-256 hash before installing. You can turn this off under Settings › About.</li><li>The installers aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the one shown here.</li></ul>
+            <p class="hash"><span>SHA-256 of Keepsake_1.0.0_x64-setup.exe</span><code>3c81380f30a4b26e804adc2acf9b7fffbd72c952a4cdca2d7c4cbc3705304a34</code></p>
+          </div>
+          <div class="trust-card">
+            <h3 class="trust-title">Requirements</h3>
+            <ul class="trust-list"><li>Windows 10 or 11, 64-bit</li><li>RPCS3, Lichii or Fritchii, with your own games</li><li>The Microsoft Edge WebView2 runtime, which comes with Windows 11</li></ul>
+          </div>
+        </div>
+      </section>
+
       <section class="app-section" aria-labelledby="info-title">
         <h2 class="title-2" id="info-title">Information</h2>
         <div class="info-columns">
           <div class="list">
           <div class="row info-row"><span class="row-body">Developer</span><span class="row-detail">PG</span></div>
-          <div class="row info-row"><span class="row-body">Platform</span><span class="row-detail">Windows 10 and 11</span></div>
-          <div class="row info-row"><span class="row-body">Version</span><span class="row-detail">1.0.0 (build 9)</span></div>
           <div class="row info-row"><span class="row-body">Updated</span><span class="row-detail">Nov 13, 2026</span></div>
-          <div class="row info-row"><span class="row-body">Size</span><span class="row-detail">1.6 MB</span></div>
+          <div class="row info-row"><span class="row-body">Price</span><span class="row-detail">Free</span></div>
           <div class="row info-row"><span class="row-body">Built With</span><span class="row-detail">Tauri 2 · Rust</span></div>
           <div class="row info-row"><span class="row-body">Source</span><span class="row-detail">Closed source</span></div>
-          <div class="row info-row"><span class="row-body">Status</span><span class="row-detail">Available</span></div>
           </div>
           <div>
             <div class="list">
@@ -126,6 +200,12 @@
             <span class="glyph" style="--tint:var(--accent, var(--green))"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a1 1 0 0 1 1 1v8.1l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0l-4.5-4.5a1 1 0 0 1 1.4-1.4L9 11.6V3.5a1 1 0 0 1 1-1ZM4 16a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Z"/></svg></span>
             <span class="row-body row-title">Download</span>
             <span class="row-detail">GitHub Releases</span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a>
+          <a class="row has-glyph" href="https://github.com/lilpatter/keepsake/issues">
+            <span class="glyph" style="--tint:var(--orange)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 10.9a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm0-7.4c-1.7 0-3 1.1-3.2 2.6a.9.9 0 0 0 1.8.3c.1-.6.7-1.1 1.4-1.1.8 0 1.4.5 1.4 1.2 0 .5-.3.8-.9 1.2-.8.5-1.4 1.1-1.4 2.1a.9.9 0 0 0 1.8 0c0-.3.2-.5.7-.8.8-.5 1.6-1.2 1.6-2.5 0-1.7-1.4-3-3.2-3Z"/></svg></span>
+            <span class="row-body row-title">Report a Problem</span>
+            <span class="row-detail">GitHub Issues</span>
             <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
           </a>
             </div>
@@ -142,38 +222,38 @@
       </div>
       <ul class="app-grid">
         <li data-families="Apple">
-          <a class="app-tile" href="/catalyst/" title="One home for movies and series.">
+          <a class="app-tile" href="/catalyst/">
             <img class="app-icon" src="/assets/icons/catalyst.png" alt="" width="112" height="112">
             <h3 class="tile-name">Catalyst</h3>
-            <span class="sr-only">One home for movies and series.</span><span class="tile-badge">Coming Soon</span>
+            <span class="tile-tagline">One home for movies and series.</span><span class="tile-badge">In Development</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/hangar/" title="Every Steam account, one click away.">
+          <a class="app-tile" href="/hangar/">
             <img class="app-icon" src="/assets/icons/hangar.png" alt="" width="112" height="112">
             <h3 class="tile-name">Hangar</h3>
-            <span class="sr-only">Every Steam account, one click away.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+            <span class="tile-tagline">Every Steam account, one click away.</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/verdant/" title="Your GeForce driver, always current.">
+          <a class="app-tile" href="/verdant/">
             <img class="app-icon" src="/assets/icons/verdant.png" alt="" width="112" height="112">
             <h3 class="tile-name">Verdant</h3>
-            <span class="sr-only">Your GeForce driver, always current.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+            <span class="tile-tagline">GeForce driver updates, without the NVIDIA App.</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/prism/" title="Your games, in their own colours.">
+          <a class="app-tile" href="/prism/">
             <img class="app-icon" src="/assets/icons/prism.png" alt="" width="112" height="112">
             <h3 class="tile-name">Prism</h3>
-            <span class="sr-only">Your games, in their own colours.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+            <span class="tile-tagline">Colour profiles for every game, switched automatically.</span>
           </a>
         </li>
         <li data-families="Windows">
-          <a class="app-tile" href="/parley/" title="Discord, light.">
+          <a class="app-tile" href="/parley/">
             <img class="app-icon" src="/assets/icons/parley.png" alt="" width="112" height="112">
             <h3 class="tile-name">Parley</h3>
-            <span class="sr-only">Discord, light.</span><span class="tile-badge tile-platform"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>Windows</span>
+            <span class="tile-tagline">An unofficial, lightweight Discord client for Windows.</span>
           </a>
         </li>
       </ul>
@@ -187,11 +267,11 @@
     </div>
     <ul class="palette-results" id="palette-results" role="listbox"></ul>
   </dialog>
-  <script type="application/json" id="apps-data">[{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"Your GeForce driver, always current.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"keepsake","name":"Keepsake","tagline":"Your emulator saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Your games, in their own colours.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"Discord, light.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
+  <script type="application/json" id="apps-data">[{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"GeForce driver updates, without the NVIDIA App.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"keepsake","name":"Keepsake","tagline":"Your emulator games and saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Colour profiles for every game, switched automatically.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"An unofficial, lightweight Discord client for Windows.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>Copyright © 2026 PG. All rights reserved.</span>
-      <span>Not affiliated with Apple, Valve or NVIDIA.</span>
+      <span>Copyright © 2026 PG. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
+      <span>Not affiliated with Apple, Valve, NVIDIA, Discord or the other companies named here.</span>
     </div>
   </footer>
 </body>
