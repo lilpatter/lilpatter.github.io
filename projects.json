@@ -4,6 +4,7 @@
       "id": "catalyst",
       "name": "Catalyst",
       "icon": "assets/icons/catalyst.png",
+      "accent": "#a78bfa",
       "status": "in-development",
       "featured": true,
       "tagline": "One home for movies and series.",
