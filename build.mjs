@@ -2,6 +2,7 @@
 // Usage: node build.mjs
 import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { inflateSync } from "node:zlib";
 
 const SITE = "https://lilpatter.github.io";
 const { projects } = JSON.parse(await readFile("projects.json", "utf8"));
@@ -34,6 +35,91 @@ async function latestRelease(p) {
 const releases = Object.fromEntries(await Promise.all(projects.map(async (p) => [p.id, await latestRelease(p)])));
 const formatSize = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`);
 const formatDate = (iso) => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+
+// ---- Accent colours, taken from each app's icon ---------------------------------------------
+// An 8-bit, non-interlaced RGB or RGBA PNG as { width, height, channels, data } (filters undone).
+function decodePng(buf) {
+  if (buf.readUInt32BE(0) !== 0x89504e47) throw new Error("not a PNG");
+  let width, height, depth, type, interlace;
+  const idat = [];
+  for (let at = 8; at < buf.length; ) {
+    const len = buf.readUInt32BE(at);
+    const kind = buf.toString("ascii", at + 4, at + 8);
+    const body = buf.subarray(at + 8, at + 8 + len);
+    if (kind === "IHDR") [width, height, depth, type, interlace] = [body.readUInt32BE(0), body.readUInt32BE(4), body[8], body[9], body[12]];
+    else if (kind === "IDAT") idat.push(body);
+    else if (kind === "IEND") break;
+    at += 12 + len;
+  }
+  const channels = { 2: 3, 6: 4 }[type];
+  if (depth !== 8 || !channels || interlace) throw new Error(`unsupported PNG (depth ${depth}, type ${type}, interlace ${interlace})`);
+  const raw = inflateSync(Buffer.concat(idat));
+  const stride = width * channels;
+  const data = Buffer.alloc(stride * height);
+  for (let y = 0; y < height; y++) {
+    const filter = raw[y * (stride + 1)];
+    const line = raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1));
+    for (let x = 0; x < stride; x++) {
+      const i = y * stride + x;
+      const a = x >= channels ? data[i - channels] : 0;
+      const b = y ? data[i - stride] : 0;
+      const c = x >= channels && y ? data[i - stride - channels] : 0;
+      const pa = Math.abs(b - c), pb = Math.abs(a - c), pc = Math.abs(a + b - 2 * c);
+      const pred = [0, a, b, (a + b) >> 1, pa <= pb && pa <= pc ? a : pb <= pc ? b : c][filter];
+      data[i] = (line[x] + pred) & 255;
+    }
+  }
+  return { width, height, channels, data };
+}
+
+const hex = (rgb) => "#" + rgb.map((v) => Math.round(v).toString(16).padStart(2, "0")).join("");
+
+// The icon's main colour: the hue that most of its vivid pixels share (dark backgrounds, whites and
+// greys don't count), averaged, then kept bright and saturated enough to fill a button.
+function iconAccent({ width, height, channels, data }) {
+  const BINS = 36;
+  const bins = Array.from({ length: BINS }, () => [0, 0, 0, 0]);
+  for (let i = 0; i < width * height * channels; i += channels) {
+    if (channels === 4 && data[i + 3] < 128) continue;
+    const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const s = max ? (max - min) / max : 0, v = max / 255;
+    if (s < 0.3 || v < 0.3) continue;
+    const d = max - min;
+    const h = (max === r ? (g - b) / d + 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4) % 6 / 6;
+    const w = s * s * v;
+    const bin = bins[Math.floor(h * BINS) % BINS];
+    bin[0] += w; bin[1] += r * w; bin[2] += g * w; bin[3] += b * w;
+  }
+  const near = (i) => [(i + BINS - 1) % BINS, i, (i + 1) % BINS];
+  // Neighbouring bins count too, so a gradient split across two hues still wins.
+  const score = (i) => bins[near(i)[0]][0] + 2 * bins[i][0] + bins[near(i)[2]][0];
+  const best = bins.reduce((top, _, i) => (score(i) > score(top) ? i : top), 0);
+  const [w, r, g, b] = [0, 1, 2, 3].map((j) => near(best).reduce((sum, k) => sum + bins[k][j], 0));
+  if (!w) return null;
+  // To HSL, clamp, and back.
+  const [R, G, B] = [r / w / 255, g / w / 255, b / w / 255];
+  const max = Math.max(R, G, B), min = Math.min(R, G, B), l0 = (max + min) / 2, d = max - min;
+  const h = d ? (max === R ? (G - B) / d + 6 : max === G ? (B - R) / d + 2 : (R - G) / d + 4) % 6 / 6 : 0;
+  const s = Math.max(d ? d / (1 - Math.abs(2 * l0 - 1)) : 0, 0.65);
+  const l = Math.min(Math.max(l0, 0.45), 0.62);
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+  const channel = (t) => {
+    t = (t + 1) % 1;
+    return 255 * (t < 1 / 6 ? p + (q - p) * 6 * t : t < 1 / 2 ? q : t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 : p);
+  };
+  return hex([channel(h + 1 / 3), channel(h), channel(h - 1 / 3)]);
+}
+
+// `accent` in projects.json overrides the icon's colour; otherwise it comes from the icon.
+const accents = {};
+for (const p of projects) {
+  try {
+    accents[p.id] = p.accent || iconAccent(decodePng(await readFile(p.icon)));
+  } catch (e) {
+    console.warn(`No accent for ${p.id}: ${e.message}`);
+  }
+}
 
 const PLATFORM_FAMILY = {
   iOS: "Apple", iPadOS: "Apple", macOS: "Apple", tvOS: "Apple", watchOS: "Apple", visionOS: "Apple",
@@ -308,7 +394,7 @@ function appPage(p) {
     .map(([k, v]) => `<div class="row info-row"><span class="row-body">${esc(k)}</span><span class="row-detail">${esc(v)}</span></div>`)
     .join("\n          ");
 
-  const accent = p.accent ? `--accent:${esc(p.accent)}; --on-accent:${labelOn(p.accent)}` : "";
+  const accent = accents[p.id] ? `--accent:${esc(accents[p.id])}; --on-accent:${labelOn(accents[p.id])}` : "";
   const body = `    <article class="wrap app-page" aria-labelledby="app-title" style="${accent}">
       <header class="app-hero">
         <div class="tilt" data-tilt>
@@ -409,6 +495,8 @@ for (const entry of await readdir(".")) {
   if (generated) await rm(entry, { recursive: true });
 }
 
+// Each app's accent, for other sites (the GitHub profile tiles) to use the same colour.
+await writeFile("accents.json", JSON.stringify(accents, null, 2) + "\n");
 await writeFile("index.html", homePage());
 await writeFile("404.html", notFound());
 for (const p of projects) {
@@ -417,4 +505,5 @@ for (const p of projects) {
 }
 const withRelease = Object.entries(releases).filter(([, r]) => r).map(([id, r]) => `${id} ${r.version}`);
 console.log(`Release info: ${withRelease.join(", ") || "none (offline or rate limited)"}`);
+console.log(`Accents: ${Object.entries(accents).map(([id, c]) => `${id} ${c}`).join(", ")}`);
 console.log(`Built home, 404 and ${projects.length} app pages: ${projects.map((p) => "/" + p.id + "/").join(" ")}`);

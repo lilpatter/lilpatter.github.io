@@ -1,6 +1,6 @@
 name: Build pages
 
-# Rebuilds the home page and the /<app>/ pages whenever the app list or the builder changes,
+# Rebuilds the home page and the /<app>/ pages whenever the app list, an icon or the builder changes,
 # so editing projects.json on github.com is enough to add or update an app.
 on:
   push:
@@ -10,6 +10,7 @@ on:
       - build.mjs
       - styles.css
       - app.js
+      - assets/icons/**
   # Refresh version, date and size from the apps' latest GitHub releases.
   schedule:
     - cron: "30 6 * * *"

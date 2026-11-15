@@ -16,7 +16,7 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
 
 ## Adding an app
 
-1. Put a square icon (256×256 PNG, full-bleed, no rounded corners needed) in `assets/icons/`.
+1. Put a square icon (256×256 8-bit RGBA PNG, full-bleed, no rounded corners needed) in `assets/icons/`.
 2. Add an entry to `projects.json`:
 
 ```json
@@ -24,13 +24,12 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
   "id": "my-app",
   "name": "My App",
   "icon": "assets/icons/my-app.png",
-  "accent": "#007aff",
   "status": "available",
   "tagline": "One short line.",
   "description": "A sentence or two about what it does.",
   "platforms": ["Windows"],
   "stack": "Tauri 2 · Rust",
-  "highlights": ["Up to four short points"],
+  "highlights": ["Up to six short points"],
   "links": [
     { "label": "Download", "url": "https://github.com/lilpatter/my-app/releases/latest", "kind": "download" }
   ]
@@ -42,7 +41,9 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
 
 - `status`: `available`, `in-development` or `beta`.
 - `kind`: `website`, `download` or `source` picks the link's icon. The first link is the main button.
-- `accent` colours the checkmarks on the app's page and the glow on its GitHub profile tile.
+- The app's accent colour comes from its icon: `build.mjs` picks the hue most of the icon's vivid pixels share
+  and uses it for the Download button, the checkmarks and the glow on its GitHub profile tile (via `accents.json`).
+  Change the icon and the colour follows. Add `"accent": "#rrggbb"` only to override it.
 - Leave out the `source` link for closed-source apps.
 - The Apple / Windows filter builds itself from `platforms`.
 - The GitHub profile's app tiles are generated from this same file once a day.

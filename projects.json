@@ -4,7 +4,6 @@
       "id": "catalyst",
       "name": "Catalyst",
       "icon": "assets/icons/catalyst.png",
-      "accent": "#a78bfa",
       "status": "in-development",
       "featured": true,
       "tagline": "One home for movies and series.",
@@ -96,10 +95,9 @@
       "id": "hangar",
       "name": "Hangar",
       "icon": "assets/icons/hangar.png",
-      "accent": "#ff9f43",
       "status": "available",
       "tagline": "Every Steam account, one click away.",
-      "description": "Changes the signed-in Steam account without the account picker or a password prompt, and shows every game on every account.",
+      "description": "Switches the signed-in Steam account without the account picker or a password prompt, shows every game on every account, and brings your Steam friends, chat and profiles with it. Steam stays in the tray, using a fraction of its usual memory.",
       "platforms": [
         "Windows"
       ],
@@ -108,6 +106,8 @@
         "Silent switching, straight to the tray",
         "Play as… launches a game on the account that owns it",
         "Your whole library, installed or not",
+        "Friends, chat and profiles, signed in with a QR code",
+        "Idle Steam at about 50 MB instead of 330 MB",
         "Never reads or stores passwords"
       ],
       "links": [
@@ -133,16 +133,16 @@
           "device": "Windows",
           "alt": "Three remembered Steam accounts, each with a Switch button, and Add Account."
         }
-      ]
+      ],
+      "note": "Not affiliated with Valve."
     },
     {
       "id": "verdant",
       "name": "Verdant",
       "icon": "assets/icons/verdant.png",
-      "accent": "#76b900",
       "status": "available",
       "tagline": "Your GeForce driver, always current.",
-      "description": "Finds the latest Game Ready and Studio drivers for your NVIDIA card, checks they're genuine and installs them with one prompt.",
+      "description": "Finds the latest Game Ready and Studio drivers for your NVIDIA card, checks they're signed by NVIDIA and installs them with one prompt, without the NVIDIA App.",
       "platforms": [
         "Windows"
       ],
@@ -150,8 +150,10 @@
       "highlights": [
         "Matches your exact card with NVIDIA's catalog",
         "Only runs installers signed by NVIDIA",
+        "Never installs the NVIDIA App",
         "Express or custom install, with roll back",
-        "Live GPU temperature, load and VRAM"
+        "Live GPU temperature, load and VRAM",
+        "Compact mode: a small window that keeps you current"
       ],
       "note": "Not affiliated with NVIDIA.",
       "links": [
@@ -183,21 +185,22 @@
       "id": "keepsake",
       "name": "Keepsake",
       "icon": "assets/icons/keepsake.png",
-      "accent": "#ffcc00",
       "status": "available",
       "tagline": "Your emulator saves, in one place.",
-      "description": "Finds your RPCS3 and Lichii games and every save, starts any game straight from its library, and edits the saves of supported games with each game's own artwork.",
+      "description": "Finds your RPCS3, Lichii and Fritchii games and every save, starts any game straight from its library, and edits the saves of supported games with each game's own artwork.",
       "platforms": [
         "Windows"
       ],
       "stack": "Tauri 2 · Rust",
       "highlights": [
-        "RPCS3 and Lichii in one library",
+        "PS3, Switch and Switch 2 games in one library",
         "Play without the emulator's game list",
-        "Save editors for LEGO Batman and LEGO Indiana Jones",
+        "Save editors for three LEGO games and Ocarina of Time",
+        "Opens saves copied from a real PS3",
+        "Artwork from the eShop, Steam and SteamGridDB",
         "A backup before every change"
       ],
-      "note": "Not affiliated with the RPCS3 or Lichii projects, Nintendo, Sony, Warner Bros. Games, TT Games or the LEGO Group.",
+      "note": "Not affiliated with the RPCS3, Lichii or Fritchii projects, Nintendo, Sony Interactive Entertainment, Warner Bros. Games, Disney, TT Games or the LEGO Group.",
       "links": [
         {
           "label": "Download",
@@ -237,7 +240,6 @@
       "id": "prism",
       "name": "Prism",
       "icon": "assets/icons/prism.png",
-      "accent": "#7d7aff",
       "status": "available",
       "tagline": "Your games, in their own colours.",
       "description": "Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.",
@@ -246,9 +248,11 @@
       ],
       "stack": "Tauri 2 · Rust",
       "highlights": [
-        "Switches with the game in focus",
+        "Switches with the game in focus, or while it runs",
         "Vibrance up to 200%, past the driver",
+        "Contrast, brightness and white balance too",
         "NVIDIA, AMD and Intel, no admin rights",
+        "Nothing injected into your games",
         "About 2 MB in the tray"
       ],
       "note": "Based on Digital Vibrance by SYTStudio. Not affiliated with NVIDIA, AMD or Intel.",
@@ -281,7 +285,6 @@
       "id": "parley",
       "name": "Parley",
       "icon": "assets/icons/parley.png",
-      "accent": "#8b5cf6",
       "status": "available",
       "tagline": "Discord, light.",
       "description": "A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls with Discord's own end-to-end encryption, in a single exe with no Electron and no browser engine.",
@@ -291,8 +294,10 @@
       "stack": "Rust · Slint",
       "highlights": [
         "Servers, DMs and encrypted voice calls",
-        "Stays signed in across restarts",
+        "Replies, emoji and invite cards",
         "Sign in by scanning a QR code",
+        "Stays signed in across restarts",
+        "No Electron and no browser engine",
         "One light exe, idle in the tray"
       ],
       "note": "Based on Litecord. Not affiliated with Discord; using a third-party client is against Discord's Terms of Service.",
