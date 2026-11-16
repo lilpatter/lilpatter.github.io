@@ -4,24 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Parley — An unofficial, lightweight Discord client for Windows</title>
-  <meta name="description" content="A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls with Discord&#39;s own end-to-end encryption, in a single exe with no Electron and no browser engine.">
+  <meta name="description" content="A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls end-to-end encrypted with DAVE, Discord&#39;s own protocol for calls, in a single exe with no Electron and no browser engine. Text messages aren&#39;t end-to-end encrypted, in Parley or in any Discord client.">
   <link rel="canonical" href="https://lilpatter.github.io/parley/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="PG">
   <meta property="og:title" content="Parley — An unofficial, lightweight Discord client for Windows">
-  <meta property="og:description" content="A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls with Discord&#39;s own end-to-end encryption, in a single exe with no Electron and no browser engine.">
+  <meta property="og:description" content="A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls end-to-end encrypted with DAVE, Discord&#39;s own protocol for calls, in a single exe with no Electron and no browser engine. Text messages aren&#39;t end-to-end encrypted, in Parley or in any Discord client.">
   <meta property="og:image" content="https://lilpatter.github.io/assets/og/parley.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Parley — An unofficial, lightweight Discord client for Windows">
   <meta property="og:url" content="https://lilpatter.github.io/parley/">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Parley","description":"A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls with Discord's own end-to-end encryption, in a single exe with no Electron and no browser engine.","url":"https://lilpatter.github.io/parley/","image":"https://lilpatter.github.io/assets/icons/parley.png","operatingSystem":"Windows 10, Windows 11","applicationCategory":"UtilitiesApplication","author":{"@type":"Person","name":"PG","url":"https://lilpatter.github.io"},"softwareVersion":"1.0.0","dateModified":"2026-11-15T20:44:42Z","downloadUrl":"https://github.com/lilpatter/parley/releases/latest","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Parley","description":"A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls end-to-end encrypted with DAVE, Discord's own protocol for calls, in a single exe with no Electron and no browser engine. Text messages aren't end-to-end encrypted, in Parley or in any Discord client.","url":"https://lilpatter.github.io/parley/","image":"https://lilpatter.github.io/assets/icons/parley.png","operatingSystem":"Windows 10, Windows 11","applicationCategory":"UtilitiesApplication","author":{"@type":"Person","name":"PG","url":"https://lilpatter.github.io"},"softwareVersion":"1.0.0","dateModified":"2026-11-15T20:44:42Z","downloadUrl":"https://github.com/lilpatter/parley/releases/latest","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/icons/parley.png">
   <link rel="apple-touch-icon" href="/assets/icons/parley.png">
-  <link rel="stylesheet" href="/styles.css?v=5feac3bc2e">
+  <link rel="stylesheet" href="/styles.css?v=25c64f5a88">
   <script src="/app.js?v=3850e946c0" defer></script>
 </head>
 <body>
@@ -53,6 +53,7 @@
           <div class="header-actions">
             <a class="btn btn-filled" href="https://github.com/lilpatter/parley/releases/latest">Download for Windows</a>
             <span class="status" data-status="available">Available</span>
+            <span class="status" data-status="warn">Unofficial client</span>
           </div>
           <p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>For Windows 10 and 11. There’s no Mac version yet.</p>
           <div class="callout" role="note">
@@ -74,8 +75,13 @@
 
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
-        <p class="app-desc">A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls with Discord&#39;s own end-to-end encryption, in a single exe with no Electron and no browser engine.</p>
-        
+        <p class="app-desc">A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls end-to-end encrypted with DAVE, Discord&#39;s own protocol for calls, in a single exe with no Electron and no browser engine. Text messages aren&#39;t end-to-end encrypted, in Parley or in any Discord client.</p>
+      </section>
+
+      <section class="app-section" aria-labelledby="story-title">
+        <h2 class="title-2" id="story-title">Why Parley Exists</h2>
+        <p class="app-desc">Discord&#39;s own app is built on Electron: a full copy of the Chromium browser, running in several processes even while it waits in the tray.</p>
+        <p class="app-desc app-story">Parley does the everyday parts of Discord (servers, DMs and voice calls) in a small native exe instead. It says plainly what it leaves out and what using an unofficial client risks, so you can decide whether it&#39;s for you.</p>
       </section>
 
       <section class="app-section" aria-labelledby="features-title">
@@ -83,7 +89,11 @@
         <ul class="feature-grid">
           <li class="feature">
             <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-            <span>Servers, DMs and encrypted voice calls</span>
+            <span>Servers, channels and DMs</span>
+          </li>
+          <li class="feature">
+            <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
+            <span>Voice calls end-to-end encrypted with DAVE</span>
           </li>
           <li class="feature">
             <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
@@ -101,10 +111,6 @@
             <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
             <span>No Electron and no browser engine</span>
           </li>
-          <li class="feature">
-            <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-            <span>One light exe, idle in the tray</span>
-          </li>
         </ul>
       </section>
 
@@ -115,7 +121,7 @@
             <span><strong class="feature-title">Stays signed in</strong>A failed first request after boot, before the network is up, no longer signs you out. Parley retries with backoff and only drops an account when Discord says its session is no longer valid. Saved accounts are written atomically, with a backup copy.</span>
           </li>
           <li class="feature">
-            <span><strong class="feature-title">Lighter by subtraction</strong>Screen sharing, camera, the bundled video library and the diagnostics tools were cut, taking the exe from 93 MB to 42 MB. The window idles at around 7 MB of memory.</span>
+            <span><strong class="feature-title">Lighter by subtraction</strong>Screen sharing, camera, the bundled video library and the diagnostics tools were cut, taking the exe from 93 MB to 42 MB. With its window open and idle, Parley trims its own working set (the part of its memory held in RAM) to around 7 MB. The memory it has allocated in total is larger.</span>
           </li>
           <li class="feature">
             <span><strong class="feature-title">Careful updates</strong>Parley updates itself from its GitHub releases and checks each download&#39;s SHA-256 hash first. It waits until you&#39;re not busy, gives you ten seconds to say Later, then updates quietly in the tray.</span>
@@ -189,7 +195,7 @@
           </div>
           <div class="trust-card">
             <h3 class="trust-title">What stays on your PC</h3>
-            <ul class="trust-list"><li>Your Discord session is encrypted with Windows&#39; own data protection (DPAPI) and never leaves your PC except to talk to Discord</li><li>Settings live in %APPDATA%\Parley</li><li>No analytics, telemetry or crash reports, and nothing is ever sent to PG.</li></ul>
+            <ul class="trust-list"><li>Your Discord session is encrypted with Windows&#39; own data protection (DPAPI) and never leaves your PC except to talk to Discord</li><li>Settings live in %APPDATA%\Parley</li><li>Voice calls are end-to-end encrypted with DAVE, Discord&#39;s protocol for calls. Text messages are encrypted on their way to Discord but not end to end, the same as in Discord&#39;s own app</li><li>No analytics, telemetry or crash reports, and nothing is ever sent to PG.</li></ul>
           </div>
           <div class="trust-card">
             <h3 class="trust-title">Downloads and updates</h3>

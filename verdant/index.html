@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/icons/verdant.png">
   <link rel="apple-touch-icon" href="/assets/icons/verdant.png">
-  <link rel="stylesheet" href="/styles.css?v=5feac3bc2e">
+  <link rel="stylesheet" href="/styles.css?v=25c64f5a88">
   <script src="/app.js?v=3850e946c0" defer></script>
 </head>
 <body>
@@ -53,6 +53,7 @@
           <div class="header-actions">
             <a class="btn btn-filled" href="https://github.com/lilpatter/verdant/releases/latest">Download for Windows</a>
             <span class="status" data-status="available">Available</span>
+            
           </div>
           <p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>For Windows 10 and 11. There’s no Mac version yet.</p>
           
@@ -81,7 +82,12 @@
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
         <p class="app-desc">Finds the latest Game Ready and Studio drivers for your NVIDIA card, checks they&#39;re signed by NVIDIA and installs them with one prompt, without the NVIDIA App.</p>
-        
+      </section>
+
+      <section class="app-section" aria-labelledby="story-title">
+        <h2 class="title-2" id="story-title">Why Verdant Exists</h2>
+        <p class="app-desc">NVIDIA&#39;s own way to keep a GeForce driver current is the NVIDIA App, which installs its own overlay, background services and update checks alongside the driver. Most people only want the driver.</p>
+        <p class="app-desc app-story">Verdant does that one job: it finds the right driver for your exact card, checks it really comes from NVIDIA, installs it with one prompt and keeps the NVIDIA App out.</p>
       </section>
 
       <section class="app-section" aria-labelledby="features-title">
@@ -241,7 +247,7 @@
           <a class="app-tile" href="/parley/">
             <img class="app-icon" src="/assets/icons/parley.png" alt="" width="112" height="112">
             <h3 class="tile-name">Parley</h3>
-            <span class="tile-tagline">An unofficial, lightweight Discord client for Windows.</span>
+            <span class="tile-tagline">An unofficial, lightweight Discord client for Windows.</span><span class="tile-badge is-warn">Unofficial client</span>
           </a>
         </li>
       </ul>

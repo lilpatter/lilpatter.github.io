@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/icons/prism.png">
   <link rel="apple-touch-icon" href="/assets/icons/prism.png">
-  <link rel="stylesheet" href="/styles.css?v=5feac3bc2e">
+  <link rel="stylesheet" href="/styles.css?v=25c64f5a88">
   <script src="/app.js?v=3850e946c0" defer></script>
 </head>
 <body>
@@ -53,6 +53,7 @@
           <div class="header-actions">
             <a class="btn btn-filled" href="https://github.com/lilpatter/prism/releases/latest">Download for Windows</a>
             <span class="status" data-status="available">Available</span>
+            
           </div>
           <p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4.2 8.6 3.4v6.1H2.5Zm7.1-1 7.9-1.1v7.4H9.6ZM2.5 10.5h6.1v6.1l-6.1-.8Zm7.1 0h7.9v7.4l-7.9-1.1Z"/></svg>For Windows 10 and 11. There’s no Mac version yet.</p>
           
@@ -81,7 +82,12 @@
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
         <p class="app-desc">Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.</p>
-        
+      </section>
+
+      <section class="app-section" aria-labelledby="story-title">
+        <h2 class="title-2" id="story-title">Why Prism Exists</h2>
+        <p class="app-desc">Colour settings in a graphics driver are global. Turn vibrance up for one game and the desktop, every video and every other game change with it, so you end up flipping settings by hand each time you switch.</p>
+        <p class="app-desc app-story">Prism gives each game its own colours and puts the desktop back the moment you leave the game. It began as Digital Vibrance, rewritten in Rust so it works the same on any graphics card and sits in the tray using almost nothing.</p>
       </section>
 
       <section class="app-section" aria-labelledby="features-title">
@@ -109,7 +115,7 @@
           </li>
           <li class="feature">
             <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-            <span>About 2 MB in the tray</span>
+            <span>About 4 MB of memory in the tray</span>
           </li>
         </ul>
       </section>
@@ -118,7 +124,7 @@
         <h2 class="title-2" id="engineering-title">Under the Hood</h2>
         <ul class="feature-grid engineering">
           <li class="feature">
-            <span><strong class="feature-title">Idle means idle</strong>One engine thread owns the colour effect. It sleeps until Windows reports a new window in front, and only checks again while a profile needs it. Closing Prism&#39;s window destroys it and its web view entirely, so in the tray it uses about 2 MB and no CPU.</span>
+            <span><strong class="feature-title">Idle means idle</strong>One engine thread owns the colour effect. It sleeps until Windows reports a new window in front, and only checks again while a profile needs it. Closing Prism&#39;s window destroys it and its web view entirely, so in the tray it uses about 4 MB and no CPU. That&#39;s its private memory as well as its working set (the part held in RAM), measured on Windows 11 with Prism idle in the tray.</span>
           </li>
           <li class="feature">
             <span><strong class="feature-title">Better than the original</strong>Prism is a rewrite of Digital Vibrance in Rust. Along the way: the live preview no longer sticks on screen, a colour change Windows refuses is retried, and the list of running processes is no longer read every 1.5 seconds.</span>
@@ -261,7 +267,7 @@
           <a class="app-tile" href="/parley/">
             <img class="app-icon" src="/assets/icons/parley.png" alt="" width="112" height="112">
             <h3 class="tile-name">Parley</h3>
-            <span class="tile-tagline">An unofficial, lightweight Discord client for Windows.</span>
+            <span class="tile-tagline">An unofficial, lightweight Discord client for Windows.</span><span class="tile-badge is-warn">Unofficial client</span>
           </a>
         </li>
       </ul>
