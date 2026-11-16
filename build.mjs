@@ -308,7 +308,12 @@ const appBar = (p) => {
 // Where each app runs is said once, above the grid, rather than on every tile.
 function appCard(p, heading = "h3") {
   // Only a status that isn't "Available" earns a badge, in the same words as the app page.
-  const soon = p.status !== "available" ? `<span class="tile-badge">${esc(STATUS_LABEL[p.status] || p.status)}</span>` : "";
+  const soon =
+    p.status !== "available"
+      ? `<span class="tile-badge">${esc(STATUS_LABEL[p.status] || p.status)}</span>`
+      : p.badge
+        ? `<span class="tile-badge is-warn">${esc(p.badge)}</span>`
+        : "";
   return `<li data-families="${esc(families(p).join(" "))}">
           <a class="app-tile" href="/${esc(p.id)}/">
             ${icon(p, 112)}
@@ -348,7 +353,7 @@ function appShowcase(p, i = Infinity) {
               <span class="card-text">
                 <h3 class="card-name">${esc(p.name)}</h3>
                 <span class="card-tagline">${esc(p.tagline)}</span>
-                <span class="card-meta">${esc(where)}<span class="card-status${p.status === "available" ? "" : " is-soon"}">${esc(status)}</span></span>
+                <span class="card-meta">${esc(where)}<span class="card-status${p.status === "available" ? "" : " is-soon"}">${esc(status)}</span>${p.badge ? `<span class="card-badge">${esc(p.badge)}</span>` : ""}</span>
               </span>
             </span>
           </a>
@@ -357,7 +362,7 @@ function appShowcase(p, i = Infinity) {
 
 // What every app has in common. Each point names the apps that prove it, so it isn't just a slogan.
 const PRINCIPLES = [
-  ["Light on your PC", "Hangar keeps Steam idling at about 50 MB instead of 330 MB. Prism uses about 2 MB in the tray. Parley has no Electron and no browser engine."],
+  ["Light on your PC", "Hangar trims what an idle Steam holds in RAM from about 330 MB to 30–70 MB. Prism uses about 4 MB of memory in the tray. Parley has no Electron and no browser engine. Memory figures are measured on Windows 11 with the app idle; the Under the Hood notes on each app page say exactly what was measured."],
   ["Your accounts stay yours", "Hangar never reads or stores a password: it signs in with a QR code from your phone, and the token it gets back is encrypted on your PC."],
   ["Careful with your system", "Verdant only runs installers signed by NVIDIA. Keepsake makes a backup before every change. Prism injects nothing into your games and needs no admin rights."],
   ["Straight from GitHub", "Every download comes from the app’s GitHub Releases page, and each app page shows the version and the date it was last updated."],
@@ -658,6 +663,7 @@ function appPage(p) {
           <div class="header-actions">
             ${primary ? `<a class="btn btn-filled" href="${esc(primary.url)}">${esc(windowsOnly(p) && primary.kind === "download" ? "Download for Windows" : primary.label)}</a>` : ""}
             <span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>
+            ${p.badge ? `<span class="status" data-status="warn">${esc(p.badge)}</span>` : ""}
           </div>
           ${windowsOnly(p) ? `<p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.windows}</svg>For ${WINDOWS_VERSIONS}. There’s no Mac version yet.</p>` : ""}
           ${warning(p)}
@@ -676,9 +682,13 @@ ${gallery(p)}
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
         <p class="app-desc">${esc(p.description)}</p>
-        ${[].concat(p.story || []).map((s) => `<p class="app-desc app-story">${esc(s)}</p>`).join("\n        ")}
       </section>
-
+${p.story ? `
+      <section class="app-section" aria-labelledby="story-title">
+        <h2 class="title-2" id="story-title">Why ${esc(p.name)} Exists</h2>
+        ${[].concat(p.story).map((s, i) => `<p class="app-desc${i ? " app-story" : ""}">${esc(s)}</p>`).join("\n        ")}
+      </section>
+` : ""}
 ${features ? `      <section class="app-section" aria-labelledby="features-title">
         <h2 class="title-2" id="features-title">Features</h2>
         <ul class="feature-grid">

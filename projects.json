@@ -90,6 +90,10 @@
           "device": "Apple TV",
           "alt": "The Library on Apple TV: Marvel Cinematic Universe and Star Wars watch plans, Coming Soon and History."
         }
+      ],
+      "story": [
+        "What to watch next is spread across streaming services, media servers and add-ons, and every device keeps its own idea of where you stopped.",
+        "Catalyst brings them into one native app for iPhone, iPad, Mac and Apple TV, and keeps your place in sync across all of them."
       ]
     },
     {
@@ -98,7 +102,7 @@
       "icon": "assets/icons/hangar.png",
       "status": "available",
       "tagline": "Every Steam account, one click away.",
-      "description": "Switches the signed-in Steam account without the account picker or a password prompt, shows every game on every account, and brings your Steam friends, chat and profiles with it. Steam stays in the tray, using a fraction of its usual memory.",
+      "description": "Switches the signed-in Steam account without the account picker or a password prompt, shows every game on every account, and brings your Steam friends, chat and profiles with it. Steam stays in the tray, holding a fraction of its usual memory in RAM.",
       "platforms": [
         "Windows"
       ],
@@ -108,13 +112,13 @@
         "Play as… launches a game on the account that owns it",
         "Your whole library, installed or not",
         "Friends, chat and profiles, signed in with a QR code",
-        "Idle Steam at about 50 MB instead of 330 MB",
+        "Idle Steam holds 30–70 MB in RAM instead of about 330 MB",
         "Never reads or stores passwords"
       ],
       "engineering": [
         {
-          "title": "Low memory without breaking Steam",
-          "text": "Launch flags barely help: the best set saved about 25 MB of Steam's ~330 MB, because most of it is a hidden web renderer every client keeps loaded. Instead, Hangar asks Windows to page out the memory steam.exe and steamwebhelper aren't using, a minute after Steam signs in and every five minutes after, never while a game is running. Idle in the tray, Steam drops to about 30–70 MB and stays signed in."
+          "title": "Less RAM without breaking Steam",
+          "text": "Launch flags barely help: the best set saved about 25 MB of Steam's ~330 MB, because most of it is a hidden web renderer every client keeps loaded. Instead, Hangar asks Windows to trim the working set of steam.exe and steamwebhelper (EmptyWorkingSet), a minute after Steam signs in and every five minutes after, never while a game is running. The working set is the part of a program's memory held in RAM. Idle in the tray, Steam's drops from about 330 MB to 30–70 MB, and it stays signed in. Steam's total allocated memory doesn't shrink: the trimmed pages wait in standby or the page file and come back if Steam touches them. Measured on Windows 11 with Steam signed in, idle in the tray and no game running."
         },
         {
           "title": "No passwords, ever",
@@ -176,6 +180,10 @@
         "Windows 10 or 11, 64-bit",
         "Steam installed",
         "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
+      ],
+      "story": [
+        "Steam keeps one account signed in at a time. Switching means opening its account picker and watching Steam restart in front of you, typing a password and a Steam Guard code for any account it has forgotten, and the library only shows the games of whoever is signed in. If the game you want is on your other account, you find out after the switch.",
+        "Hangar makes switching one click, shows every game on every account in one library, and switches for you when you press Play on a game another account owns. It does it with the sign-ins Steam already remembers, so it never needs your password."
       ]
     },
     {
@@ -258,6 +266,10 @@
         "Windows 10 or 11, 64-bit",
         "An NVIDIA GeForce graphics card",
         "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
+      ],
+      "story": [
+        "NVIDIA's own way to keep a GeForce driver current is the NVIDIA App, which installs its own overlay, background services and update checks alongside the driver. Most people only want the driver.",
+        "Verdant does that one job: it finds the right driver for your exact card, checks it really comes from NVIDIA, installs it with one prompt and keeps the NVIDIA App out."
       ]
     },
     {
@@ -354,6 +366,10 @@
         "Windows 10 or 11, 64-bit",
         "RPCS3, Lichii or Fritchii, with your own games",
         "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
+      ],
+      "story": [
+        "Every emulator keeps its games and saves its own way, in its own folders, and editing a save usually means a hex editor and offsets copied from a forum post.",
+        "Keepsake puts the games and saves from RPCS3, Lichii and Fritchii in one library, starts any of them in one click, and turns supported saves into a form with the game's own artwork, with a backup before every change."
       ]
     },
     {
@@ -373,12 +389,12 @@
         "Contrast, brightness and white balance too",
         "NVIDIA, AMD and Intel, no admin rights",
         "Nothing injected into your games",
-        "About 2 MB in the tray"
+        "About 4 MB of memory in the tray"
       ],
       "engineering": [
         {
           "title": "Idle means idle",
-          "text": "One engine thread owns the colour effect. It sleeps until Windows reports a new window in front, and only checks again while a profile needs it. Closing Prism's window destroys it and its web view entirely, so in the tray it uses about 2 MB and no CPU."
+          "text": "One engine thread owns the colour effect. It sleeps until Windows reports a new window in front, and only checks again while a profile needs it. Closing Prism's window destroys it and its web view entirely, so in the tray it uses about 4 MB and no CPU. That's its private memory as well as its working set (the part held in RAM), measured on Windows 11 with Prism idle in the tray."
         },
         {
           "title": "Better than the original",
@@ -438,6 +454,10 @@
         "Any NVIDIA, AMD or Intel graphics card",
         "Games in borderless or windowed mode: exclusive fullscreen skips the effect, and HDR may change it",
         "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
+      ],
+      "story": [
+        "Colour settings in a graphics driver are global. Turn vibrance up for one game and the desktop, every video and every other game change with it, so you end up flipping settings by hand each time you switch.",
+        "Prism gives each game its own colours and puts the desktop back the moment you leave the game. It began as Digital Vibrance, rewritten in Rust so it works the same on any graphics card and sits in the tray using almost nothing."
       ]
     },
     {
@@ -446,18 +466,18 @@
       "icon": "assets/icons/parley.png",
       "status": "available",
       "tagline": "An unofficial, lightweight Discord client for Windows.",
-      "description": "A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls with Discord's own end-to-end encryption, in a single exe with no Electron and no browser engine.",
+      "description": "A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls end-to-end encrypted with DAVE, Discord's own protocol for calls, in a single exe with no Electron and no browser engine. Text messages aren't end-to-end encrypted, in Parley or in any Discord client.",
       "platforms": [
         "Windows"
       ],
       "stack": "Rust · Slint",
       "highlights": [
-        "Servers, DMs and encrypted voice calls",
+        "Servers, channels and DMs",
+        "Voice calls end-to-end encrypted with DAVE",
         "Replies, emoji and invite cards",
         "Sign in by scanning a QR code",
         "Stays signed in across restarts",
-        "No Electron and no browser engine",
-        "One light exe, idle in the tray"
+        "No Electron and no browser engine"
       ],
       "engineering": [
         {
@@ -466,7 +486,7 @@
         },
         {
           "title": "Lighter by subtraction",
-          "text": "Screen sharing, camera, the bundled video library and the diagnostics tools were cut, taking the exe from 93 MB to 42 MB. The window idles at around 7 MB of memory."
+          "text": "Screen sharing, camera, the bundled video library and the diagnostics tools were cut, taking the exe from 93 MB to 42 MB. With its window open and idle, Parley trims its own working set (the part of its memory held in RAM) to around 7 MB. The memory it has allocated in total is larger."
         },
         {
           "title": "Careful updates",
@@ -516,7 +536,8 @@
         ],
         "local": [
           "Your Discord session is encrypted with Windows' own data protection (DPAPI) and never leaves your PC except to talk to Discord",
-          "Settings live in %APPDATA%\\Parley"
+          "Settings live in %APPDATA%\\Parley",
+          "Voice calls are end-to-end encrypted with DAVE, Discord's protocol for calls. Text messages are encrypted on their way to Discord but not end to end, the same as in Discord's own app"
         ]
       },
       "updates": "Checks its GitHub Releases page for updates, verifies each download against its SHA-256 hash, and asks before installing.",
@@ -524,6 +545,11 @@
         "Windows 10 or 11, 64-bit",
         "A Discord account you're willing to risk (see the warning above)",
         "WebView2, only for the captcha window"
+      ],
+      "badge": "Unofficial client",
+      "story": [
+        "Discord's own app is built on Electron: a full copy of the Chromium browser, running in several processes even while it waits in the tray.",
+        "Parley does the everyday parts of Discord (servers, DMs and voice calls) in a small native exe instead. It says plainly what it leaves out and what using an unofficial client risks, so you can decide whether it's for you."
       ]
     }
   ]

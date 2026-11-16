@@ -276,6 +276,7 @@ a.row:active { background: var(--cell-pressed); }
 .tile-badge { margin-top: -6px; font-size: 12px; color: var(--label-2); }
 .tile-tagline { margin-top: -6px; max-width: 17ch; font-size: 13px; line-height: 1.3; color: var(--label-2); text-wrap: balance; }
 .tile-tagline + .tile-badge { margin-top: -4px; font-weight: 600; color: var(--accent, var(--blue)); }
+.tile-badge.is-warn { color: var(--orange); }
 
 /* Home: the line under "Apps", the principles and About */
 .section-note { margin: 4px 0 0; font-size: 15px; line-height: 1.4; color: var(--label-2); }
@@ -320,6 +321,8 @@ a.row:active { background: var(--cell-pressed); }
 .card-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green, #34c759); }
 .card-status.is-soon { color: var(--accent, var(--blue)); }
 .card-status.is-soon::before { background: currentColor; }
+/* A caveat every visitor should see before opening the app, such as "Unofficial client". */
+.card-badge { padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--orange); background: color-mix(in srgb, var(--orange) 14%, transparent); }
 .grid-note { margin: 16px 4px 0; }
 
 /* Home: "In the Works", one wide card per app still in development */
@@ -372,6 +375,7 @@ a.row:active { background: var(--cell-pressed); }
 .status[data-status="available"] { --dot: var(--green); }
 .status[data-status="in-development"] { --dot: var(--orange); }
 .status[data-status="beta"] { --dot: var(--blue); }
+.status[data-status="warn"] { --dot: var(--orange); color: var(--orange); }
 .app-desc { margin: 26px 4px 0; max-width: 700px; font-size: 19px; line-height: 1.45; letter-spacing: -0.026em; }
 .app-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 30px; align-items: start; }
 .group-title { margin: 0 0 10px 18px; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--label-2); text-transform: uppercase; }

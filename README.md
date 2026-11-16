@@ -48,6 +48,9 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
 - Optional, for a fuller app page:
   - `story`: a paragraph (or a list of them) under About: the problem the app solves and why you built it.
   - `engineering`: `[{ "title", "text" }]`, shown as **Under the Hood**: how it works, not what it does.
+  - `story`: one or two paragraphs, shown as **Why <App> Exists**: the problem the app solves, before what it does.
+  - `badge`: a caveat shown next to the status everywhere the app appears, for example `"Unofficial client"`.
+  - Memory or speed figures: say what was measured (working set, private memory) and how, in the Under the Hood notes.
   - `video`: `{ "src", "poster", "caption" }`, a short screen recording (MP4) shown above the screenshots. It only plays when clicked.
   - `cardShot`: which screenshot the home page card uses. By default it's the first Windows or Mac one.
 - **Link previews** (the 1200×630 image shown when a page is shared) live in `assets/og/`. They aren't redrawn by the
