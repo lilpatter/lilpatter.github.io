@@ -60,7 +60,11 @@ async function githubReleases(p) {
     return {
       ...parseTag(r.tag_name), date: r.published_at, size: installer?.size, history,
       all: `https://github.com/${repo}/releases`, issues: `https://github.com/${repo}/issues`,
-      installer: installer?.name, sha256: installer?.digest?.replace(/^sha256:/, ""),
+      // Every .exe in the release with GitHub's SHA-256, the installer first, then the portable exe.
+      hashes: r.assets
+        .filter((a) => /\.exe$/i.test(a.name) && a.digest)
+        .sort((a, b) => (b === installer) - (a === installer))
+        .map((a) => ({ name: a.name, sha256: a.digest.replace(/^sha256:/, ""), portable: a !== installer })),
     };
   } catch {
     return null;
@@ -161,7 +165,6 @@ const PLATFORM_FAMILY = {
 };
 // Windows apps here borrow the Mac's look (sidebar, traffic-light buttons), so the site spells out where they run.
 const windowsOnly = (p) => families(p).join() === "Windows";
-const WINDOWS_VERSIONS = "Windows 10 and 11";
 const STATUS_LABEL = { available: "Available", "in-development": "In Development", beta: "Beta" };
 
 // SF Symbols-style glyphs drawn on a 20×20 grid.
@@ -178,7 +181,7 @@ const GLYPH_TINT = { website: "var(--blue)", download: "var(--accent, var(--gree
 
 // True of every app on the site. Change these if that stops being so.
 const NO_TELEMETRY = "No analytics, telemetry or crash reports, and nothing is ever sent to PG.";
-const UNSIGNED = "The installers aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the one shown here.";
+const UNSIGNED = "The downloads aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the ones shown here.";
 
 // Text colour for a button filled with the app's accent: whichever of white or near-black reads better.
 function labelOn(hex) {
@@ -505,11 +508,11 @@ function trustSection(p, release) {
             ${bullets([...(pv.local || []), NO_TELEMETRY])}
           </div>`);
   }
-  if (p.updates || release?.sha256) {
+  if (p.updates || release?.hashes?.length) {
     cards.push(`<div class="trust-card">
             <h3 class="trust-title">Downloads and updates</h3>
             ${bullets([p.updates, UNSIGNED].filter(Boolean))}
-            ${release?.sha256 ? `<p class="hash"><span>SHA-256 of ${esc(release.installer)}</span><code>${esc(release.sha256)}</code></p>` : ""}
+            ${(release?.hashes || []).map((h) => `<p class="hash"><span>SHA-256 of ${esc(h.name)}${h.portable ? " (portable, runs without installing)" : " (installer)"}</span><code>${esc(h.sha256)}</code></p>`).join("\n            ")}
           </div>`);
   }
   if (p.requirements?.length) {
@@ -662,16 +665,14 @@ function appPage(p) {
           <p class="app-subtitle">${esc(p.tagline)}</p>
           <div class="header-actions">
             ${primary ? `<a class="btn btn-filled" href="${esc(primary.url)}">${esc(windowsOnly(p) && primary.kind === "download" ? "Download for Windows" : primary.label)}</a>` : ""}
-            <span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>
-            ${p.badge ? `<span class="status" data-status="warn">${esc(p.badge)}</span>` : ""}
+            ${p.status !== "available" ? `<span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>` : ""}
           </div>
-          ${windowsOnly(p) ? `<p class="platform-note"><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.windows}</svg>For ${WINDOWS_VERSIONS}. There’s no Mac version yet.</p>` : ""}
           ${warning(p)}
         </div>
       </header>
 
       <div class="facts">
-        ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : windowsOnly(p) ? "10 and 11 · not Mac" : "", fams.map(platformIcon).join(""))}
+        ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : windowsOnly(p) ? "10 and 11" : "", fams.map(platformIcon).join(""))}
         ${release
           ? fact("Version", release.version, release.build ? `Build ${release.build}` : "") +
             (release.size ? fact("Size", formatSize(release.size), "Installer") : "")
