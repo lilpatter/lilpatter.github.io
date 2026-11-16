@@ -501,7 +501,23 @@
           "kind": "download"
         }
       ],
-      "screenshots": [],
+      "screenshots": [
+        {
+          "src": "assets/screens/parley/chat.jpg",
+          "device": "Windows",
+          "alt": "A FragPunk server channel in Parley: the server and channel lists, messages with replies and emoji, and the message field. Names and avatars are blurred."
+        },
+        {
+          "src": "assets/screens/parley/light.jpg",
+          "device": "Windows",
+          "alt": "The same channel in Parley's light theme. Names and avatars are blurred."
+        },
+        {
+          "src": "assets/screens/parley/voice.jpg",
+          "device": "Windows",
+          "alt": "Settings, Voice & Audio: output and input device, microphone gain and voice activity sensitivity."
+        }
+      ],
       "warning": {
         "title": "Unofficial client: use at your own risk",
         "text": "Parley isn't made or approved by Discord. Discord's Terms of Service forbid “unauthorized software designed to modify the services”, and Discord can suspend or close accounts that break its terms. Discord can also change its service at any time, which may stop Parley working until it's updated. Screen sharing and camera aren't supported. Don't use it on an account you can't afford to lose.",
