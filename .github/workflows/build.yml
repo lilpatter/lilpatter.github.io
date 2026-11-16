@@ -11,9 +11,10 @@ on:
       - styles.css
       - app.js
       - assets/icons/**
-  # Refresh version, date and size from the apps' latest GitHub releases.
+  # Refresh version, date, size and release history from the apps' GitHub releases every hour,
+  # so a new release shows up within the hour. A run that finds nothing new commits nothing.
   schedule:
-    - cron: "30 6 * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:

@@ -9,7 +9,8 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
 
 - `build.mjs` writes plain HTML for every page, so the site works without JavaScript.
   It also reads each app's latest GitHub release (version, date, installer size); the **Build pages**
-  workflow reruns it daily and whenever the site's source changes.
+  workflow reruns it every hour and whenever the site's source changes. To pick up a release at once, run
+  `gh workflow run "Build pages" --repo lilpatter/lilpatter.github.io`.
 - `app.js` adds the extras: in-place navigation with a skeleton of the next page and the app icon
   flying into place (View Transitions), prefetching on hover, the tilting icon on app pages, and
   search with Ctrl/⌘ K or `/`. With Reduce Motion turned on, movement becomes simple fades.
