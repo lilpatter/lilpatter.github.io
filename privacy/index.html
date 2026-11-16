@@ -20,7 +20,7 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/avatar.jpg">
   <link rel="apple-touch-icon" href="/assets/avatar.jpg">
-  <link rel="stylesheet" href="/styles.css?v=25c64f5a88">
+  <link rel="stylesheet" href="/styles.css?v=bf668a7b42">
   <script src="/app.js?v=3850e946c0" defer></script>
 </head>
 <body>
@@ -100,7 +100,7 @@
         <h2 class="title-2" id="security-title">Checking a Download</h2>
         <div class="about-card">
           <p>Every app downloads from its own GitHub Releases page, and updates itself from there too, checking each download against its SHA-256 hash before installing.</p>
-          <p>The installers aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the one shown here. In PowerShell, run this on the file you downloaded:</p>
+          <p>The downloads aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the ones shown here. In PowerShell, run this on the file you downloaded:</p>
           <pre class="code"><code>Get-FileHash .\Hangar_1.0.0_x64-setup.exe</code></pre>
           <p>The hash it prints should match the one in the Privacy &amp; Security section of that app’s page, and the one GitHub shows next to the file.</p>
         </div>
