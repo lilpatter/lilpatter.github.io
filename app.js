@@ -277,7 +277,9 @@ function skeleton(path) {
     wash: "/assets/avatar.jpg",
     html: `<section class="hero wrap skeleton" aria-busy="true" aria-label="Loading">
         <span class="sk sk-avatar"></span>
+        <span class="sk sk-line w20 c"></span>
         <span class="sk sk-title c"></span>
+        <span class="sk sk-line w60 c"></span>
         <span class="sk sk-line w40 c"></span>
       </section>
       <section class="section wrap skeleton">

@@ -10,7 +10,7 @@
   <meta property="og:site_name" content="PG">
   <meta property="og:title" content="Privacy &amp; Support — PG">
   <meta property="og:description" content="What PG’s apps do with your information, how to check a download, and where to get help.">
-  <meta property="og:image" content="https://lilpatter.github.io/assets/og/pg.png">
+  <meta property="og:image" content="https://lilpatter.github.io/assets/og/home.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Privacy &amp; Support — PG">
@@ -20,8 +20,8 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/avatar.jpg">
   <link rel="apple-touch-icon" href="/assets/avatar.jpg">
-  <link rel="stylesheet" href="/styles.css?v=ba872f7908">
-  <script src="/app.js?v=3850e946c0" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=042824c6dc">
+  <script src="/app.js?v=a3fde8c99a" defer></script>
 </head>
 <body>
   <header class="bar" id="bar">
@@ -37,7 +37,7 @@
     <div class="wash" style="--art:url('/assets/avatar.jpg')" aria-hidden="true"><i></i><i></i><i></i></div>
     <article class="wrap doc-page" aria-labelledby="page-title">
       <h1 class="large-title" id="page-title" tabindex="-1">Privacy &amp; Support</h1>
-      <p class="app-desc">What PG’s apps do with your information, how to check a download is genuine, and where to get help. This covers the released apps: Hangar, Verdant, Keepsake, Prism and Parley.</p>
+      <p class="app-desc">What PG’s apps do with your information, how to check a download is genuine, and where to get help. This covers the released apps: Keepsake, Hangar, Verdant, Prism and Parley.</p>
 
       <section class="app-section" aria-labelledby="short-title">
         <h2 class="title-2" id="short-title">The Short Version</h2>
@@ -52,6 +52,14 @@
       <section class="app-section" aria-labelledby="apps-privacy-title">
         <h2 class="title-2" id="apps-privacy-title">App by App</h2>
         <ul class="list">
+          <li><a class="row has-glyph" href="/keepsake/#privacy">
+            <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="40" height="40">
+            <span class="row-body">
+              <span class="row-title">Keepsake</span>
+              <span class="row-sub">Connects to Nintendo eShop and Steam store, SteamGridDB and GitHub</span>
+            </span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
           <li><a class="row has-glyph" href="/hangar/#privacy">
             <img class="app-icon" src="/assets/icons/hangar.png" alt="" width="40" height="40">
             <span class="row-body">
@@ -65,14 +73,6 @@
             <span class="row-body">
               <span class="row-title">Verdant</span>
               <span class="row-sub">Connects to NVIDIA, Steam store and GitHub</span>
-            </span>
-            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
-          </a></li>
-          <li><a class="row has-glyph" href="/keepsake/#privacy">
-            <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="40" height="40">
-            <span class="row-body">
-              <span class="row-title">Keepsake</span>
-              <span class="row-sub">Connects to Nintendo eShop and Steam store, SteamGridDB and GitHub</span>
             </span>
             <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
           </a></li>
@@ -100,8 +100,8 @@
         <h2 class="title-2" id="security-title">Checking a Download</h2>
         <div class="about-card">
           <p>Every app downloads from its own GitHub Releases page, and updates itself from there too, checking each download against its SHA-256 hash before installing.</p>
-          <p>The downloads aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the ones shown here. In PowerShell, run this on the file you downloaded:</p>
-          <pre class="code"><code>Get-FileHash .\Hangar_1.0.0_x64-setup.exe</code></pre>
+          <p>The downloads aren’t code-signed yet, so Windows SmartScreen may say “Windows protected your PC” and that the publisher is unknown. Choose More info, then Run anyway. To check a download is the real one, compare its SHA-256 hash with the ones shown here. In PowerShell, run this on the file you downloaded:</p>
+          <pre class="code"><code>Get-FileHash .\Keepsake_1.1.0_x64-setup.exe</code></pre>
           <p>The hash it prints should match the one in the Privacy &amp; Security section of that app’s page, and the one GitHub shows next to the file.</p>
         </div>
       </section>
@@ -109,6 +109,12 @@
       <section class="app-section" id="support" aria-labelledby="support-title">
         <h2 class="title-2" id="support-title">Support</h2>
         <ul class="list">
+          <li><a class="row has-glyph" href="https://github.com/lilpatter/keepsake/issues">
+            <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="40" height="40">
+            <span class="row-body row-title">Keepsake</span>
+            <span class="row-detail">GitHub Issues</span>
+            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
+          </a></li>
           <li><a class="row has-glyph" href="https://github.com/lilpatter/hangar/issues">
             <img class="app-icon" src="/assets/icons/hangar.png" alt="" width="40" height="40">
             <span class="row-body row-title">Hangar</span>
@@ -118,12 +124,6 @@
           <li><a class="row has-glyph" href="https://github.com/lilpatter/verdant/issues">
             <img class="app-icon" src="/assets/icons/verdant.png" alt="" width="40" height="40">
             <span class="row-body row-title">Verdant</span>
-            <span class="row-detail">GitHub Issues</span>
-            <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
-          </a></li>
-          <li><a class="row has-glyph" href="https://github.com/lilpatter/keepsake/issues">
-            <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="40" height="40">
-            <span class="row-body row-title">Keepsake</span>
             <span class="row-detail">GitHub Issues</span>
             <svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5 1.5 11.5"/></svg>
           </a></li>
@@ -152,10 +152,10 @@
     </div>
     <ul class="palette-results" id="palette-results" role="listbox"></ul>
   </dialog>
-  <script type="application/json" id="apps-data">[{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"GeForce driver updates, without the NVIDIA App.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"keepsake","name":"Keepsake","tagline":"Your emulator games and saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Colour profiles for every game, switched automatically.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"An unofficial, lightweight Discord client for Windows.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
+  <script type="application/json" id="apps-data">[{"id":"keepsake","name":"Keepsake","tagline":"Your emulator games and saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"GeForce driver updates, without the NVIDIA App.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Colour profiles for every game, switched automatically.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"An unofficial, lightweight Discord client for Windows.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>Copyright © 2026 PG. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
+      <span>Copyright © 2026 PG. Independent software for Windows. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
       <span>Not affiliated with Apple, Valve, NVIDIA, Discord or the other companies named here.</span>
     </div>
   </footer>

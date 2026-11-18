@@ -1,6 +1,6 @@
 """Draws the 1200x630 link previews (Open Graph images) into assets/og/.
 
-One for the site (pg.png) and one per app (<id>.png), from projects.json, the app icons,
+One for the site (home.png) and one per app (<id>.png), from projects.json, the app icons,
 the screenshots and accents.json. Run it from the site's folder after changing an app's
 name, tagline, icon or screenshots, then commit the images:
 
@@ -102,14 +102,15 @@ def site_image():
     img.paste(avatar, ((W - 200) // 2, 90), avatar)
     d = ImageDraw.Draw(img)
     title = font(True, 120)
-    d.text(((W - d.textlength("PG", font=title)) / 2, 300), "PG", font=title, fill=TEXT)
+    name = "PG"
+    d.text(((W - d.textlength(name, font=title)) / 2, 300), name, font=title, fill=TEXT)
     sub = font(False, 36)
-    line = "Small, fast apps that do one job well."
+    line = "Software that respects your PC."
     d.text(((W - d.textlength(line, font=sub)) / 2, 455), line, font=sub, fill=DIM)
     small = font(False, 26)
     url = "lilpatter.github.io"
     d.text(((W - d.textlength(url, font=small)) / 2, 540), url, font=small, fill=(120, 120, 128))
-    img.save(OUT / "pg.png", optimize=True)
+    img.save(OUT / "home.png", optimize=True)
 
 
 def app_image(p, accent):

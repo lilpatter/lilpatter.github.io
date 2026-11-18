@@ -5,6 +5,9 @@ import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises"
 import { inflateSync } from "node:zlib";
 
 const SITE = "https://lilpatter.github.io";
+// The publisher: one name everywhere (header, footer, credits, search results), matching the GitHub account.
+const PUBLISHER = "PG";
+const GITHUB = "https://github.com/lilpatter";
 const { projects } = JSON.parse(await readFile("projects.json", "utf8"));
 
 // GitHub Pages lets browsers cache files for 10 minutes. A content hash in the URL makes
@@ -57,8 +60,12 @@ async function githubReleases(p) {
       if (!title || history.at(-1)?.title === title) continue;
       history.push({ ...parseTag(x.tag_name), title, date: x.published_at, url: x.html_url });
     }
+    const portable = r.assets.find((a) => a !== installer && /\.exe$/i.test(a.name));
     return {
       ...parseTag(r.tag_name), date: r.published_at, size: installer?.size, history,
+      // Straight to the file, so the Download button downloads instead of opening GitHub.
+      installer: installer && { name: installer.name, url: installer.browser_download_url },
+      portable: portable && { name: portable.name, url: portable.browser_download_url, size: portable.size },
       all: `https://github.com/${repo}/releases`, issues: `https://github.com/${repo}/issues`,
       // Every .exe in the release with GitHub's SHA-256, the installer first, then the portable exe.
       hashes: r.assets
@@ -177,11 +184,12 @@ const GLYPH = {
   check: '<path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/>',
 };
 GLYPH.support = '<path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 10.9a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm0-7.4c-1.7 0-3 1.1-3.2 2.6a.9.9 0 0 0 1.8.3c.1-.6.7-1.1 1.4-1.1.8 0 1.4.5 1.4 1.2 0 .5-.3.8-.9 1.2-.8.5-1.4 1.1-1.4 2.1a.9.9 0 0 0 1.8 0c0-.3.2-.5.7-.8.8-.5 1.6-1.2 1.6-2.5 0-1.7-1.4-3-3.2-3Z"/>';
+const GLYPH_SVG = Object.fromEntries(Object.entries(GLYPH).map(([k, v]) => [k, `<svg viewBox="0 0 20 20" aria-hidden="true">${v}</svg>`]));
 const GLYPH_TINT = { website: "var(--blue)", download: "var(--accent, var(--green))", source: "#8e8e93", support: "var(--orange)" };
 
 // True of every app on the site. Change these if that stops being so.
-const NO_TELEMETRY = "No analytics, telemetry or crash reports, and nothing is ever sent to PG.";
-const UNSIGNED = "The downloads aren’t code-signed yet, so Windows may say the publisher is unknown. To check a download is the real one, compare its SHA-256 hash with the ones shown here.";
+const NO_TELEMETRY = `No analytics, telemetry or crash reports, and nothing is ever sent to ${PUBLISHER}.`;
+const UNSIGNED = "The downloads aren’t code-signed yet, so Windows SmartScreen may say “Windows protected your PC” and that the publisher is unknown. Choose More info, then Run anyway. To check a download is the real one, compare its SHA-256 hash with the ones shown here.";
 
 // Text colour for a button filled with the app's accent: whichever of white or near-black reads better.
 function labelOn(hex) {
@@ -228,7 +236,7 @@ const appData = JSON.stringify(
 
 // image: the favicon; wash: the tint at the top of the page; social: the 1200×630 link preview,
 // drawn by scripts/og.py into assets/og/.
-function layout({ title, description, path, image = "/assets/avatar.jpg", wash = image, social = "/assets/og/pg.png", jsonld, bar, body }) {
+function layout({ title, description, path, image = "/assets/avatar.jpg", wash = image, social = "/assets/og/home.png", jsonld, bar, body }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -238,7 +246,7 @@ function layout({ title, description, path, image = "/assets/avatar.jpg", wash =
   <meta name="description" content="${esc(description)}">
   <link rel="canonical" href="${SITE}${path}">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="PG">
+  <meta property="og:site_name" content="${PUBLISHER}">
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(description)}">
   <meta property="og:image" content="${SITE}${social}">
@@ -276,7 +284,7 @@ ${body}
   <script type="application/json" id="apps-data">${appData}</script>
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>Copyright © ${new Date().getFullYear()} PG. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
+      <span>Copyright © ${new Date().getFullYear()} ${PUBLISHER}. Independent software for Windows. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
       <span>Not affiliated with Apple, Valve, NVIDIA, Discord or the other companies named here.</span>
     </div>
   </footer>
@@ -286,14 +294,14 @@ ${body}
 }
 
 // Floating controls, always visible. Search has no button: Ctrl/⌘ K or / opens it (see app.js).
-// Home: a "PG" capsule and the section links.
-const homeBar = `<a class="pill glass" href="/" aria-label="PG, home">
-        <img src="/assets/avatar.jpg" alt="" width="32" height="32">PG
+// Home: the publisher's capsule and the section links.
+const homeBar = `<a class="pill glass" href="/" aria-label="${PUBLISHER}, home">
+        <img src="/assets/avatar.jpg" alt="" width="32" height="32">${PUBLISHER}
       </a>
       <nav class="bar-links glass" aria-label="Sections">
         <a class="hide-narrow" href="/#apps">Apps</a>
         <a href="/#about">About</a>
-        <a href="https://github.com/lilpatter">GitHub</a>
+        <a href="${GITHUB}">GitHub</a>
       </nav>`;
 
 // App pages: back to the apps, and links to this app's support and GitHub page.
@@ -306,7 +314,7 @@ const appBar = (p) => {
       </span>
       <nav class="bar-links glass" aria-label="Sections">
         <a href="${esc(releases[p.id]?.issues || "/privacy/#support")}">Support</a>
-        <a href="${esc(repo || "https://github.com/lilpatter")}">GitHub</a>
+        <a href="${esc(repo || GITHUB)}">GitHub</a>
       </nav>`;
 };
 
@@ -329,6 +337,13 @@ function appCard(p, heading = "h3") {
         </li>`;
 }
 
+// "category" in projects.json: what kind of app it is, in the words people search with
+// ("Steam Account Switcher for Windows"). It's used in the page title and search data, not shown on the page.
+// Small numbers read better as words in a sentence.
+const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const countWord = (n) => WORDS[n] || String(n);
+const capital = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
 const DEVICE = { iOS: "iPhone", iPadOS: "iPad", macOS: "Mac", tvOS: "Apple TV", watchOS: "Apple Watch", visionOS: "Apple Vision Pro" };
 const andList = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
 
@@ -346,14 +361,15 @@ const cardShot = (p) => {
 function appShowcase(p, i = Infinity) {
   const shot = cardShot(p);
   const accent = accents[p.id] ? ` style="--accent:${esc(accents[p.id])}"` : "";
+  const spot = p.spotlight ? " is-spotlight" : "";
   const where = windowsOnly(p) ? "Windows" : p.platforms.map((x) => DEVICE[x] || x).join(", ");
   const status = STATUS_LABEL[p.status] || p.status;
   const art = shot
     ? `<img src="${esc(asset(shot))}" alt=""${i < 3 ? "" : ' loading="lazy"'} decoding="async">`
     : `<span class="card-shot-empty" aria-hidden="true">${icon(p, 96)}</span>`;
   return `<li data-families="${esc(families(p).join(" "))}">
-          <a class="app-card" href="/${esc(p.id)}/"${accent}>
-            <span class="card-shot">${art}</span>
+          <a class="app-card${spot}" href="/${esc(p.id)}/"${accent}>
+            <span class="card-shot">${art}${p.spotlight ? `<span class="card-flag">${esc(p.spotlight.label || "New")}</span>` : ""}</span>
             <span class="card-body">
               ${shot ? icon(p, 52) : ""}
               <span class="card-text">
@@ -366,13 +382,15 @@ function appShowcase(p, i = Infinity) {
         </li>`;
 }
 
-// What every app has in common. Each point names the apps that prove it, so it isn't just a slogan.
+// What every app has in common, kept short: the measurements and how they were taken live on each
+// app's page under "Under the Hood", where they support the app instead of crowding the home page.
 const PRINCIPLES = [
-  ["Light on your PC", "Hangar trims what an idle Steam holds in RAM from about 330 MB to 30–70 MB. Prism uses about 4 MB of memory in the tray. Parley has no Electron and no browser engine. Memory figures are measured on Windows 11 with the app idle; the Under the Hood notes on each app page say exactly what was measured."],
-  ["Your accounts stay yours", "Hangar never reads or stores a password: it signs in with a QR code from your phone, and the token it gets back is encrypted on your PC."],
-  ["Careful with your system", "Verdant only runs installers signed by NVIDIA. Keepsake makes a backup before every change. Prism injects nothing into your games and needs no admin rights."],
-  ["Straight from GitHub", "Every download comes from the app’s GitHub Releases page, and each app page shows the version and the date it was last updated."],
+  ["Focused", "Each app solves one specific problem, such as switching Steam accounts or editing an emulator save, and does it properly."],
+  ["Light", "Native apps with no background services you didn’t ask for. Idle in the tray, they use a few megabytes instead of hundreds."],
+  ["Private", "No accounts, no ads and no telemetry. Hangar and Parley sign in with a QR code, so your password is never seen or stored."],
+  ["Careful", "Keepsake backs up every save before changing it, Verdant only runs drivers signed by NVIDIA, and every update is checked against its SHA-256 hash."],
 ];
+
 
 // An app still in development, shown wide under "In the Works": a big screenshot, what it is,
 // where it's coming and a plain "In Development" status, so it reads as a preview, not a download.
@@ -413,10 +431,18 @@ function homePage() {
           ${["All", ...fams].map((f, i) => `<button type="button" role="radio" aria-checked="${i === 0}" data-family="${esc(f)}">${esc(f)}</button>`).join("\n          ")}
         </div>`
       : "";
+  const winCount = released.filter(windowsOnly).length;
   const body = `    <section class="hero wrap" aria-labelledby="page-title">
       <img class="avatar" src="/assets/avatar.jpg" alt="" width="128" height="128">
-      <h1 class="hero-title" id="page-title" tabindex="-1">PG</h1>
-      <p class="hero-sub">Small, fast apps that do one job well. Made by one developer.</p>
+      <p class="hero-eyebrow">${PUBLISHER}</p>
+      <h1 class="hero-title" id="page-title" tabindex="-1">Software that respects your&nbsp;PC.</h1>
+      <p class="hero-sub">Lightweight Windows apps for gaming, emulation and everyday use. ${capital(countWord(winCount))} focused apps, each doing one job well, from one independent developer.</p>
+      <ul class="hero-chips" aria-label="At a glance">
+        <li>Windows 10 and 11</li>
+        <li>Free</li>
+        <li>No telemetry</li>
+        <li>Independent developer</li>
+      </ul>
     </section>
 
     <section class="section wrap" id="apps" aria-labelledby="apps-title">
@@ -441,8 +467,9 @@ ${upcoming.length ? `
 ` : ""}
     <section class="section wrap" id="principles" aria-labelledby="principles-title">
       <div class="section-head">
-        <h2 class="title-2" id="principles-title">How They’re Built</h2>
+        <h2 class="title-2" id="principles-title">What They Share</h2>
       </div>
+      <p class="section-lede">Independent software. Focused functionality. Minimal overhead.</p>
       <ul class="feature-grid">
         ${PRINCIPLES.map(
           ([title, text]) => `<li class="feature">
@@ -458,20 +485,28 @@ ${upcoming.length ? `
         <h2 class="title-2" id="about-title">About</h2>
       </div>
       <div class="about-card">
-        <p>PG is one developer making the apps I want on my own PC. Most replace a heavy official app with something smaller, or do the one thing the official app leaves out.</p>
-        <p>The apps are closed source for now. Found a bug or have an idea? Open an issue on the app’s GitHub page.</p>
+        <p>${PUBLISHER} is one independent developer, known on GitHub as <a href="${GITHUB}">lilpatter</a>, making the apps I want on my own PC. Most replace a heavy official app with something smaller, or do the one thing the official app leaves out.</p>
+        <p>The apps are closed source for now. Every download comes from the app’s GitHub Releases page, with its SHA-256 hash on the app’s page here. Found a bug or have an idea? Open an issue on the app’s GitHub page.</p>
         <p>The apps are free. If one saves you some time, you can buy me a coffee on Ko&#8209;fi.</p>
         <div class="hero-actions about-actions">
-          <a class="btn btn-soft" href="https://github.com/lilpatter">${GITHUB_MARK}GitHub</a>
+          <a class="btn btn-soft" href="${GITHUB}">${GITHUB_MARK}GitHub</a>
           ${KOFI}
         </div>
       </div>
     </section>`;
   return layout({
-    title: "PG — Small, fast apps",
+    title: `${PUBLISHER} — Lightweight Windows apps for gaming and emulation`,
     // What the apps do, not just their names: this is the line under the link in search results.
     description:
-      "Small, fast Windows apps that do one job well: switch Steam accounts, update GeForce drivers without the NVIDIA App, manage emulator saves and give every game its own colours. Free, and made by one developer.",
+      `Free, lightweight Windows apps by ${PUBLISHER}: Keepsake (emulator game manager and save editor), Hangar (Steam account switcher), Verdant (NVIDIA driver updates without the NVIDIA App), Prism (per-game colour profiles) and Parley (a light Discord client).`,
+    jsonld: {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: PUBLISHER,
+      url: SITE,
+      logo: `${SITE}/assets/avatar.jpg`,
+      sameAs: [GITHUB],
+    },
     path: "/",
     bar: homeBar,
     body,
@@ -547,6 +582,78 @@ function demo(p) {
         </figure>`;
 }
 
+// The direct download: the installer file itself, or the app's first link if there's no release.
+function downloadHref(p) {
+  const dl = (p.links || []).find((l) => l.kind === "download");
+  return releases[p.id]?.installer?.url || dl?.url || "";
+}
+
+// Feature, screenshot, explanation: "tour": [{ "title", "text", "shot" }], where shot is a screenshot's
+// src. Each row says what to notice in the screenshot next to it, alternating sides.
+function tour(p) {
+  const steps = p.tour || [];
+  if (!steps.length) return "";
+  const alt = (src) => (p.screenshots || []).find((x) => x.src === src)?.alt || "";
+  return `      <section class="app-section" aria-labelledby="tour-title">
+        <h2 class="title-2" id="tour-title">${esc(p.tourTitle || `What ${p.name} Does`)}</h2>
+        <ol class="tour">
+          ${steps
+            .map(
+              (t) => `<li class="tour-step">
+            <figure class="tour-shot"><img src="${esc(asset(t.shot))}" alt="${esc(alt(t.shot))}" loading="lazy" decoding="async"></figure>
+            <div class="tour-text">
+              <h3 class="tour-title">${esc(t.title)}</h3>
+              <p>${esc(t.text)}</p>
+            </div>
+          </li>`
+            )
+            .join("\n          ")}
+        </ol>
+${p.shotsNote ? `        <p class="shots-note">${esc(p.shotsNote)}</p>\n` : ""}      </section>
+`;
+}
+
+// A table of exactly what's supported: "table": { "title", "intro", "columns": [..], "rows": [[..]], "note" }.
+function supportTable(p) {
+  const t = p.table;
+  if (!t?.rows?.length) return "";
+  return `
+      <section class="app-section" id="${esc(t.id || "supported")}" aria-labelledby="table-title">
+        <h2 class="title-2" id="table-title">${esc(t.title)}</h2>
+        ${t.intro ? `<p class="section-lede">${esc(t.intro)}</p>` : ""}
+        <div class="table-scroll" tabindex="0">
+          <table class="support-table">
+            <thead><tr>${t.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("")}</tr></thead>
+            <tbody>
+              ${t.rows.map((r) => `<tr>${r.map((c, i) => (i ? `<td>${esc(c)}</td>` : `<th scope="row">${esc(c)}</th>`)).join("")}</tr>`).join("\n              ")}
+            </tbody>
+          </table>
+        </div>
+        ${t.note ? `<p class="group-note">${esc(t.note)}</p>` : ""}
+      </section>
+`;
+}
+
+// Answers to what people ask before downloading: "faq": [{ "q", "a" }]. Also given to search engines.
+function faqSection(p) {
+  if (!p.faq?.length) return "";
+  return `
+      <section class="app-section" id="faq" aria-labelledby="faq-title">
+        <h2 class="title-2" id="faq-title">Questions and Answers</h2>
+        <div class="list faq-list">
+          ${p.faq
+            .map(
+              (f) => `<details class="faq">
+            <summary>${esc(f.q)}${CHEVRON}</summary>
+            <p>${esc(f.a)}</p>
+          </details>`
+            )
+            .join("\n          ")}
+        </div>
+      </section>
+`;
+}
+
 function gallery(p) {
   const shots = p.screenshots || [];
   if (!shots.length && !p.video?.src) return "";
@@ -576,7 +683,7 @@ function gallery(p) {
         </div>
         ${demo(p)}
         ${rows}
-        ${windowsOnly(p) ? `<p class="shots-note">Screenshots from Windows 11. The Mac-style sidebar and window buttons are part of ${esc(p.name)}’s design; it runs on Windows only.</p>` : ""}
+        ${p.shotsNote ? `<p class="shots-note">${esc(p.shotsNote)}</p>` : windowsOnly(p) ? `<p class="shots-note">Screenshots from Windows 11. The Mac-style sidebar and window buttons are part of ${esc(p.name)}’s design; it runs on Windows only.</p>` : ""}
       </section>
 `;
 }
@@ -646,7 +753,7 @@ function appPage(p) {
   // Information, like the bottom of an App Store page. Only what the header and the facts strip
   // don't already say: platform, version, size and status are shown once, up there.
   const info = [
-    ["Developer", "PG"],
+    ["Developer", PUBLISHER],
     release && ["Updated", formatDate(release.date)],
     release && ["Price", "Free"],
     release && p.stack && ["Built With", p.stack],
@@ -669,9 +776,15 @@ function appPage(p) {
           <h1 class="app-name" id="app-title" tabindex="-1">${esc(p.name)}</h1>
           <p class="app-subtitle">${esc(p.tagline)}</p>
           <div class="header-actions">
-            ${primary ? `<a class="btn btn-filled" href="${esc(primary.url)}">${esc(windowsOnly(p) && primary.kind === "download" ? "Download for Windows" : primary.label)}</a>` : ""}
+            ${primary ? `<a class="btn btn-filled" href="${esc(primary.kind === "download" ? downloadHref(p) : primary.url)}">${primary.kind === "download" ? GLYPH_SVG.download : ""}${esc(windowsOnly(p) && primary.kind === "download" ? "Download for Windows" : primary.label)}</a>` : ""}
             ${p.status !== "available" ? `<span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>` : ""}
           </div>
+          ${primary?.kind === "download" && release?.installer ? `<p class="download-meta">${esc([`Version ${release.version}`, release.size && `${formatSize(release.size)} installer`, windowsOnly(p) && "Windows 10 and 11", "Free"].filter(Boolean).join(" · "))}</p>
+          <p class="download-links">${[
+            release.portable && `<a href="${esc(release.portable.url)}">Portable version</a>`,
+            history && `<a href="#history">Release history</a>`,
+            `<a href="#privacy">Is it safe?</a>`,
+          ].filter(Boolean).join('<span aria-hidden="true"> · </span>')}</p>` : ""}
           ${warning(p)}
         </div>
       </header>
@@ -684,7 +797,7 @@ function appPage(p) {
           : fact("Status", STATUS_LABEL[p.status] || p.status) + (p.stack ? fact("Built With", stackMain, stackRest.join(" · ")) : "")}
       </div>
 
-${gallery(p)}
+${p.tour ? (p.video?.src ? gallery({ ...p, screenshots: [] }) : "") : gallery(p)}
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
         <p class="app-desc">${esc(p.description)}</p>
@@ -695,7 +808,7 @@ ${p.story ? `
         ${[].concat(p.story).map((s, i) => `<p class="app-desc${i ? " app-story" : ""}">${esc(s)}</p>`).join("\n        ")}
       </section>
 ` : ""}
-${features ? `      <section class="app-section" aria-labelledby="features-title">
+${tour(p)}${features ? `      <section class="app-section" aria-labelledby="features-title">
         <h2 class="title-2" id="features-title">Features</h2>
         <ul class="feature-grid">
           ${features}
@@ -708,7 +821,7 @@ ${features ? `      <section class="app-section" aria-labelledby="features-title
           ${engineering}
         </ul>
       </section>
-` : ""}${credits ? `
+` : ""}${supportTable(p)}${credits ? `
       <section class="app-section" aria-labelledby="credits-title">
         <h2 class="title-2" id="credits-title">Credits</h2>
         <ul class="list credit-list">
@@ -716,7 +829,7 @@ ${features ? `      <section class="app-section" aria-labelledby="features-title
         </ul>
       </section>
 ` : ""}${history ? `
-      <section class="app-section" aria-labelledby="history-title">
+      <section class="app-section" id="history" aria-labelledby="history-title">
         <div class="section-head">
           <h2 class="title-2" id="history-title">Release History</h2>
           <a class="btn btn-plain" href="${esc(release.all)}">All Releases</a>
@@ -725,7 +838,7 @@ ${features ? `      <section class="app-section" aria-labelledby="features-title
           ${history}
         </ol>
       </section>
-` : ""}${trustSection(p, release)}
+` : ""}${faqSection(p)}${trustSection(p, release)}
       <section class="app-section" aria-labelledby="info-title">
         <h2 class="title-2" id="info-title">Information</h2>
         <div class="info-columns">
@@ -753,8 +866,9 @@ ${others.length ? `
     </section>` : ""}`;
 
   return layout({
-    title: `${p.name} — ${p.tagline.replace(/\.$/, "")}`,
-    description: p.description,
+    // The category first, since that's what people search for; the name alone says little.
+    title: `${p.name} — ${p.category || p.tagline.replace(/\.$/, "")}`,
+    description: p.metaDescription || p.description,
     path: `/${p.id}/`,
     image: asset(p.icon),
     wash: asset(p.icon),
@@ -762,20 +876,27 @@ ${others.length ? `
     // Lets search engines show the app as software: what it runs on, that it's free, its version.
     jsonld: {
       "@context": "https://schema.org",
+      "@graph": [{
       "@type": "SoftwareApplication",
       name: p.name,
-      description: p.description,
+      alternateName: p.category,
+      description: p.metaDescription || p.description,
       url: `${SITE}/${p.id}/`,
       image: `${SITE}${asset(p.icon)}`,
       operatingSystem: windowsOnly(p) ? "Windows 10, Windows 11" : p.platforms.join(", "),
       applicationCategory: "UtilitiesApplication",
-      author: { "@type": "Person", name: "PG", url: SITE },
+      author: { "@type": "Organization", name: PUBLISHER, url: SITE, sameAs: [GITHUB] },
       ...(release && {
         softwareVersion: release.version,
         dateModified: release.date,
-        downloadUrl: links.find((l) => l.kind === "download")?.url,
+        downloadUrl: downloadHref(p),
+        fileSize: release.size ? formatSize(release.size) : undefined,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       }),
+      }, ...(p.faq?.length ? [{
+        "@type": "FAQPage",
+        mainEntity: p.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+      }] : [])],
     },
     bar: appBar(p),
     body,
@@ -784,7 +905,7 @@ ${others.length ? `
 
 function notFound() {
   return layout({
-    title: "Page Not Found — PG",
+    title: `Page Not Found — ${PUBLISHER}`,
     description: "This page doesn't exist.",
     path: "/404.html",
     bar: homeBar.replaceAll(" reveal", ""),
@@ -827,11 +948,11 @@ function privacyPage() {
   const bar = `<a class="circle glass" href="/" aria-label="Back to Apps">${BACK}</a>
       <nav class="bar-links glass" aria-label="Sections">
         <a href="/">Apps</a>
-        <a href="https://github.com/lilpatter">GitHub</a>
+        <a href="${GITHUB}">GitHub</a>
       </nav>`;
   const body = `    <article class="wrap doc-page" aria-labelledby="page-title">
       <h1 class="large-title" id="page-title" tabindex="-1">Privacy &amp; Support</h1>
-      <p class="app-desc">What PG’s apps do with your information, how to check a download is genuine, and where to get help. This covers the released apps: ${esc(andList(shipped.map((p) => p.name)))}.</p>
+      <p class="app-desc">What ${PUBLISHER}’s apps do with your information, how to check a download is genuine, and where to get help. This covers the released apps: ${esc(andList(shipped.map((p) => p.name)))}.</p>
 
       <section class="app-section" aria-labelledby="short-title">
         <h2 class="title-2" id="short-title">The Short Version</h2>
@@ -856,7 +977,7 @@ function privacyPage() {
         <div class="about-card">
           <p>Every app downloads from its own GitHub Releases page, and updates itself from there too, checking each download against its SHA-256 hash before installing.</p>
           <p>${esc(UNSIGNED)} In PowerShell, run this on the file you downloaded:</p>
-          <pre class="code"><code>Get-FileHash .\\Hangar_1.0.0_x64-setup.exe</code></pre>
+          <pre class="code"><code>Get-FileHash .\\Keepsake_1.1.0_x64-setup.exe</code></pre>
           <p>The hash it prints should match the one in the Privacy &amp; Security section of that app’s page, and the one GitHub shows next to the file.</p>
         </div>
       </section>
@@ -870,8 +991,8 @@ function privacyPage() {
       </section>
     </article>`;
   return layout({
-    title: "Privacy & Support — PG",
-    description: "What PG’s apps do with your information, how to check a download, and where to get help.",
+    title: `Privacy & Support — ${PUBLISHER}`,
+    description: `What ${PUBLISHER}’s apps do with your information, how to check a download, and where to get help.`,
     path: "/privacy/",
     bar,
     body,
@@ -889,6 +1010,10 @@ for (const entry of await readdir(".")) {
 
 // Each app's accent, for other sites (the GitHub profile tiles) to use the same colour.
 await writeFile("accents.json", JSON.stringify(accents, null, 2) + "\n");
+// Each app's current version, for the GitHub profile tiles. Kept from the last build when offline.
+const previousVersions = await readFile("versions.json", "utf8").then(JSON.parse, () => ({}));
+const versions = Object.fromEntries(projects.map((p) => [p.id, releases[p.id]?.version || previousVersions[p.id]]).filter(([, v]) => v));
+await writeFile("versions.json", JSON.stringify(versions, null, 2) + "\n");
 await writeFile("index.html", homePage());
 await writeFile("404.html", notFound());
 await mkdir("privacy", { recursive: true });

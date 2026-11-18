@@ -54,6 +54,21 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
   - Memory or speed figures: say what was measured (working set, private memory) and how, in the Under the Hood notes.
   - `video`: `{ "src", "poster", "caption" }`, a short screen recording (MP4) shown above the screenshots. It only plays when clicked.
   - `cardShot`: which screenshot the home page card uses. By default it's the first Windows or Mac one.
+  - `category`: what kind of app it is, in the words people search with, for example
+    `"Steam Account Switcher for Windows"`. It leads the page title and the search data; it isn't shown on the page.
+  - `metaDescription`: the line under the link in search results, if it should differ from `description`.
+  - `spotlight`: `{ "label", "title" }` announces the app: its home card glows with a "New" flag, and it gets a wide
+    glowing tile first on the GitHub profile. Give it to one app at a time, and move that app to the top of `projects.json`
+    so it leads everywhere. Remove it when the news is old.
+  - `tour`: `[{ "shot", "title", "text" }]`: feature, screenshot, explanation, in place of the screenshot gallery.
+    `shot` is a screenshot's `src`. `shotsNote` replaces the line under the screenshots.
+  - `table`: `{ "id", "title", "intro", "columns", "rows", "note" }`, an exact list of what's supported
+    (Keepsake's save editors). The first cell of each row is its heading.
+  - `faq`: `[{ "q", "a" }]`, shown as **Questions and Answers** and given to search engines as an FAQ.
+- The **Download** button links straight to the latest release's installer, with its version and size under it,
+  plus the portable exe and the release history. Without a release it falls back to the `download` link.
+- The publisher's name is `PUBLISHER` at the top of `build.mjs`; `versions.json` (like `accents.json`) gives the
+  profile tiles each app's current version.
 - **Link previews** (the 1200×630 image shown when a page is shared) live in `assets/og/`. They aren't redrawn by the
   workflow: after adding an app or changing a name, tagline, icon or screenshot, run `python scripts/og.py`
   (needs Pillow) and commit the images.

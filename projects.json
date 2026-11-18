@@ -1,11 +1,229 @@
 {
   "projects": [
     {
+      "id": "keepsake",
+      "name": "Keepsake",
+      "icon": "assets/icons/keepsake.png",
+      "status": "available",
+      "category": "Emulator Game Manager & Save Editor for Windows",
+      "spotlight": {
+        "label": "New",
+        "title": "Keepsake 1.1 is out of testing",
+        "text": "After 23 test builds, the emulator game manager and save editor is ready for everyone: ten emulators in one library, save editors for five games, Big Picture for your controller, and trophies."
+      },
+      "tagline": "Your emulator games and saves, in one place.",
+      "description": "Keepsake is an emulator game manager and save editor for Windows. It brings the games and saves from ten emulators, including RPCS3, Lichii, Dolphin, Cemu and Vita3K, into one library with each game's artwork, starts any game in one click or from your controller in Big Picture, and edits the saves of five supported games in an editor built for each one. No hex editor, and a backup before every change.",
+      "metaDescription": "Keepsake is a free emulator game manager and save editor for Windows. One library for RPCS3, Lichii, Fritchii, Dolphin, Cemu, Vita3K and more, save editors for LEGO Batman, LEGO Indiana Jones, LEGO Pirates and two Zelda games, and real PS3 save decryption.",
+      "platforms": [
+        "Windows"
+      ],
+      "stack": "Tauri 2 · Rust",
+      "highlights": [
+        "Ten emulators, from PS3 and Switch 2 to Game Boy, in one library",
+        "Save editors for five games, no hex editor needed",
+        "Decrypts saves copied from a real PS3",
+        "Big Picture for your controller, with an in-game overlay",
+        "Trophies from RPCS3 and Vita3K, with the date you earned them",
+        "A backup before every change"
+      ],
+      "engineering": [
+        {
+          "title": "Saves from a real PS3",
+          "text": "Saves copied off a PS3 are encrypted and signed. Keepsake decrypts them with each game's secure file ID and writes them back plain for RPCS3. Re-encrypting and re-signing is kept too, and tested against real saves."
+        },
+        {
+          "title": "Reading Switch 2 save data",
+          "text": "Ocarina of Time on Switch 2 stores its save in Nintendo's GameData format, where every field name is a MurmurHash3 hash. Keepsake maps those hashes to rupees, hearts, items, songs and more, per save slot, and keeps the save's caption file in sync."
+        },
+        {
+          "title": "The game's own icons",
+          "text": "Switch games are encrypted, so Keepsake takes icons from the files your emulator already keeps: a game dump or a mod. It decodes the compressed archives and texture formats itself. Switch 2 lays texture bytes out differently from Switch 1, and that layout was worked out from real textures until every icon decoded cleanly."
+        },
+        {
+          "title": "Out of the way while you play",
+          "text": "Keepsake hands the memory it isn't using back to Windows while it's minimized, and won't write a save while that save's emulator is running, so a game in progress can never overwrite an edit or be overwritten by one."
+        }
+      ],
+      "note": "Not affiliated with any emulator project, Nintendo, Sony Interactive Entertainment, Warner Bros. Games, Disney, TT Games or the LEGO Group.",
+      "links": [
+        {
+          "label": "Download",
+          "url": "https://github.com/lilpatter/keepsake/releases/latest",
+          "kind": "download"
+        }
+      ],
+      "screenshots": [
+        {
+          "src": "assets/screens/keepsake/home.jpg",
+          "device": "Windows",
+          "alt": "Home with LEGO Batman in the hero: Play, Edit Save, 88.9% complete, and Recently Saved games from RPCS3 and Lichii."
+        },
+        {
+          "src": "assets/screens/keepsake/games.jpg",
+          "device": "Windows",
+          "alt": "Games in a grid: games with saves first, then PlayStation 3 and Switch games with no saves yet."
+        },
+        {
+          "src": "assets/screens/keepsake/editor.jpg",
+          "device": "Windows",
+          "alt": "Editing a LEGO Batman save: studs, levels, Mini-kits, Red Power Bricks, characters, vehicles, Extras, suit upgrades and Batman facts."
+        },
+        {
+          "src": "assets/screens/keepsake/characters.jpg",
+          "device": "Windows",
+          "alt": "The Batcomputer roster with each character’s portrait and price, bought or locked."
+        },
+        {
+          "src": "assets/screens/keepsake/indy.jpg",
+          "device": "Windows",
+          "alt": "LEGO Indiana Jones levels: story, parcel, 100% flags and Artefacts for each level of Raiders of the Lost Ark."
+        }
+      ],
+      "tour": [
+        {
+          "shot": "assets/screens/keepsake/home.jpg",
+          "title": "Every emulator, one library",
+          "text": "Keepsake finds the emulators you have and every game and save they keep, and shows each game with its own artwork from the Nintendo eShop, Steam or SteamGridDB. Press Play and the game starts straight away, without the emulator's game list."
+        },
+        {
+          "shot": "assets/screens/keepsake/games.jpg",
+          "title": "Your whole collection at a glance",
+          "text": "Games with saves come first, then everything else you own, labelled by platform. Keepsake also lists saves whose game it can't find, so nothing gets lost."
+        },
+        {
+          "shot": "assets/screens/keepsake/editor.jpg",
+          "title": "Edit saves without a hex editor",
+          "text": "Each supported game gets an editor built for it and laid out like the game: studs, levels, collectibles, characters, vehicles and upgrades. Quick actions finish a chapter or unlock everything at once."
+        },
+        {
+          "shot": "assets/screens/keepsake/characters.jpg",
+          "title": "With the game's own artwork",
+          "text": "Character portraits, shop icons and collectibles are read from your own copy of the game, so the editor looks like the game you're playing. Keepsake ships no game files."
+        },
+        {
+          "shot": "assets/screens/keepsake/indy.jpg",
+          "title": "Saves from a real PS3, too",
+          "text": "Saves copied off a PlayStation 3 are encrypted and signed. Keepsake decrypts them so RPCS3 can use them, and the backup it takes first keeps the encrypted original."
+        }
+      ],
+      "shotsNote": "Screenshots from Windows 11. The coloured window buttons are Keepsake's default look; Windows-style buttons are an option in Settings. Keepsake runs on Windows only.",
+      "table": {
+        "id": "save-editors",
+        "title": "Supported Save Editors",
+        "intro": "Every game in your library gets its saves listed, backed up and restored. These games can also have their saves edited:",
+        "columns": [
+          "Game",
+          "Platform",
+          "Editions",
+          "What you can edit"
+        ],
+        "rows": [
+          [
+            "LEGO Batman: The Videogame",
+            "PlayStation 3 (RPCS3)",
+            "BLUS30175",
+            "Studs, story and 100% flags for every level, Red Power Bricks, Mini-kits, all 46 characters and 32 vehicles, 20 Extras, 15 suit upgrades and 54 Batman facts"
+          ],
+          [
+            "LEGO Indiana Jones: The Original Adventures",
+            "PlayStation 3 (RPCS3)",
+            "BLES00254, BLUS30141",
+            "Studs, story, parcels, Artefacts and 100% flags for 18 story and 3 bonus levels, all 83 characters and 24 Extras"
+          ],
+          [
+            "LEGO Pirates of the Caribbean: The Video Game",
+            "PlayStation 3 (RPCS3)",
+            "BLES01239, BLES01241, BLUS30744",
+            "Studs, story, Red Hats, Minikits and True Pirate for all 20 levels, all 80 characters and 20 Extras"
+          ],
+          [
+            "The Legend of Zelda: Ocarina of Time",
+            "Switch 2 (Lichii, Fritchii)",
+            "0400486024DEC000",
+            "Rupees and wallet, hearts, magic, Gold Skulltulas, every item and upgrade, bottles, gear, Spiritual Stones, medallions, songs, keys and masks, in all six save slots"
+          ],
+          [
+            "The Legend of Zelda: The Minish Cap",
+            "Game Boy Advance (Mesen, mGBA)",
+            "Cartridge saves",
+            "Rupees and wallet, hearts, bombs, arrows, shells, swords, items, bottles, Elements, equipment, sword techniques, quest items and butterflies, in all three save files"
+          ]
+        ],
+        "note": "Saves from real PS3s and from RPCS3 both work. More games are on the way."
+      },
+      "faq": [
+        {
+          "q": "Which emulators does Keepsake support?",
+          "a": "RPCS3 (PlayStation 3), KytyPS5 (PlayStation 5), Vita3K (PlayStation Vita), Lichii and Fritchii (Switch and Switch 2), Cemu (Wii U), Dolphin (GameCube and Wii), Azahar (3DS), Mesen (NES, SNES and Game Boy) and mGBA (Game Boy Advance). PCSX2, PPSSPP and Xenia are coming."
+        },
+        {
+          "q": "Which games can Keepsake edit?",
+          "a": "LEGO Batman: The Videogame, LEGO Indiana Jones: The Original Adventures and LEGO Pirates of the Caribbean on PS3, The Legend of Zelda: Ocarina of Time on Switch 2, and The Legend of Zelda: The Minish Cap on Game Boy Advance. Every other game still gets its saves listed, backed up and restored."
+        },
+        {
+          "q": "Does it work with saves from a real PS3?",
+          "a": "Yes. Saves copied off a PlayStation 3 are encrypted and signed. Keepsake decrypts them with the game's own key so RPCS3 can use them, and the backup it takes first keeps the encrypted original."
+        },
+        {
+          "q": "Can editing a save break it?",
+          "a": "Keepsake copies every save before it changes it, and before it restores a backup, so you can always go back from the Backups page. It also won't write a save while its emulator is running."
+        },
+        {
+          "q": "Is Keepsake free?",
+          "a": "Yes. There are no ads, no accounts and no telemetry. If it saves you some time, you can support development on Ko-fi."
+        },
+        {
+          "q": "Does it need administrator rights?",
+          "a": "No. The installer installs Keepsake for your Windows account only, and the portable keepsake.exe runs from any folder without installing."
+        },
+        {
+          "q": "Does Keepsake come with games or game files?",
+          "a": "No. Keepsake works with the games and saves you already have. In-game artwork such as character portraits is read from your own copy of each game."
+        },
+        {
+          "q": "Why does Windows warn me when I run it?",
+          "a": "Keepsake isn't code-signed yet, so Windows SmartScreen may say the publisher is unknown. Choose More info, then Run anyway. To check your download is the real one, compare its SHA-256 hash with the one in Privacy & Security below."
+        }
+      ],
+      "privacy": {
+        "contacts": [
+          [
+            "Nintendo eShop and Steam store",
+            "library artwork for your games"
+          ],
+          [
+            "SteamGridDB",
+            "only if you add your own key, for more artwork"
+          ],
+          [
+            "GitHub",
+            "to check for and download updates"
+          ]
+        ],
+        "local": [
+          "Your games and saves are found, read and edited on your PC only",
+          "A backup of every save is kept on your PC before Keepsake changes it",
+          "In-game artwork is read from your own copy of each game"
+        ]
+      },
+      "updates": "Updates itself from its GitHub Releases page and checks each download against its SHA-256 hash before installing. You can turn this off under Settings › About.",
+      "requirements": [
+        "Windows 10 or 11, 64-bit",
+        "At least one supported emulator, with your own games",
+        "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
+      ],
+      "story": [
+        "Every emulator keeps its games and saves its own way, in its own folders, and editing a save usually means a hex editor and offsets copied from a forum post.",
+        "Keepsake puts the games and saves from all your emulators in one library, starts any of them in one click, and turns supported saves into a form with the game's own artwork, with a backup before every change."
+      ]
+    },
+    {
       "id": "catalyst",
       "name": "Catalyst",
       "icon": "assets/icons/catalyst.png",
       "accent": "#a78bfa",
       "status": "in-development",
+      "category": "Movie & TV App for iPhone, iPad, Mac and Apple TV",
       "featured": true,
       "tagline": "One home for movies and series.",
       "description": "A native app for iPhone, iPad, Mac and Apple TV. Discover what to watch, keep your place across devices, and play from the sources you already use.",
@@ -101,6 +319,7 @@
       "name": "Hangar",
       "icon": "assets/icons/hangar.png",
       "status": "available",
+      "category": "Steam Account Switcher for Windows",
       "tagline": "Every Steam account, one click away.",
       "description": "Switches the signed-in Steam account without the account picker or a password prompt, shows every game on every account, and brings your Steam friends, chat and profiles with it. Steam stays in the tray, holding a fraction of its usual memory in RAM.",
       "platforms": [
@@ -191,6 +410,7 @@
       "name": "Verdant",
       "icon": "assets/icons/verdant.png",
       "status": "available",
+      "category": "NVIDIA Driver Updater Without the NVIDIA App",
       "tagline": "GeForce driver updates, without the NVIDIA App.",
       "description": "Finds the latest Game Ready and Studio drivers for your NVIDIA card, checks they're signed by NVIDIA and installs them with one prompt, without the NVIDIA App.",
       "platforms": [
@@ -273,110 +493,11 @@
       ]
     },
     {
-      "id": "keepsake",
-      "name": "Keepsake",
-      "icon": "assets/icons/keepsake.png",
-      "status": "available",
-      "tagline": "Your emulator games and saves, in one place.",
-      "description": "Finds your RPCS3, Lichii and Fritchii games and every save, starts any game straight from its library, and edits the saves of supported games with each game's own artwork.",
-      "platforms": [
-        "Windows"
-      ],
-      "stack": "Tauri 2 · Rust",
-      "highlights": [
-        "PS3, Switch and Switch 2 games in one library",
-        "Play without the emulator's game list",
-        "Save editors for three LEGO games and Ocarina of Time",
-        "Opens saves copied from a real PS3",
-        "Artwork from the eShop, Steam and SteamGridDB",
-        "A backup before every change"
-      ],
-      "engineering": [
-        {
-          "title": "Saves from a real PS3",
-          "text": "Saves copied off a PS3 are encrypted and signed. Keepsake decrypts them with each game's secure file ID and writes them back plain for RPCS3. Re-encrypting and re-signing is kept too, and tested against real saves."
-        },
-        {
-          "title": "Reading Switch 2 save data",
-          "text": "Ocarina of Time on Switch 2 stores its save in Nintendo's GameData format, where every field name is a MurmurHash3 hash. Keepsake maps those hashes to rupees, hearts, items, songs and more, per save slot, and keeps the save's caption file in sync."
-        },
-        {
-          "title": "The game's own icons",
-          "text": "Switch games are encrypted, so Keepsake takes icons from the files your emulator already keeps: a game dump or a mod. It decodes the compressed archives and texture formats itself. Switch 2 lays texture bytes out differently from Switch 1, and that layout was worked out from real textures until every icon decoded cleanly."
-        }
-      ],
-      "note": "Not affiliated with the RPCS3, Lichii or Fritchii projects, Nintendo, Sony Interactive Entertainment, Warner Bros. Games, Disney, TT Games or the LEGO Group.",
-      "links": [
-        {
-          "label": "Download",
-          "url": "https://github.com/lilpatter/keepsake/releases/latest",
-          "kind": "download"
-        }
-      ],
-      "screenshots": [
-        {
-          "src": "assets/screens/keepsake/home.jpg",
-          "device": "Windows",
-          "alt": "Home with LEGO Batman in the hero: Play, Edit Save, 88.9% complete, and Recently Saved games from RPCS3 and Lichii."
-        },
-        {
-          "src": "assets/screens/keepsake/games.jpg",
-          "device": "Windows",
-          "alt": "Games in a grid: games with saves first, then PlayStation 3 and Switch games with no saves yet."
-        },
-        {
-          "src": "assets/screens/keepsake/editor.jpg",
-          "device": "Windows",
-          "alt": "Editing a LEGO Batman save: studs, levels, Mini-kits, Red Power Bricks, characters, vehicles, Extras, suit upgrades and Batman facts."
-        },
-        {
-          "src": "assets/screens/keepsake/characters.jpg",
-          "device": "Windows",
-          "alt": "The Batcomputer roster with each character’s portrait and price, bought or locked."
-        },
-        {
-          "src": "assets/screens/keepsake/indy.jpg",
-          "device": "Windows",
-          "alt": "LEGO Indiana Jones levels: story, parcel, 100% flags and Artefacts for each level of Raiders of the Lost Ark."
-        }
-      ],
-      "privacy": {
-        "contacts": [
-          [
-            "Nintendo eShop and Steam store",
-            "library artwork for your games"
-          ],
-          [
-            "SteamGridDB",
-            "only if you add your own key, for more artwork"
-          ],
-          [
-            "GitHub",
-            "to check for and download updates"
-          ]
-        ],
-        "local": [
-          "Your games and saves are found, read and edited on your PC only",
-          "A backup of every save is kept on your PC before Keepsake changes it",
-          "In-game artwork is read from your own copy of each game"
-        ]
-      },
-      "updates": "Updates itself from its GitHub Releases page and checks each download against its SHA-256 hash before installing. You can turn this off under Settings › About.",
-      "requirements": [
-        "Windows 10 or 11, 64-bit",
-        "RPCS3, Lichii or Fritchii, with your own games",
-        "The Microsoft Edge WebView2 runtime, which comes with Windows 11"
-      ],
-      "story": [
-        "Every emulator keeps its games and saves its own way, in its own folders, and editing a save usually means a hex editor and offsets copied from a forum post.",
-        "Keepsake puts the games and saves from RPCS3, Lichii and Fritchii in one library, starts any of them in one click, and turns supported saves into a form with the game's own artwork, with a backup before every change."
-      ]
-    },
-    {
       "id": "prism",
       "name": "Prism",
       "icon": "assets/icons/prism.png",
       "status": "available",
+      "category": "Automatic Per-Game Colour Profiles for Windows",
       "tagline": "Colour profiles for every game, switched automatically.",
       "description": "Gives every game its own vibrance, contrast and white balance, switched on when the game takes focus and off when you leave it. Works on any graphics card.",
       "platforms": [
@@ -465,6 +586,7 @@
       "name": "Parley",
       "icon": "assets/icons/parley.png",
       "status": "available",
+      "category": "Lightweight Discord Client for Windows",
       "tagline": "An unofficial, lightweight Discord client for Windows.",
       "description": "A small native Discord client for Windows: servers, channels, DMs, replies, emoji and voice calls end-to-end encrypted with DAVE, Discord's own protocol for calls, in a single exe with no Electron and no browser engine. Text messages aren't end-to-end encrypted, in Parley or in any Discord client.",
       "platforms": [

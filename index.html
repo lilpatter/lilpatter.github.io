@@ -3,25 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>PG — Small, fast apps</title>
-  <meta name="description" content="Small, fast Windows apps that do one job well: switch Steam accounts, update GeForce drivers without the NVIDIA App, manage emulator saves and give every game its own colours. Free, and made by one developer.">
+  <title>PG — Lightweight Windows apps for gaming and emulation</title>
+  <meta name="description" content="Free, lightweight Windows apps by PG: Keepsake (emulator game manager and save editor), Hangar (Steam account switcher), Verdant (NVIDIA driver updates without the NVIDIA App), Prism (per-game colour profiles) and Parley (a light Discord client).">
   <link rel="canonical" href="https://lilpatter.github.io/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="PG">
-  <meta property="og:title" content="PG — Small, fast apps">
-  <meta property="og:description" content="Small, fast Windows apps that do one job well: switch Steam accounts, update GeForce drivers without the NVIDIA App, manage emulator saves and give every game its own colours. Free, and made by one developer.">
-  <meta property="og:image" content="https://lilpatter.github.io/assets/og/pg.png">
+  <meta property="og:title" content="PG — Lightweight Windows apps for gaming and emulation">
+  <meta property="og:description" content="Free, lightweight Windows apps by PG: Keepsake (emulator game manager and save editor), Hangar (Steam account switcher), Verdant (NVIDIA driver updates without the NVIDIA App), Prism (per-game colour profiles) and Parley (a light Discord client).">
+  <meta property="og:image" content="https://lilpatter.github.io/assets/og/home.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="PG — Small, fast apps">
+  <meta property="og:image:alt" content="PG — Lightweight Windows apps for gaming and emulation">
   <meta property="og:url" content="https://lilpatter.github.io/">
   <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PG","url":"https://lilpatter.github.io","logo":"https://lilpatter.github.io/assets/avatar.jpg","sameAs":["https://github.com/lilpatter"]}</script>
   <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/assets/avatar.jpg">
   <link rel="apple-touch-icon" href="/assets/avatar.jpg">
-  <link rel="stylesheet" href="/styles.css?v=ba872f7908">
-  <script src="/app.js?v=3850e946c0" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=042824c6dc">
+  <script src="/app.js?v=a3fde8c99a" defer></script>
 </head>
 <body>
   <header class="bar" id="bar">
@@ -40,8 +41,15 @@
     <div class="wash" style="--art:url('/assets/avatar.jpg')" aria-hidden="true"><i></i><i></i><i></i></div>
     <section class="hero wrap" aria-labelledby="page-title">
       <img class="avatar" src="/assets/avatar.jpg" alt="" width="128" height="128">
-      <h1 class="hero-title" id="page-title" tabindex="-1">PG</h1>
-      <p class="hero-sub">Small, fast apps that do one job well. Made by one developer.</p>
+      <p class="hero-eyebrow">PG</p>
+      <h1 class="hero-title" id="page-title" tabindex="-1">Software that respects your&nbsp;PC.</h1>
+      <p class="hero-sub">Lightweight Windows apps for gaming, emulation and everyday use. Five focused apps, each doing one job well, from one independent developer.</p>
+      <ul class="hero-chips" aria-label="At a glance">
+        <li>Windows 10 and 11</li>
+        <li>Free</li>
+        <li>No telemetry</li>
+        <li>Independent developer</li>
+      </ul>
     </section>
 
     <section class="section wrap" id="apps" aria-labelledby="apps-title">
@@ -50,6 +58,19 @@
         
       </div>
       <ul class="app-grid card-grid" id="app-list">
+        <li data-families="Windows">
+          <a class="app-card is-spotlight" href="/keepsake/" style="--accent:#fac51c">
+            <span class="card-shot"><img src="/assets/screens/keepsake/home.jpg" alt="" decoding="async"><span class="card-flag">New</span></span>
+            <span class="card-body">
+              <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="52" height="52">
+              <span class="card-text">
+                <h3 class="card-name">Keepsake</h3>
+                <span class="card-tagline">Your emulator games and saves, in one place.</span>
+                <span class="card-meta">Windows<span class="card-status">Available</span></span>
+              </span>
+            </span>
+          </a>
+        </li>
         <li data-families="Windows">
           <a class="app-card" href="/hangar/" style="--accent:#2c90f3">
             <span class="card-shot"><img src="/assets/screens/hangar/home.jpg" alt="" decoding="async"></span>
@@ -71,19 +92,6 @@
               <span class="card-text">
                 <h3 class="card-name">Verdant</h3>
                 <span class="card-tagline">GeForce driver updates, without the NVIDIA App.</span>
-                <span class="card-meta">Windows<span class="card-status">Available</span></span>
-              </span>
-            </span>
-          </a>
-        </li>
-        <li data-families="Windows">
-          <a class="app-card" href="/keepsake/" style="--accent:#fac51c">
-            <span class="card-shot"><img src="/assets/screens/keepsake/home.jpg" alt="" decoding="async"></span>
-            <span class="card-body">
-              <img class="app-icon" src="/assets/icons/keepsake.png" alt="" width="52" height="52">
-              <span class="card-text">
-                <h3 class="card-name">Keepsake</h3>
-                <span class="card-tagline">Your emulator games and saves, in one place.</span>
                 <span class="card-meta">Windows<span class="card-status">Available</span></span>
               </span>
             </span>
@@ -145,24 +153,25 @@
 
     <section class="section wrap" id="principles" aria-labelledby="principles-title">
       <div class="section-head">
-        <h2 class="title-2" id="principles-title">How They’re Built</h2>
+        <h2 class="title-2" id="principles-title">What They Share</h2>
       </div>
+      <p class="section-lede">Independent software. Focused functionality. Minimal overhead.</p>
       <ul class="feature-grid">
         <li class="feature">
           <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-          <span><strong class="feature-title">Light on your PC</strong>Hangar trims what an idle Steam holds in RAM from about 330 MB to 30–70 MB. Prism uses about 4 MB of memory in the tray. Parley has no Electron and no browser engine. Memory figures are measured on Windows 11 with the app idle; the Under the Hood notes on each app page say exactly what was measured.</span>
+          <span><strong class="feature-title">Focused</strong>Each app solves one specific problem, such as switching Steam accounts or editing an emulator save, and does it properly.</span>
         </li>
         <li class="feature">
           <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-          <span><strong class="feature-title">Your accounts stay yours</strong>Hangar never reads or stores a password: it signs in with a QR code from your phone, and the token it gets back is encrypted on your PC.</span>
+          <span><strong class="feature-title">Light</strong>Native apps with no background services you didn’t ask for. Idle in the tray, they use a few megabytes instead of hundreds.</span>
         </li>
         <li class="feature">
           <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-          <span><strong class="feature-title">Careful with your system</strong>Verdant only runs installers signed by NVIDIA. Keepsake makes a backup before every change. Prism injects nothing into your games and needs no admin rights.</span>
+          <span><strong class="feature-title">Private</strong>No accounts, no ads and no telemetry. Hangar and Parley sign in with a QR code, so your password is never seen or stored.</span>
         </li>
         <li class="feature">
           <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm3.4 5.3a.9.9 0 0 0-1.3.1L9.2 11 7.8 9.6a.9.9 0 1 0-1.3 1.3l2.1 2.1a.9.9 0 0 0 1.3-.1l3.6-4.4a.9.9 0 0 0-.1-1.2Z"/></svg>
-          <span><strong class="feature-title">Straight from GitHub</strong>Every download comes from the app’s GitHub Releases page, and each app page shows the version and the date it was last updated.</span>
+          <span><strong class="feature-title">Careful</strong>Keepsake backs up every save before changing it, Verdant only runs drivers signed by NVIDIA, and every update is checked against its SHA-256 hash.</span>
         </li>
       </ul>
     </section>
@@ -172,8 +181,8 @@
         <h2 class="title-2" id="about-title">About</h2>
       </div>
       <div class="about-card">
-        <p>PG is one developer making the apps I want on my own PC. Most replace a heavy official app with something smaller, or do the one thing the official app leaves out.</p>
-        <p>The apps are closed source for now. Found a bug or have an idea? Open an issue on the app’s GitHub page.</p>
+        <p>PG is one independent developer, known on GitHub as <a href="https://github.com/lilpatter">lilpatter</a>, making the apps I want on my own PC. Most replace a heavy official app with something smaller, or do the one thing the official app leaves out.</p>
+        <p>The apps are closed source for now. Every download comes from the app’s GitHub Releases page, with its SHA-256 hash on the app’s page here. Found a bug or have an idea? Open an issue on the app’s GitHub page.</p>
         <p>The apps are free. If one saves you some time, you can buy me a coffee on Ko&#8209;fi.</p>
         <div class="hero-actions about-actions">
           <a class="btn btn-soft" href="https://github.com/lilpatter"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
@@ -190,10 +199,10 @@
     </div>
     <ul class="palette-results" id="palette-results" role="listbox"></ul>
   </dialog>
-  <script type="application/json" id="apps-data">[{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"GeForce driver updates, without the NVIDIA App.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"keepsake","name":"Keepsake","tagline":"Your emulator games and saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Colour profiles for every game, switched automatically.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"An unofficial, lightweight Discord client for Windows.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
+  <script type="application/json" id="apps-data">[{"id":"keepsake","name":"Keepsake","tagline":"Your emulator games and saves, in one place.","icon":"/assets/icons/keepsake.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/keepsake/releases/latest","kind":"download"}]},{"id":"catalyst","name":"Catalyst","tagline":"One home for movies and series.","icon":"/assets/icons/catalyst.png","platforms":["iOS","iPadOS","macOS","tvOS"],"links":[{"label":"Visit website","url":"https://catalystapp.pages.dev/","kind":"website"}]},{"id":"hangar","name":"Hangar","tagline":"Every Steam account, one click away.","icon":"/assets/icons/hangar.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/hangar/releases/latest","kind":"download"}]},{"id":"verdant","name":"Verdant","tagline":"GeForce driver updates, without the NVIDIA App.","icon":"/assets/icons/verdant.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/verdant/releases/latest","kind":"download"}]},{"id":"prism","name":"Prism","tagline":"Colour profiles for every game, switched automatically.","icon":"/assets/icons/prism.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/prism/releases/latest","kind":"download"}]},{"id":"parley","name":"Parley","tagline":"An unofficial, lightweight Discord client for Windows.","icon":"/assets/icons/parley.png","platforms":["Windows"],"links":[{"label":"Download","url":"https://github.com/lilpatter/parley/releases/latest","kind":"download"}]}]</script>
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>Copyright © 2026 PG. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
+      <span>Copyright © 2026 PG. Independent software for Windows. All rights reserved. <a class="footer-link" href="/privacy/">Privacy &amp; Support</a></span>
       <span>Not affiliated with Apple, Valve, NVIDIA, Discord or the other companies named here.</span>
     </div>
   </footer>

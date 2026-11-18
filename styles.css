@@ -179,8 +179,9 @@ main { position: relative; isolation: isolate; }
 /* Home: a centred hero floating on the colour wash */
 .hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 64px; padding-bottom: 12px; }
 .avatar { flex: none; width: 128px; height: 128px; border-radius: 50%; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16); }
-.hero-title { margin-top: 24px; font-family: var(--font-display); font-size: clamp(48px, 7vw, 68px); line-height: 1; font-weight: 800; letter-spacing: -0.025em; }
-.hero-sub { margin: 12px 0 0; max-width: 40ch; font-size: clamp(17px, 2vw, 21px); line-height: 1.35; color: var(--label-2); text-wrap: balance; }
+.hero-eyebrow { margin: 20px 0 0; font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--label-2); }
+.hero-title { margin-top: 8px; max-width: 16ch; font-family: var(--font-display); font-size: clamp(38px, 6.2vw, 62px); line-height: 1.04; font-weight: 800; letter-spacing: -0.025em; }
+.hero-sub { margin: 14px 0 0; max-width: 46ch; font-size: clamp(17px, 2vw, 21px); line-height: 1.35; color: var(--label-2); text-wrap: balance; }
 .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
 @media (max-width: 600px) {
   .hero { padding-top: 40px; }
@@ -449,7 +450,7 @@ main h1:focus { outline: none; }
 .sk-app { width: 112px; height: 112px; border-radius: 22.37%; }
 @media (max-width: 600px) { .sk-app { width: 76px; height: 76px; } }
 /* The home skeleton takes the real hero's measurements, so nothing shifts when the content fades in. */
-.hero .sk-title { width: 120px; height: clamp(48px, 7vw, 68px); margin: 24px auto 0; }
+.hero .sk-title { width: min(560px, 86%); height: clamp(38px, 6.2vw, 62px); margin: 8px auto 0; }
 .hero .sk-line { height: calc(clamp(17px, 2vw, 21px) * 1.35 - 8px); margin: 16px auto 4px; }
 .app-tile .sk-line { height: 14px; margin: 1px auto; }
 .sk-icon { width: 136px; height: 136px; border-radius: 22.37%; }
@@ -646,3 +647,61 @@ kbd { font: 600 12px/1 var(--font); letter-spacing: 0; padding: 4px 7px; border-
 .doc-page .app-desc { margin-top: 12px; }
 .doc-page .row .app-icon { width: 40px; height: 40px; }
 @media (max-width: 760px) { .trust-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Home: what the apps are, at a glance ---------- */
+.hero-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
+.hero-chips li { padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--cell) 72%, transparent); box-shadow: var(--card-shadow); font-size: 14px; font-weight: 600; color: var(--label-2); }
+.section-lede { margin: -4px 4px 16px; font-size: 17px; line-height: 1.4; color: var(--label-2); }
+
+/* ---------- Spotlight: the app being announced glows in its accent colour ---------- */
+@keyframes spot-breathe {
+  50% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 70%, transparent), 0 0 56px 4px color-mix(in srgb, var(--accent) 45%, transparent); }
+}
+/* Its card in the grid glows too, with a "New" flag on the screenshot. */
+.app-card.is-spotlight { box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent), 0 0 24px color-mix(in srgb, var(--accent) 32%, transparent); animation: spot-breathe 3.6s ease-in-out infinite; }
+.card-flag { position: absolute; top: 12px; left: 12px; padding: 3px 10px; border-radius: 999px; background: var(--accent); color: rgba(0, 0, 0, 0.86); font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25); }
+@media (prefers-reduced-motion: reduce) {
+  .app-card.is-spotlight { animation: none; }
+}
+
+/* ---------- App pages: category, download details ---------- */
+.download-meta { margin: 10px 2px 0; font-size: 13px; color: var(--label-2); }
+.download-links { margin: 4px 2px 0; font-size: 13px; color: var(--label-3); }
+.download-links a { font-weight: 600; }
+.app-page .btn-filled svg { width: 18px; height: 18px; }
+
+/* ---------- App pages: feature, screenshot, explanation ---------- */
+.tour { margin: 0; padding: 0; list-style: none; display: grid; gap: 18px; }
+.tour-step { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: center; gap: 28px; padding: 14px; border-radius: var(--r-card); background: var(--cell); box-shadow: var(--card-shadow); }
+.tour-step:nth-child(even) .tour-shot { order: 2; }
+.tour-shot { margin: 0; overflow: hidden; border-radius: var(--r-inner); aspect-ratio: 16 / 10; background: var(--fill); box-shadow: 0 0 0 0.5px var(--icon-border); }
+.tour-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.tour-text { padding: 6px 10px; }
+.tour-title { font-family: var(--font-display); font-size: 22px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; }
+.tour-text p { margin: 8px 0 0; font-size: 16px; line-height: 1.5; color: var(--label-2); }
+@media (max-width: 760px) {
+  .tour-step { grid-template-columns: 1fr; gap: 12px; }
+  .tour-step:nth-child(even) .tour-shot { order: 0; }
+  .tour-text { padding: 2px 4px 6px; }
+}
+
+/* ---------- App pages: what's supported ---------- */
+.table-scroll { overflow-x: auto; border-radius: var(--r-card); background: var(--cell); box-shadow: var(--card-shadow); }
+.support-table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 15px; line-height: 1.4; }
+.support-table th, .support-table td { padding: 12px 16px; text-align: left; vertical-align: top; }
+.support-table thead th { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--label-3); border-bottom: 0.5px solid var(--separator); }
+.support-table tbody tr + tr > * { border-top: 0.5px solid var(--separator); }
+.support-table tbody th { font-weight: 600; color: var(--label); }
+.support-table td { color: var(--label-2); }
+.support-table td:nth-child(3) { font: 13px/1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; }
+
+/* ---------- App pages: questions and answers ---------- */
+.faq { position: relative; border-radius: var(--r-inner); }
+.faq + .faq::before { content: ""; position: absolute; top: -3px; left: 14px; right: 14px; border-top: 0.5px solid var(--separator); }
+.faq + .faq { margin-top: 6px; }
+.faq summary { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 52px; padding: 12px 14px; border-radius: var(--r-inner); font-size: 17px; font-weight: 600; cursor: pointer; list-style: none; transition: background 0.2s; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { background: var(--fill); }
+.faq summary .chevron { transition: transform 0.3s var(--spring); }
+.faq[open] summary .chevron { transform: rotate(90deg); }
+.faq p { margin: 0; padding: 0 14px 14px; max-width: 72ch; font-size: 16px; line-height: 1.5; color: var(--label-2); }
