@@ -215,10 +215,12 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const families = (p) => [...new Set(p.platforms.map((x) => PLATFORM_FAMILY[x] || x))];
 const isOpenSource = (p) => (p.links || []).some((l) => l.kind === "source");
 const asset = (path) => "/" + path.replace(/^\//, "");
+// Where an app's links go: its page here, or its own website for an app with "redirect" set.
+const pageHref = (p) => p.redirect || `/${p.id}/`;
 const icon = (p, size, alt = "") => `<img class="app-icon" src="${esc(asset(p.icon))}" alt="${esc(alt)}" width="${size}" height="${size}">`;
 const appData = JSON.stringify(
   projects.map((p) => ({
-    id: p.id, name: p.name, tagline: p.tagline, icon: asset(p.icon), platforms: p.platforms,
+    id: p.id, name: p.name, tagline: p.tagline, icon: asset(p.icon), platforms: p.platforms, href: pageHref(p),
     links: (p.links || []).map(({ label, url, kind }) => ({ label, url, kind })),
   }))
 ).replace(/</g, "\\u003c");
@@ -317,7 +319,7 @@ function appCard(p, heading = "h3") {
         ? `<span class="tile-badge is-warn">${esc(p.badge)}</span>`
         : "";
   return `<li data-families="${esc(families(p).join(" "))}">
-          <a class="app-tile" href="/${esc(p.id)}/">
+          <a class="app-tile" href="${esc(pageHref(p))}">
             ${icon(p, 112)}
             <${heading} class="tile-name">${esc(p.name)}</${heading}>
             <span class="tile-tagline">${esc(p.tagline)}</span>${soon}
@@ -359,7 +361,7 @@ function appShowcase(p) {
   const shot = cardShot(p);
   const accent = accents[p.id] ? `--accent:${esc(accents[p.id])};` : "";
   return `<li data-families="${esc(families(p).join(" "))}">
-          <a class="app-card" href="/${esc(p.id)}/" style="${accent}${cropStyle(p)}">
+          <a class="app-card" href="${esc(pageHref(p))}" style="${accent}${cropStyle(p)}">
             <span class="card-shot">${shot ? `<img src="${esc(asset(shot))}" alt="" decoding="async">` : icon(p, 96)}</span>
             <span class="card-body">
               ${icon(p, 44)}
@@ -387,12 +389,12 @@ function appFeature(p) {
       <div class="banner" style="${accent}">
         ${shot ? `<img class="banner-blur" src="${esc(asset(shot))}" alt="" aria-hidden="true" decoding="async">` : ""}
         <div class="banner-body">
-          <a class="banner-icon" href="/${esc(p.id)}/" tabindex="-1" aria-hidden="true">${icon(p, 76)}</a>
-          <h2 class="banner-title" id="feature-title"><a href="/${esc(p.id)}/">${esc(p.name)}</a>${p.spotlight ? `<span class="row-tag">${esc(p.spotlight.label || "New")}</span>` : ""}</h2>
+          <a class="banner-icon" href="${esc(pageHref(p))}" tabindex="-1" aria-hidden="true">${icon(p, 76)}</a>
+          <h2 class="banner-title" id="feature-title"><a href="${esc(pageHref(p))}">${esc(p.name)}</a>${p.spotlight ? `<span class="row-tag">${esc(p.spotlight.label || "New")}</span>` : ""}</h2>
           <p class="banner-text">${esc(p.tagline)}</p>
           <div class="banner-actions">
             ${href ? `<a class="btn btn-primary" href="${esc(href)}">${GLYPH_SVG.download}Download</a>` : ""}
-            <a class="btn btn-plain" href="/${esc(p.id)}/">Learn More</a>
+            <a class="btn btn-plain" href="${esc(pageHref(p))}">Learn More</a>
           </div>
           ${meta.length > 1 ? `<p class="banner-meta">${meta.map(esc).join('<span aria-hidden="true">·</span>')}</p>` : ""}
         </div>
@@ -403,7 +405,7 @@ function appFeature(p) {
 
 // An app still in development: one row under the grid, so it reads as a preview, not a download.
 function appPreview(p) {
-  return `<li><a class="row upcoming-row" href="/${esc(p.id)}/">
+  return `<li><a class="row upcoming-row" href="${esc(pageHref(p))}">
             ${icon(p, 44)}
             <span class="row-body">
               <span class="row-title">${esc(p.name)} <span class="row-tag">${esc(STATUS_LABEL[p.status] || p.status)}</span></span>
@@ -990,12 +992,34 @@ function privacyPage() {
   });
 }
 
+// An app with its own website ("redirect" in projects.json) has no page here: /<id>/ only forwards old
+// links and bookmarks there. GitHub Pages can't send a real redirect, so it's a meta refresh, with a
+// script for speed and a plain link as the last resort. Search engines are told to index the website instead.
+function redirectPage(p) {
+  const to = esc(p.redirect);
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>${esc(p.name)}</title>
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="${to}">
+  <meta http-equiv="refresh" content="0; url=${to}">
+  <script>location.replace(${JSON.stringify(p.redirect).replace(/</g, "\\u003c")});</script>
+</head>
+<body>
+  <p>${esc(p.name)} has its own website: <a href="${to}">${to}</a></p>
+</body>
+</html>
+`;
+}
+
 // Remove folders of apps that were taken out of projects.json.
 const ids = new Set(projects.map((p) => p.id));
 for (const entry of await readdir(".")) {
   if (ids.has(entry) || entry.startsWith(".") || !(await stat(entry)).isDirectory()) continue;
   const page = `${entry}/index.html`;
-  const generated = await readFile(page, "utf8").then((s) => s.includes('class="wrap app-page"'), () => false);
+  const generated = await readFile(page, "utf8").then((s) => s.includes('class="wrap app-page"') || s.includes("has its own website"), () => false);
   if (generated) await rm(entry, { recursive: true });
 }
 
@@ -1014,13 +1038,13 @@ await writeFile(
   "sitemap.xml",
   `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${["/", ...projects.map((p) => `/${p.id}/`), "/privacy/"].map((u) => `  <url><loc>${SITE}${u}</loc></url>`).join("\n")}
+${["/", ...projects.filter((p) => !p.redirect).map((p) => `/${p.id}/`), "/privacy/"].map((u) => `  <url><loc>${SITE}${u}</loc></url>`).join("\n")}
 </urlset>
 `
 );
 for (const p of projects) {
   await mkdir(p.id, { recursive: true });
-  await writeFile(`${p.id}/index.html`, appPage(p));
+  await writeFile(`${p.id}/index.html`, p.redirect ? redirectPage(p) : appPage(p));
 }
 const withRelease = Object.entries(releases).filter(([, r]) => r).map(([id, r]) => `${id} ${r.version}`);
 console.log(`Release info: ${withRelease.join(", ") || "none (offline or rate limited)"}`);

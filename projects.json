@@ -219,6 +219,7 @@
     },
     {
       "id": "catalyst",
+      "redirect": "https://catalystapp.pages.dev/",
       "name": "Catalyst",
       "icon": "assets/icons/catalyst.png",
       "accent": "#a78bfa",

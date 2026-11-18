@@ -483,7 +483,7 @@ function paletteEntries() {
     sub: a.tagline,
     meta: a.platforms.join(" · "),
     icon: a.icon,
-    href: `/${a.id}/`,
+    href: a.href || `/${a.id}/`,
     keywords: `${a.name} ${a.tagline} ${a.platforms.join(" ")}`,
   }));
   for (const a of APPS) {

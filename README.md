@@ -2,7 +2,7 @@
 
 PG's apps site, served by GitHub Pages from `main`. The design follows Apple's Human Interface Guidelines.
 
-Every app has its own page at `/<id>/` (for example [/catalyst/](https://lilpatter.github.io/catalyst/)).
+Every app has its own page at `/<id>/` (for example [/keepsake/](https://lilpatter.github.io/keepsake/)).
 The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`, `404.html` or the app folders by hand.
 
 ## How it works
@@ -54,6 +54,8 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
   - Memory or speed figures: say what was measured (working set, private memory) and how, in the Under the Hood notes.
   - `video`: `{ "src", "poster", "caption" }`, a short screen recording (MP4) shown above the screenshots. It only plays when clicked.
   - `cardShot`: which screenshot the home page card uses. By default it's the first Windows or Mac one.
+  - `redirect`: a URL. For an app with its own website (Catalyst): every link to it goes there, and `/<id>/`
+    becomes a redirect to it instead of an app page.
   - `cardCrop`: `{ "x", "y", "zoom" }`, the part of that screenshot the home card shows (x and y from 0 to 100).
     By default the card zooms in 1.2× from the right, which drops the app's sidebar.
   - `category`: what kind of app it is, in the words people search with, for example
