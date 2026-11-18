@@ -437,12 +437,6 @@ function homePage() {
       <p class="hero-eyebrow">${PUBLISHER}</p>
       <h1 class="hero-title" id="page-title" tabindex="-1">Software that respects your&nbsp;PC.</h1>
       <p class="hero-sub">Lightweight Windows apps for gaming, emulation and everyday use. ${capital(countWord(winCount))} focused apps, each doing one job well, from one independent developer.</p>
-      <ul class="hero-chips" aria-label="At a glance">
-        <li>Windows 10 and 11</li>
-        <li>Free</li>
-        <li>No telemetry</li>
-        <li>Independent developer</li>
-      </ul>
     </section>
 
     <section class="section wrap" id="apps" aria-labelledby="apps-title">
