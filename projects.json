@@ -583,6 +583,7 @@
     },
     {
       "id": "parley",
+      "cardCrop": { "x": 0, "y": 0, "zoom": 1.7 },
       "name": "Parley",
       "icon": "assets/icons/parley.png",
       "status": "available",

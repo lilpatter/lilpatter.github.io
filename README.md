@@ -54,6 +54,8 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
   - Memory or speed figures: say what was measured (working set, private memory) and how, in the Under the Hood notes.
   - `video`: `{ "src", "poster", "caption" }`, a short screen recording (MP4) shown above the screenshots. It only plays when clicked.
   - `cardShot`: which screenshot the home page card uses. By default it's the first Windows or Mac one.
+  - `cardCrop`: `{ "x", "y", "zoom" }`, the part of that screenshot the home card shows (x and y from 0 to 100).
+    By default the card zooms in 1.2× from the right, which drops the app's sidebar.
   - `category`: what kind of app it is, in the words people search with, for example
     `"Steam Account Switcher for Windows"`. It leads the page title and the search data; it isn't shown on the page.
   - `metaDescription`: the line under the link in search results, if it should differ from `description`.
@@ -75,4 +77,7 @@ The pages are built from `projects.json` by `build.mjs`; don't edit `index.html`
 - **Release History** builds itself from each app's GitHub releases: the first line of a release's notes is its title,
   and releases that only say "Download the setup to install it…" are left out. Write that first line for visitors.
 - The Apple / Windows filter builds itself from `platforms`.
+- App pages open with a banner (icon, Download, and the app's window from `cardShot`), then tabs: Overview,
+  Details, Privacy, Releases and Questions. A tab only appears when it has content. Without JavaScript every
+  tab's content shows in turn. `warning` shows as one line under the Download button that opens to the full text.
 - The GitHub profile's app tiles are generated from this same file once a day.

@@ -208,7 +208,7 @@ const CHEVRON = '<svg class="chevron" viewBox="0 0 8 13" aria-hidden="true"><pat
 const BACK = '<svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8"/></svg>';
 // Ko-fi's "Support me on Ko-fi" widget, drawn here instead of by its script: the script uses document.write,
 // which doesn't run after app.js swaps pages in place, and it loads Google Fonts. The cup is a local copy.
-const KOFI = `<a class="btn btn-kofi" href="https://ko-fi.com/O6N02AUO5M" target="_blank" rel="noopener" title="Support me on ko-fi.com"><img src="/assets/kofi-cup.png" alt="" width="22" height="18">Support me on Ko-fi</a>`;
+const KOFI = `<a class="btn btn-soft btn-kofi" href="https://ko-fi.com/O6N02AUO5M" target="_blank" rel="noopener" title="Support me on ko-fi.com"><img src="/assets/kofi-cup.png" alt="" width="22" height="18">Support me on Ko-fi</a>`;
 const SEARCH = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3a5.5 5.5 0 0 1 4.4 8.8l3.6 3.7a.9.9 0 0 1-1.3 1.3l-3.7-3.6A5.5 5.5 0 1 1 8.5 3Zm0 1.8a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Z"/></svg>';
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -216,17 +216,6 @@ const families = (p) => [...new Set(p.platforms.map((x) => PLATFORM_FAMILY[x] ||
 const isOpenSource = (p) => (p.links || []).some((l) => l.kind === "source");
 const asset = (path) => "/" + path.replace(/^\//, "");
 const icon = (p, size, alt = "") => `<img class="app-icon" src="${esc(asset(p.icon))}" alt="${esc(alt)}" width="${size}" height="${size}">`;
-// Platform marks for the facts strip: the Windows logo, and the Apple logo (Simple Icons, CC0) for Apple platforms.
-const PLATFORM_GLYPH = {
-  Windows: ["0 0 20 20", GLYPH.windows],
-  Apple: ["0 0 24 24", '<path d="M12.15 6.9c-.95 0-2.42-1.08-3.96-1.04-2.04.03-3.91 1.18-4.96 3.01-2.12 3.68-.55 9.1 1.52 12.09 1.01 1.45 2.21 3.09 3.79 3.04 1.52-.07 2.09-.99 3.94-.99 1.83 0 2.35.99 3.96.95 1.64-.03 2.68-1.48 3.68-2.95 1.16-1.69 1.64-3.33 1.66-3.42-.04-.01-3.18-1.22-3.22-4.86-.03-3.04 2.48-4.49 2.6-4.56-1.43-2.09-3.62-2.32-4.39-2.38-2-.16-3.68 1.09-4.62 1.09Zm3.38-3.07c.84-1.01 1.4-2.43 1.25-3.83-1.21.05-2.66.81-3.53 1.82-.78.9-1.45 2.34-1.27 3.71 1.34.1 2.71-.69 3.55-1.7"/>'],
-};
-const platformIcon = (fam) =>
-  PLATFORM_GLYPH[fam] ? `<svg class="platform-glyph" viewBox="${PLATFORM_GLYPH[fam][0]}" aria-hidden="true">${PLATFORM_GLYPH[fam][1]}</svg>` : "";
-
-const fact = (label, value, note = "", iconHtml = "") =>
-  `<div class="fact"><div class="fact-label">${esc(label)}</div><div class="fact-value">${iconHtml}${esc(value)}</div>${note ? `<div class="fact-note">${esc(note)}</div>` : ""}</div>`;
-
 const appData = JSON.stringify(
   projects.map((p) => ({
     id: p.id, name: p.name, tagline: p.tagline, icon: asset(p.icon), platforms: p.platforms,
@@ -256,8 +245,8 @@ function layout({ title, description, path, image = "/assets/avatar.jpg", wash =
   <meta property="og:url" content="${SITE}${path}">
   <meta name="twitter:card" content="summary_large_image">${jsonld ? `
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>` : ""}
-  <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141416" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="${esc(image)}">
   <link rel="apple-touch-icon" href="${esc(image)}">
   <link rel="stylesheet" href="${CSS}">
@@ -270,7 +259,7 @@ function layout({ title, description, path, image = "/assets/avatar.jpg", wash =
     </div>
   </header>
   <main id="top">
-    <div class="wash" style="--art:url('${esc(wash)}')" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wash"${wash ? ` style="--art:url('${esc(wash)}')"` : ""} aria-hidden="true"><i></i><i></i><i></i></div>
 ${body}
   </main>
   <dialog class="palette" id="palette" aria-label="Search">
@@ -299,9 +288,8 @@ const homeBar = `<a class="pill glass" href="/" aria-label="${PUBLISHER}, home">
         <img src="/assets/avatar.jpg" alt="" width="32" height="32">${PUBLISHER}
       </a>
       <nav class="bar-links glass" aria-label="Sections">
-        <a class="hide-narrow" href="/#apps">Apps</a>
         <a href="/#about">About</a>
-        <a href="${GITHUB}">GitHub</a>
+        <a href="${GITHUB}">${GITHUB_MARK}GitHub</a>
       </nav>`;
 
 // App pages: back to the apps, and links to this app's support and GitHub page.
@@ -314,7 +302,7 @@ const appBar = (p) => {
       </span>
       <nav class="bar-links glass" aria-label="Sections">
         <a href="${esc(releases[p.id]?.issues || "/privacy/#support")}">Support</a>
-        <a href="${esc(repo || GITHUB)}">GitHub</a>
+        <a href="${esc(repo || GITHUB)}">${GITHUB_MARK}GitHub</a>
       </nav>`;
 };
 
@@ -355,64 +343,74 @@ const cardShot = (p) => {
   return p.cardShot || (WIDE.map((d) => shots.find((s) => s.device === d)).find(Boolean) || shots[0])?.src;
 };
 
-// A home card: the app's screenshot, then its icon, name, what it does, where it runs and whether it's out.
-// The icon stays inside the link so it still flies into place on the app page.
-// The first row is on screen as the page opens, so only the cards below it load lazily.
-function appShowcase(p, i = Infinity) {
+// Home cards are laid out like the game tiles in the apps: a cropped screenshot on its own, then the
+// icon, name and what it does underneath. The crop drops the window's sidebar and zooms in on the
+// content, so the screenshot reads at card size. "cardCrop": { "x", "y", "zoom" } in projects.json
+// moves it (x and y from 0 to 100, the point of the screenshot kept in view).
+const cropStyle = (p) => {
+  const c = { x: 100, y: 0, zoom: 1.2, ...(p.cardCrop || {}) };
+  return `--x:${c.x}%;--y:${c.y}%;--z:${c.zoom}`;
+};
+
+// A home card: the screenshot, then the icon, name and one line, the same on every card so they line up.
+// Status, platform and caveats such as "Unofficial client" are on the app's own page, not repeated here.
+// The screenshot loads with the page (there are only a few), so no card shows up empty while scrolling.
+function appShowcase(p) {
   const shot = cardShot(p);
-  const accent = accents[p.id] ? ` style="--accent:${esc(accents[p.id])}"` : "";
-  const spot = p.spotlight ? " is-spotlight" : "";
-  const where = windowsOnly(p) ? "Windows" : p.platforms.map((x) => DEVICE[x] || x).join(", ");
-  const status = STATUS_LABEL[p.status] || p.status;
-  const art = shot
-    ? `<img src="${esc(asset(shot))}" alt=""${i < 3 ? "" : ' loading="lazy"'} decoding="async">`
-    : `<span class="card-shot-empty" aria-hidden="true">${icon(p, 96)}</span>`;
+  const accent = accents[p.id] ? `--accent:${esc(accents[p.id])};` : "";
   return `<li data-families="${esc(families(p).join(" "))}">
-          <a class="app-card${spot}" href="/${esc(p.id)}/"${accent}>
-            <span class="card-shot">${art}${p.spotlight ? `<span class="card-flag">${esc(p.spotlight.label || "New")}</span>` : ""}</span>
+          <a class="app-card" href="/${esc(p.id)}/" style="${accent}${cropStyle(p)}">
+            <span class="card-shot">${shot ? `<img src="${esc(asset(shot))}" alt="" decoding="async">` : icon(p, 96)}</span>
             <span class="card-body">
-              ${shot ? icon(p, 52) : ""}
+              ${icon(p, 44)}
               <span class="card-text">
                 <h3 class="card-name">${esc(p.name)}</h3>
                 <span class="card-tagline">${esc(p.tagline)}</span>
-                <span class="card-meta">${esc(where)}<span class="card-status${p.status === "available" ? "" : " is-soon"}">${esc(status)}</span>${p.badge ? `<span class="card-badge">${esc(p.badge)}</span>` : ""}</span>
               </span>
             </span>
           </a>
         </li>`;
 }
 
-// What every app has in common, kept short: the measurements and how they were taken live on each
-// app's page under "Under the Hood", where they support the app instead of crowding the home page.
-const PRINCIPLES = [
-  ["Focused", "Each app solves one specific problem, such as switching Steam accounts or editing an emulator save, and does it properly."],
-  ["Light", "Native apps with no background services you didn’t ask for. Idle in the tray, they use a few megabytes instead of hundreds."],
-  ["Private", "No accounts, no ads and no telemetry. Hangar and Parley sign in with a QR code, so your password is never seen or stored."],
-  ["Careful", "Keepsake backs up every save before changing it, Verdant only runs drivers signed by NVIDIA, and every update is checked against its SHA-256 hash."],
-];
-
-
-// An app still in development, shown wide under "In the Works": a big screenshot, what it is,
-// where it's coming and a plain "In Development" status, so it reads as a preview, not a download.
-function appPreview(p) {
+// The app at the top of the home page: its icon, name and what it does on a plain panel, like the
+// apps' own cards, with its real window beside them, whole, the way it looks on your desktop. It's the spotlight app if
+// there is one, otherwise the first app in projects.json.
+function appFeature(p) {
   const shot = cardShot(p);
-  const accent = accents[p.id] ? ` style="--accent:${esc(accents[p.id])}"` : "";
-  return `<li>
-          <a class="app-card upcoming-card" href="/${esc(p.id)}/"${accent}>
-            <span class="card-shot">${shot ? `<img src="${esc(asset(shot))}" alt="" loading="lazy" decoding="async">` : `<span class="card-shot-empty" aria-hidden="true">${icon(p, 96)}</span>`}</span>
-            <span class="card-body">
-              ${icon(p, 64)}
-              <span class="card-text">
-                <h3 class="card-name">${esc(p.name)}</h3>
-                <span class="card-status is-soon">${esc(STATUS_LABEL[p.status] || p.status)}</span>
-                <span class="card-tagline">${esc(p.tagline)}</span>
-                ${p.description ? `<span class="card-desc">${esc(p.description)}</span>` : ""}
-                <span class="card-meta">Coming to ${esc(andList(p.platforms.map((x) => DEVICE[x] || x)))}</span>
-                <span class="card-more">See ${esc(p.name)} ${CHEVRON}</span>
-              </span>
+  const release = releases[p.id];
+  const accent = accents[p.id] ? `--accent:${esc(accents[p.id])};` : "";
+  // The version leads the small print; a spotlight app gets the apps' small "New" tag beside its name.
+  const meta = [release && `Version ${release.version}`, release?.size && formatSize(release.size), windowsOnly(p) && "Windows 10 and 11", "Free"].filter(Boolean);
+  const href = downloadHref(p);
+  const alt = (p.screenshots || []).find((x) => x.src === shot)?.alt || `${p.name} on Windows`;
+  return `<section class="feature-banner wrap" aria-labelledby="feature-title">
+      <div class="banner" style="${accent}">
+        ${shot ? `<img class="banner-blur" src="${esc(asset(shot))}" alt="" aria-hidden="true" decoding="async">` : ""}
+        <div class="banner-body">
+          <a class="banner-icon" href="/${esc(p.id)}/" tabindex="-1" aria-hidden="true">${icon(p, 76)}</a>
+          <h2 class="banner-title" id="feature-title"><a href="/${esc(p.id)}/">${esc(p.name)}</a>${p.spotlight ? `<span class="row-tag">${esc(p.spotlight.label || "New")}</span>` : ""}</h2>
+          <p class="banner-text">${esc(p.tagline)}</p>
+          <div class="banner-actions">
+            ${href ? `<a class="btn btn-primary" href="${esc(href)}">${GLYPH_SVG.download}Download</a>` : ""}
+            <a class="btn btn-plain" href="/${esc(p.id)}/">Learn More</a>
+          </div>
+          ${meta.length > 1 ? `<p class="banner-meta">${meta.map(esc).join('<span aria-hidden="true">·</span>')}</p>` : ""}
+        </div>
+        ${shot ? `<figure class="banner-window"><img src="${esc(asset(shot))}" alt="${esc(alt)}" width="1600" height="1000" decoding="async" fetchpriority="high"></figure>` : ""}
+      </div>
+    </section>`;
+}
+
+// An app still in development: one row under the grid, so it reads as a preview, not a download.
+function appPreview(p) {
+  return `<li><a class="row upcoming-row" href="/${esc(p.id)}/">
+            ${icon(p, 44)}
+            <span class="row-body">
+              <span class="row-title">${esc(p.name)} <span class="row-tag">${esc(STATUS_LABEL[p.status] || p.status)}</span></span>
+              <span class="row-sub">${esc(p.tagline)} Coming to ${esc(andList(p.platforms.map((x) => DEVICE[x] || x)))}.</span>
             </span>
-          </a>
-        </li>`;
+            ${CHEVRON}
+          </a></li>`;
 }
 
 // The platform filter only earns its place once there are enough apps to sift through.
@@ -432,60 +430,44 @@ function homePage() {
         </div>`
       : "";
   const winCount = released.filter(windowsOnly).length;
-  const body = `    <section class="hero wrap" aria-labelledby="page-title">
-      <img class="avatar" src="/assets/avatar.jpg" alt="" width="128" height="128">
-      <p class="hero-eyebrow">${PUBLISHER}</p>
-      <h1 class="hero-title" id="page-title" tabindex="-1">Software that respects your&nbsp;PC.</h1>
-      <p class="hero-sub">Lightweight Windows apps for gaming, emulation and everyday use. ${capital(countWord(winCount))} focused apps, each doing one job well, from one independent developer.</p>
-    </section>
+  // The banner's app leads; the grid holds the rest, so no app is shown twice.
+  const featured = released.find((p) => p.spotlight) || released[0];
+  const rest = released.filter((p) => p !== featured);
+  const body = `    <header class="page-head wrap">
+      <h1 class="large-title" id="page-title" tabindex="-1">Apps</h1>
+      <p class="page-sub">${capital(countWord(winCount))} free Windows apps for games and emulators, from one developer. No accounts, no ads, no telemetry.</p>
+    </header>
+
+    ${featured ? appFeature(featured) : ""}
 
     <section class="section wrap" id="apps" aria-labelledby="apps-title">
       <div class="section-head">
-        <h2 class="title-2" id="apps-title">Apps</h2>
+        <h2 class="title-2" id="apps-title">${featured ? "More Apps" : "Apps"}</h2>
         ${filter}
       </div>
       <ul class="app-grid card-grid" id="app-list">
-        ${released.map(appShowcase).join("\n        ")}
-      </ul>${upcoming.length ? "" : `\n      <p class="section-note grid-note">More apps are on the way.</p>`}
+        ${rest.map(appShowcase).join("\n        ")}
+      </ul>
     </section>
 ${upcoming.length ? `
     <section class="section wrap" id="upcoming" aria-labelledby="upcoming-title">
       <div class="section-head">
         <h2 class="title-2" id="upcoming-title">In the Works</h2>
       </div>
-      <ul class="upcoming-list">
+      <ul class="list">
         ${upcoming.map(appPreview).join("\n        ")}
       </ul>
-      <p class="section-note grid-note">More apps are on the way.</p>
     </section>
 ` : ""}
-    <section class="section wrap" id="principles" aria-labelledby="principles-title">
-      <div class="section-head">
-        <h2 class="title-2" id="principles-title">What They Share</h2>
-      </div>
-      <p class="section-lede">Independent software. Focused functionality. Minimal overhead.</p>
-      <ul class="feature-grid">
-        ${PRINCIPLES.map(
-          ([title, text]) => `<li class="feature">
-          <svg class="check" viewBox="0 0 20 20" aria-hidden="true">${GLYPH.check}</svg>
-          <span><strong class="feature-title">${esc(title)}</strong>${esc(text)}</span>
-        </li>`
-        ).join("\n        ")}
-      </ul>
-    </section>
-
-    <section class="section wrap" id="about" aria-labelledby="about-title">
+    <section class="section wrap about" id="about" aria-labelledby="about-title">
       <div class="section-head">
         <h2 class="title-2" id="about-title">About</h2>
       </div>
-      <div class="about-card">
-        <p>${PUBLISHER} is one independent developer, known on GitHub as <a href="${GITHUB}">lilpatter</a>, making the apps I want on my own PC. Most replace a heavy official app with something smaller, or do the one thing the official app leaves out.</p>
-        <p>The apps are closed source for now. Every download comes from the app’s GitHub Releases page, with its SHA-256 hash on the app’s page here. Found a bug or have an idea? Open an issue on the app’s GitHub page.</p>
-        <p>The apps are free. If one saves you some time, you can buy me a coffee on Ko&#8209;fi.</p>
-        <div class="hero-actions about-actions">
-          <a class="btn btn-soft" href="${GITHUB}">${GITHUB_MARK}GitHub</a>
-          ${KOFI}
-        </div>
+      <p>${PUBLISHER} is one developer making the apps I want on my own PC. Most replace a heavy official app with something smaller, or do the one thing the official app leaves out. They’re free and closed source for now, and every download comes from GitHub Releases with its SHA-256 hash on the app’s page.</p>
+      <p>Found a bug or have an idea? Open an issue on the app’s GitHub page. If an app saves you some time, you can buy me a coffee.</p>
+      <div class="about-actions">
+        <a class="btn btn-soft" href="${GITHUB}">${GITHUB_MARK}GitHub</a>
+        ${KOFI}
       </div>
     </section>`;
   return layout({
@@ -502,24 +484,24 @@ ${upcoming.length ? `
       sameAs: [GITHUB],
     },
     path: "/",
+    // No colour wash on the home page: the banner carries the colour.
+    wash: "",
     bar: homeBar,
     body,
   });
 }
 
-// A risk the visitor should know before downloading, shown right under the Download button:
+// A risk the visitor should know before downloading, right under the Download button: one short line
+// in the app's own words that opens to the full explanation, so it's seen without taking over the page.
 // "warning": { "title", "text", "link": { "label", "url" } }.
 function warning(p) {
   const w = p.warning;
   if (!w) return "";
-  return `<div class="callout" role="note">
-            <svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.warning}</svg>
-            <div>
-              <strong>${esc(w.title)}</strong>
-              <p>${esc(w.text)}</p>
-              ${w.link ? `<a href="${esc(w.link.url)}">${esc(w.link.label)}</a>` : ""}
-            </div>
-          </div>`;
+  return `<details class="caveat">
+            <summary><svg viewBox="0 0 20 20" aria-hidden="true">${GLYPH.warning}</svg><span>${esc(w.title)}</span>${CHEVRON}</summary>
+            <p>${esc(w.text)}</p>
+            ${w.link ? `<a href="${esc(w.link.url)}">${esc(w.link.label)}</a>` : ""}
+          </details>`;
 }
 
 // What a visitor should know before installing: what the app talks to, what stays on the PC,
@@ -582,27 +564,32 @@ function downloadHref(p) {
   return releases[p.id]?.installer?.url || dl?.url || "";
 }
 
-// Feature, screenshot, explanation: "tour": [{ "title", "text", "shot" }], where shot is a screenshot's
-// src. Each row says what to notice in the screenshot next to it, alternating sides.
+// Feature, screenshot, explanation: "tour": [{ "title", "text", "shot" }], where shot is a screenshot's src.
+// Shown as one picker: the features listed on one side, the screenshot of the chosen one beside them,
+// instead of a long row per feature. Without JavaScript every explanation shows, with the first screenshot.
 function tour(p) {
   const steps = p.tour || [];
   if (!steps.length) return "";
   const alt = (src) => (p.screenshots || []).find((x) => x.src === src)?.alt || "";
   return `      <section class="app-section" aria-labelledby="tour-title">
         <h2 class="title-2" id="tour-title">${esc(p.tourTitle || `What ${p.name} Does`)}</h2>
-        <ol class="tour">
-          ${steps
-            .map(
-              (t) => `<li class="tour-step">
-            <figure class="tour-shot"><img src="${esc(asset(t.shot))}" alt="${esc(alt(t.shot))}" loading="lazy" decoding="async"></figure>
-            <div class="tour-text">
-              <h3 class="tour-title">${esc(t.title)}</h3>
+        <div class="tour" data-tour>
+          <ol class="tour-list">
+            ${steps
+              .map(
+                (t, i) => `<li class="tour-step${i ? "" : " is-active"}">
+              <button type="button" class="tour-button" aria-pressed="${i === 0}" data-step="${i}">${esc(t.title)}</button>
               <p>${esc(t.text)}</p>
-            </div>
-          </li>`
-            )
-            .join("\n          ")}
-        </ol>
+            </li>`
+              )
+              .join("\n            ")}
+          </ol>
+          <div class="tour-stage">
+            ${steps
+              .map((t, i) => `<img class="${i ? "" : "is-active"}" src="${esc(asset(t.shot))}" alt="${esc(alt(t.shot))}" data-step="${i}"${i ? ' loading="lazy"' : ""} decoding="async">`)
+              .join("\n            ")}
+          </div>
+        </div>
 ${p.shotsNote ? `        <p class="shots-note">${esc(p.shotsNote)}</p>\n` : ""}      </section>
 `;
 }
@@ -685,8 +672,6 @@ function gallery(p) {
 function appPage(p) {
   const links = p.links || [];
   const primary = links[0];
-  const fams = families(p);
-  const [stackMain, ...stackRest] = (p.stack || "").split(" · ");
   const others = projects.filter((o) => o.id !== p.id);
   const release = releases[p.id];
 
@@ -744,13 +729,12 @@ function appPage(p) {
     )
     .join("\n          ");
 
-  // Information, like the bottom of an App Store page. Only what the header and the facts strip
-  // don't already say: platform, version, size and status are shown once, up there.
+  // Information, like the bottom of an App Store page. Only what the header doesn't already say:
+  // version, size, platforms and price are shown once, under the Download button.
   const info = [
     ["Developer", PUBLISHER],
     release && ["Updated", formatDate(release.date)],
-    release && ["Price", "Free"],
-    release && p.stack && ["Built With", p.stack],
+    p.stack && ["Built With", p.stack],
     ["Source", isOpenSource(p) ? "Open source" : "Closed source"],
   ]
     .filter(Boolean)
@@ -758,81 +742,44 @@ function appPage(p) {
     .join("\n          ");
 
   const accent = accents[p.id] ? `--accent:${esc(accents[p.id])}; --on-accent:${labelOn(accents[p.id])}` : "";
-  const body = `    <article class="wrap app-page" aria-labelledby="app-title" style="${accent}">
-      <header class="app-hero">
-        <div class="tilt" data-tilt>
-          <div class="tilt-inner">
-            ${icon(p, 128, `${p.name} app icon`)}
-            <span class="glare" aria-hidden="true"></span>
-          </div>
-        </div>
-        <div>
-          <h1 class="app-name" id="app-title" tabindex="-1">${esc(p.name)}</h1>
-          <p class="app-subtitle">${esc(p.tagline)}</p>
-          <div class="header-actions">
-            ${primary ? `<a class="btn btn-filled" href="${esc(primary.kind === "download" ? downloadHref(p) : primary.url)}">${primary.kind === "download" ? GLYPH_SVG.download : ""}${esc(windowsOnly(p) && primary.kind === "download" ? "Download for Windows" : primary.label)}</a>` : ""}
-            ${p.status !== "available" ? `<span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>` : ""}
-          </div>
-          ${primary?.kind === "download" && release?.installer ? `<p class="download-meta">${esc([`Version ${release.version}`, release.size && `${formatSize(release.size)} installer`, windowsOnly(p) && "Windows 10 and 11", "Free"].filter(Boolean).join(" · "))}</p>
-          <p class="download-links">${[
-            release.portable && `<a href="${esc(release.portable.url)}">Portable version</a>`,
-            history && `<a href="#history">Release history</a>`,
-            `<a href="#privacy">Is it safe?</a>`,
-          ].filter(Boolean).join('<span aria-hidden="true"> · </span>')}</p>` : ""}
-          ${warning(p)}
-        </div>
-      </header>
+  const shot = cardShot(p);
+  // Behind the header, a blurred copy of a wide screenshot that fades into the page; the screenshots
+  // themselves are in the Overview tab. An app with only phone screenshots goes without.
+  const wide = shot && (p.screenshots || []).find((x) => x.src === shot && WIDE.includes(x.device));
+  const download = primary
+    ? `<a class="btn btn-filled" href="${esc(primary.kind === "download" ? downloadHref(p) : primary.url)}">${primary.kind === "download" ? GLYPH_SVG.download : ""}${esc(windowsOnly(p) && primary.kind === "download" ? "Download for Windows" : primary.label)}</a>`
+    : "";
 
-      <div class="facts">
-        ${fact(p.platforms.length > 1 ? "Platforms" : "Platform", fams.join(" & "), p.platforms.length > 1 ? p.platforms.join(", ") : windowsOnly(p) ? "10 and 11" : "", fams.map(platformIcon).join(""))}
-        ${release
-          ? fact("Version", release.version, release.build ? `Build ${release.build}` : "") +
-            (release.size ? fact("Size", formatSize(release.size), "Installer") : "")
-          : fact("Status", STATUS_LABEL[p.status] || p.status) + (p.stack ? fact("Built With", stackMain, stackRest.join(" · ")) : "")}
-      </div>
-
-${p.tour ? (p.video?.src ? gallery({ ...p, screenshots: [] }) : "") : gallery(p)}
+  // The page in tabs, like the tabs in the apps, so it never turns into one long scroll. Each tab only
+  // appears when it has something in it. Without JavaScript every tab's content shows, one after another.
+  const overview = `
       <section class="app-section" aria-labelledby="about-title">
         <h2 class="title-2" id="about-title">About</h2>
         <p class="app-desc">${esc(p.description)}</p>
+        ${[].concat(p.story || []).map((s) => `<p class="app-desc app-story">${esc(s)}</p>`).join("\n        ")}
       </section>
-${p.story ? `
-      <section class="app-section" aria-labelledby="story-title">
-        <h2 class="title-2" id="story-title">Why ${esc(p.name)} Exists</h2>
-        ${[].concat(p.story).map((s, i) => `<p class="app-desc${i ? " app-story" : ""}">${esc(s)}</p>`).join("\n        ")}
-      </section>
-` : ""}
-${tour(p)}${features ? `      <section class="app-section" aria-labelledby="features-title">
-        <h2 class="title-2" id="features-title">Features</h2>
+${tour(p) || gallery(p)}${features ? `      <section class="app-section" aria-labelledby="features-title">
+        <h2 class="title-2" id="features-title">${p.tour?.length ? "At a Glance" : "Features"}</h2>
         <ul class="feature-grid">
           ${features}
         </ul>
       </section>
-` : ""}${engineering ? `
+` : ""}${supportTable(p)}`;
+  const details = `${engineering ? `
       <section class="app-section" aria-labelledby="engineering-title">
         <h2 class="title-2" id="engineering-title">Under the Hood</h2>
         <ul class="feature-grid engineering">
           ${engineering}
         </ul>
       </section>
-` : ""}${supportTable(p)}${credits ? `
+` : ""}${credits ? `
       <section class="app-section" aria-labelledby="credits-title">
         <h2 class="title-2" id="credits-title">Credits</h2>
         <ul class="list credit-list">
           ${credits}
         </ul>
       </section>
-` : ""}${history ? `
-      <section class="app-section" id="history" aria-labelledby="history-title">
-        <div class="section-head">
-          <h2 class="title-2" id="history-title">Release History</h2>
-          <a class="btn btn-plain" href="${esc(release.all)}">All Releases</a>
-        </div>
-        <ol class="list release-list">
-          ${history}
-        </ol>
-      </section>
-` : ""}${faqSection(p)}${trustSection(p, release)}
+` : ""}
       <section class="app-section" aria-labelledby="info-title">
         <h2 class="title-2" id="info-title">Information</h2>
         <div class="info-columns">
@@ -847,6 +794,56 @@ ${tour(p)}${features ? `      <section class="app-section" aria-labelledby="feat
           </div>` : ""}
         </div>
       </section>
+`;
+  const releasesTab = history ? `
+      <section class="app-section" id="history" aria-labelledby="history-title">
+        <div class="section-head">
+          <h2 class="title-2" id="history-title">Release History</h2>
+          <a class="btn btn-plain" href="${esc(release.all)}">All Releases</a>
+        </div>
+        <ol class="list release-list">
+          ${history}
+        </ol>
+      </section>
+` : "";
+  const tabs = [
+    ["overview", "Overview", overview],
+    ["details", "Details", details],
+    ["privacy", "Privacy", trustSection(p, release)],
+    ["releases", "Releases", releasesTab],
+    ["faq", "Questions", faqSection(p)],
+  ].filter(([, , html]) => html.trim());
+
+  const body = `    <article class="wrap app-page" aria-labelledby="app-title" style="${accent}">
+      <header class="app-hero">
+        ${wide ? `<img class="banner-blur" src="${esc(asset(shot))}" alt="" aria-hidden="true" decoding="async">` : ""}
+        <div class="banner-body">
+          <div class="tilt" data-tilt>
+            <div class="tilt-inner">
+              ${icon(p, 96, `${p.name} app icon`)}
+              <span class="glare" aria-hidden="true"></span>
+            </div>
+          </div>
+          <h1 class="app-name" id="app-title" tabindex="-1">${esc(p.name)}</h1>
+          <p class="banner-text">${esc(p.tagline)}</p>
+          <div class="banner-actions">
+            ${download}
+            ${p.status !== "available" ? `<span class="status" data-status="${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span>` : ""}
+          </div>
+          ${primary?.kind === "download" && release?.installer ? `<p class="banner-meta">${[`Version ${release.version}`, release.size && `${formatSize(release.size)}`, windowsOnly(p) && "Windows 10 and 11", "Free"].filter(Boolean).map(esc).join('<span aria-hidden="true">·</span>')}</p>
+          <p class="download-links">${[
+            release.portable && `<a href="${esc(release.portable.url)}">Portable version</a>`,
+            history && `<a href="#history">Release history</a>`,
+            p.privacy && `<a href="#privacy">Is it safe?</a>`,
+          ].filter(Boolean).join('<span aria-hidden="true"> · </span>')}</p>` : ""}
+          ${warning(p)}
+        </div>
+      </header>
+${tabs.length > 1 ? `
+      <div class="app-tabs" role="tablist" aria-label="${esc(p.name)}" hidden>
+        ${tabs.map(([id, label], n) => `<button type="button" role="tab" id="tab-${id}" aria-controls="panel-${id}" aria-selected="${n === 0}"${n ? ' tabindex="-1"' : ""}>${esc(label)}</button>`).join("\n        ")}
+      </div>` : ""}
+${tabs.map(([id, , html]) => `      <div class="tab-panel" id="panel-${id}"${tabs.length > 1 ? ` role="tabpanel" aria-labelledby="tab-${id}"` : ""}>${html}      </div>`).join("\n")}
     </article>
 ${others.length ? `
     <section class="section wrap" aria-labelledby="more-title">
@@ -865,7 +862,7 @@ ${others.length ? `
     description: p.metaDescription || p.description,
     path: `/${p.id}/`,
     image: asset(p.icon),
-    wash: asset(p.icon),
+    wash: "",
     social: `/assets/og/${p.id}.png`,
     // Lets search engines show the app as software: what it runs on, that it's free, its version.
     jsonld: {
@@ -942,7 +939,7 @@ function privacyPage() {
   const bar = `<a class="circle glass" href="/" aria-label="Back to Apps">${BACK}</a>
       <nav class="bar-links glass" aria-label="Sections">
         <a href="/">Apps</a>
-        <a href="${GITHUB}">GitHub</a>
+        <a href="${GITHUB}">${GITHUB_MARK}GitHub</a>
       </nav>`;
   const body = `    <article class="wrap doc-page" aria-labelledby="page-title">
       <h1 class="large-title" id="page-title" tabindex="-1">Privacy &amp; Support</h1>

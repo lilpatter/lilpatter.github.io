@@ -177,12 +177,80 @@ function wireTilt() {
   });
 }
 
+/* ---------- App page tabs ---------- */
+
+// Shows one tab of an app page. The build writes every tab's content into the page, so without
+// JavaScript it all shows in turn; here the tab row appears and the other tabs are hidden.
+function showTab(id, { focus = false } = {}) {
+  const page = document.querySelector(".app-page");
+  if (!page) return;
+  page.querySelectorAll('.app-tabs [role="tab"]').forEach((t) => {
+    const on = t.getAttribute("aria-controls") === id;
+    t.setAttribute("aria-selected", on);
+    t.tabIndex = on ? 0 : -1;
+    if (on && focus) t.focus();
+  });
+  page.querySelectorAll(".tab-panel").forEach((p) => (p.hidden = p.id !== id));
+}
+
+// A link to something inside a hidden tab (#privacy, #history, #faq) opens that tab first.
+function revealTarget(el) {
+  const panel = el?.closest(".tab-panel");
+  if (panel?.hidden) showTab(panel.id);
+  return el;
+}
+
+function wireTabs() {
+  const row = document.querySelector(".app-page .app-tabs");
+  if (!row) return;
+  const tabs = [...row.querySelectorAll('[role="tab"]')];
+  row.hidden = false;
+  showTab(tabs[0].getAttribute("aria-controls"));
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => showTab(t.getAttribute("aria-controls")));
+    t.addEventListener("keydown", (e) => {
+      const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (!step) return;
+      e.preventDefault();
+      const next = tabs[(i + step + tabs.length) % tabs.length];
+      showTab(next.getAttribute("aria-controls"), { focus: true });
+    });
+  });
+  // Opened with a link to a section: show its tab and go to it.
+  let target = null;
+  try {
+    target = location.hash ? document.querySelector(location.hash) : null;
+  } catch {} // a hash that isn't a valid selector
+  if (target?.closest(".tab-panel")) revealTarget(target).scrollIntoView();
+}
+
+// Keepsake's feature picker: choosing a feature shows its explanation and its screenshot.
+function wireTour() {
+  document.querySelectorAll("[data-tour]").forEach((tour) => {
+    tour.classList.add("is-ready");
+    const steps = [...tour.querySelectorAll(".tour-step")];
+    const shots = [...tour.querySelectorAll(".tour-stage img")];
+    steps.forEach((step, i) => {
+      step.querySelector("button").addEventListener("click", () => {
+        steps.forEach((s, n) => {
+          s.classList.toggle("is-active", n === i);
+          s.querySelector("button").setAttribute("aria-pressed", n === i);
+        });
+        shots.forEach((img, n) => {
+          if (n === i) img.loading = "eager";
+          img.classList.toggle("is-active", n === i);
+        });
+      });
+    });
+  });
+}
+
 /* ---------- Entry animation ---------- */
 
 function playEntrance() {
   const main = document.querySelector("main");
   const parts = main.querySelectorAll(
-    ".hero > *, .section-head, .app-grid > li, .app-hero, .app-page > .facts, .app-desc, .app-columns > div"
+    ".page-head > *, .banner, .section-head, .app-grid > li, .app-hero, .app-desc, .app-columns > div"
   );
   parts.forEach((el, i) => el.style.setProperty("--i", i));
   main.classList.remove("is-entering");
@@ -198,6 +266,8 @@ function hydrate() {
   watchBar();
   wireFilter();
   wireTilt();
+  wireTabs();
+  wireTour();
   updateShortcutHint();
 }
 
@@ -256,16 +326,15 @@ function skeleton(path) {
       ? `<img class="app-icon" src="${esc(app.icon)}" alt="" width="128" height="128">`
       : `<span class="sk sk-icon"></span>`;
     return {
-      wash: app?.icon,
+      wash: null, // app pages have their banner instead of a colour wash
       html: `<article class="wrap app-page skeleton" aria-busy="true" aria-label="Loading">
         <div class="app-hero">
-          <div class="tilt"><div class="tilt-inner">${icon}</div></div>
-          <div class="sk-stack">
-            ${app ? `<h1 class="app-name">${esc(app.name)}</h1><p class="app-subtitle">${esc(app.tagline)}</p>` : `<span class="sk sk-title"></span><span class="sk sk-line w60"></span>`}
-            <div class="header-actions"><span class="sk sk-pill"></span><span class="sk sk-pill sm"></span></div>
+          <div class="banner-body">
+            <div class="tilt"><div class="tilt-inner">${icon}</div></div>
+            ${app ? `<h1 class="app-name">${esc(app.name)}</h1><p class="banner-text">${esc(app.tagline)}</p>` : `<span class="sk sk-title"></span><span class="sk sk-line w60"></span>`}
+            <div class="banner-actions"><span class="sk sk-pill"></span></div>
           </div>
         </div>
-        <div class="facts">${`<div class="fact"><span class="sk sk-line w40 c"></span><span class="sk sk-line w70 c lg"></span></div>`.repeat(4)}</div>
         <div class="app-section"><span class="sk sk-title sm"></span><div class="sk-para">${bars(2, "w90")}${bars(1, "w60")}</div></div>
         <div class="app-section"><span class="sk sk-title sm"></span>
           <ul class="feature-grid">${`<li class="feature"><span class="sk sk-dot"></span><span class="sk sk-line w70"></span></li>`.repeat(4)}</ul>
@@ -274,17 +343,15 @@ function skeleton(path) {
     };
   }
   return {
-    wash: "/assets/avatar.jpg",
-    html: `<section class="hero wrap skeleton" aria-busy="true" aria-label="Loading">
-        <span class="sk sk-avatar"></span>
-        <span class="sk sk-line w20 c"></span>
-        <span class="sk sk-title c"></span>
-        <span class="sk sk-line w60 c"></span>
-        <span class="sk sk-line w40 c"></span>
-      </section>
+    wash: null,
+    html: `<header class="page-head wrap skeleton" aria-busy="true" aria-label="Loading">
+        <span class="sk sk-title"></span>
+        <span class="sk sk-line w50"></span>
+      </header>
+      <section class="feature-banner wrap skeleton"><div class="banner"></div></section>
       <section class="section wrap skeleton">
         <div class="section-head"><span class="sk sk-title sm"></span></div>
-        <ul class="app-grid card-grid">${`<li><div class="app-card"><span class="card-shot"></span><span class="card-body"><span class="sk sk-glyph"></span><span class="sk-stack"><span class="sk sk-line w50"></span><span class="sk sk-line w70"></span></span></span></div></li>`.repeat(APPS.length)}</ul>
+        <ul class="app-grid card-grid">${`<li><div class="app-card"><span class="card-shot"></span><span class="card-body"><span class="sk sk-glyph"></span><span class="sk-stack"><span class="sk sk-line w50"></span><span class="sk sk-line w70"></span></span></span></div></li>`.repeat(Math.max(APPS.length - 2, 1))}</ul>
       </section>`,
   };
 }
@@ -310,7 +377,7 @@ async function navigate(url, { pop = false, sourceIcon = null } = {}) {
   // Same page with a hash: just scroll.
   if (samePage && !pop && url.hash) {
     history.pushState({ scroll: 0 }, "", url.href);
-    document.querySelector(url.hash)?.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth" });
+    revealTarget(document.querySelector(url.hash))?.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth" });
     return;
   }
 
@@ -367,7 +434,7 @@ async function navigate(url, { pop = false, sourceIcon = null } = {}) {
       main.innerHTML = next.innerHTML;
     }
     hydrate();
-    const target = url.hash && document.querySelector(url.hash);
+    const target = url.hash && revealTarget(document.querySelector(url.hash));
     if (target) target.scrollIntoView();
     else scrollTo(0, pop ? history.state?.scroll || 0 : 0);
   }, "to-content");
